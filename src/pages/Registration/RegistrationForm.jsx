@@ -4,24 +4,15 @@ import logoSI from "/logoSI.png";
 import { app } from "../../credenciales";
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
 import { useNavigate } from "react-router";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-const ButtonGroup = ({ registroComo, setRegistroComo, handleGoogleSignIn }) => {
+const ButtonGroup = ({ handleGoogleSignIn }) => {
   return (
     <>
-      <div className={styles.registerAs}>
-        <label className={styles.label}>Registrar como:</label>
-        <select
-          className={styles.select}
-          value={registroComo}
-          onChange={(e) => setRegistroComo(e.target.value)}
-        >
-          <option value="Estudiante">Estudiante</option>
-          <option value="Guía">Guía</option>
-        </select>
-      </div>
       <div className={styles.buttonRegister}>
         <button type="submit" className={styles.btnRegister}>
           Registrarse
@@ -64,7 +55,6 @@ const FormInput = ({ label, type, placeholder, value, onChange }) => {
 };
 
 const RegistrationForm = () => {
-  const [registroComo, setRegistroComo] = useState("Estudiante");
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -79,25 +69,20 @@ const RegistrationForm = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const userEmail = result.user.email;
-  
-      let registroComo = "";
-      if (userEmail.endsWith("@correo.unimet.edu.ve")) {
-        registroComo = "Estudiante";
-      } else if (userEmail.endsWith("@unimet.edu.ve")) {
-        registroComo = "Guía";
-      } else {
-        setGeneralError("Solo se permiten correos @correo.unimet.edu.ve o @unimet.edu.ve");
+
+      // Validar que el correo sea del dominio correcto
+      if (!userEmail.endsWith("@correo.unimet.edu.ve")) {
+        setGeneralError("Solo se permiten correos @correo.unimet.edu.ve");
         return;
       }
-  
+
       const signInMethods = await fetchSignInMethodsForEmail(auth, userEmail);
-  
+
       if (signInMethods.length > 0) {
-        setGeneralError("Ya estás registrado. Por favor, inicia sesión.");
+        setGeneralError("Usuario ya registrado. Por favor, inicia sesión.");
         navigate("/login");
       } else {
-        console.log("Usuario registrado con Google:", userEmail, "como", registroComo);
-        // Aquí podrías guardar 'registroComo' en tu base de datos si es necesario
+        console.log("Usuario registrado con Google:", userEmail);
         navigate("/login");
       }
     } catch (error) {
@@ -116,26 +101,35 @@ const RegistrationForm = () => {
       return;
     }
 
-    const emailRegex =
-      registroComo === "Estudiante"
-        ? /^[a-zA-Z0-9._-]+@correo\.unimet\.edu\.ve$/
-        : /^[a-zA-Z0-9._-]+@unimet\.edu\.ve$/;
-
-    if (!emailRegex.test(email)) {
-      setGeneralError(
-        `Por favor, usa un correo válido de ${
-          registroComo === "Estudiante"
-            ? "@correo.unimet.edu.ve"
-            : "@unimet.edu.ve"
-        }`
-      );
+    // Validación de correo
+    if (!email.endsWith("@correo.unimet.edu.ve")) {
+      setGeneralError("Por favor, usa un correo válido de @correo.unimet.edu.ve");
       return;
     }
 
     try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+
+      if (signInMethods.length > 0) {
+        setGeneralError("Usuario ya registrado. Por favor, inicia sesión.");
+        navigate("/login");
+        return;
+      }
+
       const userCredential = await createUserWithEmailAndPassword(auth, email, contraseña);
       console.log("Usuario registrado:", userCredential.user.email);
 
+      // Mostrar mensaje de éxito
+      toast.success("¡Registro exitoso!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      // Limpiar los campos del formulario
       setNombre("");
       setApellido("");
       setEmail("");
@@ -143,9 +137,10 @@ const RegistrationForm = () => {
       setContraseña("");
       setConfirmContraseña("");
 
-      if (registroComo === "Estudiante") {
-        navigate("/login");
-      }
+      // Redirigir a la página de destinos después de un pequeño retraso
+      setTimeout(() => {
+        navigate("/destinos");
+      }, 3000);
     } catch (error) {
       console.error("Error al registrar:", error);
       setGeneralError("Error al registrar. Por favor, intenta de nuevo.");
@@ -178,7 +173,7 @@ const RegistrationForm = () => {
               <FormInput
                 label="Email (institucional):"
                 type="email"
-                placeholder="info@unimet.edu.ve"
+                placeholder="info@correo.unimet.edu.ve"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -208,10 +203,13 @@ const RegistrationForm = () => {
             </div>
             {passwordError && <p className={styles.error}>{passwordError}</p>}
             {generalError && <p className={styles.error}>{generalError}</p>} {/* Mostrar errores generales */}
-            <ButtonGroup registroComo={registroComo} setRegistroComo={setRegistroComo} handleGoogleSignIn={handleGoogleSignIn} />
+            <ButtonGroup handleGoogleSignIn={handleGoogleSignIn} />
           </form>
         </section>
       </main>
+
+      {/* Aquí se mostrará el popup de Toast */}
+      <ToastContainer />
     </>
   );
 };

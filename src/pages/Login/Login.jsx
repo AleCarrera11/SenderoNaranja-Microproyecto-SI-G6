@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./Login.module.css";
 import logoSI from "/logoSI.png";
 import { app } from "../../credenciales";
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
@@ -66,9 +66,7 @@ const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswo
 const SocialButton = ({ platform, onClick }) => {
   return (
     <button
-      className={`${styles.socialButton} ${
-        platform === "google" ? styles.googleButton : styles.facebookButton
-      }`}
+      className={`${styles.socialButton} ${platform === "google" ? styles.googleButton : styles.facebookButton}`}
       onClick={onClick}
     >
       {platform === "google" ? (
@@ -80,7 +78,6 @@ const SocialButton = ({ platform, onClick }) => {
     </button>
   );
 };
-
 
 const LogoSection = () => {
   return (
@@ -119,14 +116,25 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const userEmail = result.user.email;
-  
+      const user = result.user;
+      const userEmail = user.email;
+
       if (!userEmail.endsWith("@correo.unimet.edu.ve")) {
         setError("Debes usar un correo institucional (@correo.unimet.edu.ve).");
-        await auth.signOut(); // Cierra sesión inmediatamente si el correo no es válido
+        await auth.signOut(); // Cierra sesión si el correo no es válido
         return;
       }
-  
+
+      // Verifica si el usuario ya está registrado en Firebase Authentication
+      const userCredential = await fetchSignInMethodsForEmail(auth, userEmail);
+
+      if (userCredential.length === 0) {
+        setError("Este correo no está registrado. Por favor regístrate.");
+        await auth.signOut(); // Cierra sesión si el correo no está registrado
+        return;
+      }
+
+      // Si el usuario está registrado, navega a destinos
       navigate("/destinos");
     } catch (error) {
       setError("Error al iniciar sesión con Google.");

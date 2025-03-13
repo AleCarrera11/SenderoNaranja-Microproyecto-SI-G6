@@ -1,0 +1,142 @@
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Figtree, sans-serif;
+  }
+  
+  .heading {
+    color: #da5702;
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 45px;
+    font-weight: 700;
+    line-height: 45px;
+  }
+  
+  .content {
+    align-items: flex-start;
+    gap: 40px;
+    display: flex;
+    margin-bottom: 40px;
+  }
+  
+  .imageCard {
+    flex-shrink: 0;
+    width: 362px;
+    position: relative;
+  }
+  
+  .trailImage {
+    object-fit: cover;
+    border-radius: 8.08px;
+    width: 100%;
+    height: 287px;
+  }
+  
+  .tagWrapper {
+    position: absolute;
+    bottom: 7px;
+    right: 0;
+  }
+  
+  .activityTag {
+    color: #fff;
+    background-color: #da5702;
+    border-radius: 8.078px;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 12.117px 24.233px #010bfd1f;
+  }
+  
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .locationTitle {
+    color: #fff;
+    text-align: center;
+    background-color: #da5702;
+    border-radius: 8.078px;
+    width: 304px;
+    padding: 8px 24px;
+    font-size: 32px;
+    font-weight: 700;
+    box-shadow: 0 12.117px 24.233px #010bfd1f;
+  }
+  
+  .scheduleInfo {
+    flex-direction: column;
+    gap: 10px;
+    font-size: 40px;
+    display: flex;
+  }
+  
+  .scheduleRow {
+    gap: 5px;
+    display: flex;
+    margin: 0;
+  }
+  
+  .label {
+    font-weight: 700;
+  }
+  
+  .value {
+    font-weight: 400;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-end; /* Alinea el botón a la derecha */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+  }
+  
+  .participantsButton {
+    background-color: #ee9a12;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-family: Figtree, sans-serif;
+    font-weight: 700;
+  }
+  
+  @media (width <= 991px) {
+    .container {
+      max-width: 991px;
+    }
+  
+    .content {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  @media (width <= 640px) {
+    .container {
+      max-width: 640px;
+    }
+  
+    .heading {
+      font-size: 36px;
+    }
+  
+    .imageCard {
+      width: 100%;
+    }
+  
+    .locationTitle {
+      width: 100%;
+      font-size: 24px;
+    }
+  
+    .scheduleInfo {
+      font-size: 24px;
+    }
+  }

@@ -98,21 +98,38 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
+
     if (!email.endsWith("@correo.unimet.edu.ve")) {
       setError("Debes usar un correo institucional (@correo.unimet.edu.ve).");
       return;
     }
-  
+
     try {
-      await signInWithEmailAndPassword(auth, email, contraseña);
-      navigate("/destinos");
+      // Verifica los métodos de inicio de sesión disponibles para el correo
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+
+      if (signInMethods.length === 0) {
+        setError("Este correo no está registrado. Por favor regístrate.");
+        return;
+      }
+
+      // Si el correo está registrado mediante Google, inicia sesión con Google
+      if (signInMethods.includes('google.com')) {
+        const result = await signInWithPopup(auth, googleProvider);
+        console.log("Usuario autenticado con Google:", result.user.email);
+        navigate("/destinos");
+      } else {
+        // Si el correo está registrado con correo y contraseña, realiza el inicio de sesión
+        const userCredential = await signInWithEmailAndPassword(auth, email, contraseña);
+        console.log("Usuario autenticado:", userCredential.user.email);
+        navigate("/destinos");
+      }
     } catch (error) {
       setError("Correo no registrado o contraseña incorrecta.");
       console.error("Error al iniciar sesión", error);
     }
   };
-  
+
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -141,7 +158,7 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
       console.error("Error con Google Sign-In", error);
     }
   };
-  
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -184,7 +201,6 @@ const LoginPage = () => {
         <LogoSection />
       </div>
       <div className={styles.rightPanel}>
-        
         <h2 className={styles.loginTitle}>Inicia sesión</h2>
         {error && <p className={styles.error}>{error}</p>}
         <LoginForm

@@ -139,7 +139,7 @@ const RegistrationForm = () => {
 
       // Redirigir a la página de destinos después de un pequeño retraso
       setTimeout(() => {
-        navigate("/destinos");
+        navigate("/login");  // Cambié a "/login" en lugar de "/destinos" ya que queremos iniciar sesión
       }, 3000);
     } catch (error) {
       console.error("Error al registrar:", error);

@@ -10,6 +10,7 @@ import PerfilActividad from './pages/PerfilActividad/PerfilActividad.jsx';
 import Calendario from './pages/Calendario/Calendario.jsx';
 
 export default function App() {
+  
   return (
     <Router>
       <Routes>
@@ -21,7 +22,6 @@ export default function App() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/sabasnieves" element={<PerfilActividad />} />
         <Route path="/calendario" element={<Calendario />} />
-
       </Routes>
     </Router>
   );

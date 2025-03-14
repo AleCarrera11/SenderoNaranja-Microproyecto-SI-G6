@@ -1,7 +1,6 @@
-"use client";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./RegistrationForm.module.css";
-import logoSI from "/logoSI.png";
+import { UserContext } from "../../Context/UserContex";
 
 const FormInput = ({ label, type, placeholder, value, onChange, name }) => {
   return (
@@ -39,21 +38,27 @@ const ProfileHeader = ({ email }) => {
 };
 
 const Perfil1 = () => {
-  const userEmail = "guia@unimet.edu.ve";
-  const [nombre, setNombre] = useState("Maria");
-  const [apellido, setApellido] = useState("Perez");
-  const [telefono, setTelefono] = useState("04143686749");
+  const { user, profile } = useContext(UserContext); // Usar useContext
+  const userEmail = user?.email || ""; // Acceder al email de forma segura
+
+  const [nombre, setNombre] = useState(profile.nombre || "");
+  const [apellido, setApellido] = useState(profile.apellido || "");
+  const [telefono, setTelefono] = useState(profile.telefono || "");
 
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [editedData, setEditedData] = useState({
-    nombre,
-    apellido,
-    telefono,
+    nombre: profile.nombre || "",
+    apellido: profile.apellido || "",
+    telefono: profile.telefono || "",
   });
   const [error, setError] = useState("");
 
   const handleEditClick = () => {
-    setEditedData({ nombre, apellido, telefono });
+    setEditedData({
+      nombre: profile.nombre || "",
+      apellido: profile.apellido || "",
+      telefono: profile.telefono || "",
+    });
     setIsEditPopupOpen(true);
   };
 
@@ -88,21 +93,21 @@ const Perfil1 = () => {
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label className={styles.label}>Nombre:</label>
-              <p className={styles.userData}>{nombre}</p>
+              <p className={styles.userData}>{profile.nombre}</p>
             </div>
             <div className={styles.formGroup}>
               <label className={styles.label}>Apellido:</label>
-              <p className={styles.userData}>{apellido}</p>
+              <p className={styles.userData}>{profile.apellido}</p>
             </div>
           </div>
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label className={styles.label}>Email:</label>
-              <p className={styles.userData}>{userEmail}</p>
+              <p className={styles.userData}>{profile.email}</p>
             </div>
             <div className={styles.formGroup}>
               <label className={styles.label}>Número de teléfono:</label>
-              <p className={styles.userData}>{telefono}</p>
+              <p className={styles.userData}>{profile.telefono}</p>
             </div>
           </div>
         </form>

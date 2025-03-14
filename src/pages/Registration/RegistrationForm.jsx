@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import styles from "./RegistrationForm.module.css";
 import logoSI from "/logoSI.png";
 import { app } from "../../credenciales";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
 import { useNavigate } from "react-router";
 
+const db = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
@@ -136,6 +138,14 @@ const RegistrationForm = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, contraseña);
       console.log("Usuario registrado:", userCredential.user.email);
 
+      await setDoc( doc (db,'users',userCredential.user.uid),{
+        nombre: nombre,
+        apellido: apellido,
+        email: email,
+        telefono: telefono,
+        tipoUser: registroComo,
+      })
+      
       setNombre("");
       setApellido("");
       setEmail("");

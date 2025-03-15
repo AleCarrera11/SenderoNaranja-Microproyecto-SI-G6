@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import styles from "./Login.module.css";
 import logoSI from "/logoSI.png";
 import { app } from "../../credenciales";
-import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail, signOut } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { getFirestore } from "firebase/firestore";
+import toast, { Toaster } from 'react-hot-toast';
+import { getDoc, doc, setDoc } from "firebase/firestore";
 
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const db = getFirestore(app);
 
 const Header = () => {
   return (
@@ -20,7 +24,7 @@ const Header = () => {
   );
 };
 
-const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswordVisibility, isPasswordVisible }) => {
+const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswordVisibility, isPasswordVisible, disabled }) => {
   return (
     <div className={styles.formGroup}>
       <label className={styles.label}>
@@ -33,6 +37,7 @@ const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswo
           placeholder={placeholder}
           onChange={onChange}
           className={styles.inputField}
+          disabled={disabled}
         />
         <div
           className={
@@ -63,11 +68,12 @@ const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswo
   );
 };
 
-const SocialButton = ({ platform, onClick }) => {
+const SocialButton = ({ platform, onClick, disabled }) => {
   return (
     <button
       className={`${styles.socialButton} ${platform === "google" ? styles.googleButton : styles.facebookButton}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {platform === "google" ? (
         <i className="ti ti-brand-google" />
@@ -95,67 +101,114 @@ const LogoSection = () => {
 const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) => {
   const navigate = useNavigate();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    if (!email || !contraseña) {
+      setError("Por favor, completa todos los campos");
+      setIsLoading(false);
+      return;
+    }
 
     if (!email.endsWith("@correo.unimet.edu.ve")) {
-      setError("Debes usar un correo institucional (@correo.unimet.edu.ve).");
+      setError("Solo se permiten correos @correo.unimet.edu.ve");
+      setIsLoading(false);
       return;
     }
 
     try {
-      // Verifica los métodos de inicio de sesión disponibles para el correo
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-
+      
       if (signInMethods.length === 0) {
-        setError("Este correo no está registrado. Por favor regístrate.");
+        setError("Este correo no está registrado");
+        setIsLoading(false);
         return;
       }
 
-      // Si el correo está registrado mediante Google, inicia sesión con Google
       if (signInMethods.includes('google.com')) {
-        const result = await signInWithPopup(auth, googleProvider);
-        console.log("Usuario autenticado con Google:", result.user.email);
-        navigate("/destinos");
-      } else {
-        // Si el correo está registrado con correo y contraseña, realiza el inicio de sesión
-        const userCredential = await signInWithEmailAndPassword(auth, email, contraseña);
-        console.log("Usuario autenticado:", userCredential.user.email);
-        navigate("/destinos");
+        setError("Este correo está registrado con Google. Por favor, usa el botón de Google para iniciar sesión.");
+        setIsLoading(false);
+        return;
       }
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, contraseña);
+      const user = userCredential.user;
+
+      // Verificar si el usuario existe en Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        // Si no existe en Firestore pero sí en Auth, crear el documento
+        await setDoc(doc(db, "users", user.uid), {
+          email: user.email,
+          nombre: user.displayName?.split(' ')[0] || '',
+          apellido: user.displayName?.split(' ')[1] || '',
+          fechaRegistro: new Date(),
+          provider: 'email'
+        });
+      }
+
+      toast.success("¡Inicio de sesión exitoso!");
+      navigate("/destinos");
     } catch (error) {
-      setError("Correo no registrado o contraseña incorrecta.");
-      console.error("Error al iniciar sesión", error);
+      console.error("Error al iniciar sesión:", error);
+      switch (error.code) {
+        case 'auth/wrong-password':
+          setError("Contraseña incorrecta");
+          break;
+        case 'auth/too-many-requests':
+          setError("Demasiados intentos fallidos. Por favor, intenta más tarde");
+          break;
+        default:
+          setError("Error al iniciar sesión. Por favor, intenta de nuevo");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    setError("");
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const userEmail = user.email;
 
       if (!userEmail.endsWith("@correo.unimet.edu.ve")) {
-        setError("Debes usar un correo institucional (@correo.unimet.edu.ve).");
-        await auth.signOut(); // Cierra sesión si el correo no es válido
+        toast.error("Solo se permiten correos @correo.unimet.edu.ve");
+        await signOut(auth);
+        setIsLoading(false);
         return;
       }
 
-      // Verifica si el usuario ya está registrado en Firebase Authentication
-      const userCredential = await fetchSignInMethodsForEmail(auth, userEmail);
-
-      if (userCredential.length === 0) {
-        setError("Este correo no está registrado. Por favor regístrate.");
-        await auth.signOut(); // Cierra sesión si el correo no está registrado
-        return;
+      // Verificar si el usuario existe en Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        // Si no existe en Firestore, crear el documento
+        await setDoc(doc(db, "users", user.uid), {
+          email: userEmail,
+          nombre: user.displayName?.split(' ')[0] || '',
+          apellido: user.displayName?.split(' ')[1] || '',
+          fechaRegistro: new Date(),
+          provider: 'google'
+        });
       }
 
-      // Si el usuario está registrado, navega a destinos
+      toast.success("¡Inicio de sesión exitoso!");
       navigate("/destinos");
     } catch (error) {
-      setError("Error al iniciar sesión con Google.");
-      console.error("Error con Google Sign-In", error);
+      console.error("Error al iniciar sesión con Google:", error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        toast.error("Se canceló el inicio de sesión con Google");
+      } else {
+        toast.error("Error al iniciar sesión con Google. Intenta nuevamente.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -167,10 +220,11 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
     <form className={styles.loginForm} onSubmit={handleLogin}>
       <InputField
         type="email"
-        placeholder="info@unimet.edu.ve"
+        placeholder="info@correo.unimet.edu.ve"
         iconType="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        disabled={isLoading}
       />
       <InputField
         type="password"
@@ -180,11 +234,20 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
         onChange={(e) => setContraseña(e.target.value)}
         togglePasswordVisibility={togglePasswordVisibility}
         isPasswordVisible={isPasswordVisible}
+        disabled={isLoading}
       />
-      <button type="submit" className={styles.loginButton}>
-        Inicia sesión
+      <button 
+        type="submit" 
+        className={styles.loginButton}
+        disabled={isLoading}
+      >
+        {isLoading ? "Cargando..." : "Inicia sesión"}
       </button>
-      <SocialButton platform="google" onClick={handleGoogleLogin} />
+      <SocialButton 
+        platform="google" 
+        onClick={handleGoogleLogin}
+        disabled={isLoading}
+      />
     </form>
   );
 };
@@ -211,6 +274,7 @@ const LoginPage = () => {
           setError={setError}
         />
       </div>
+      <Toaster position="top-right" />
     </div>
   );
 };

@@ -81,6 +81,12 @@ const RegistrationForm = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const userEmail = result.user.email;
+      const displayName = result.user.displayName || ""; // Verifica si displayName existe
+  
+      // Separar el nombre y apellido
+      const nameParts = displayName.split(" ");
+      const nombre = nameParts[0]; // Primer nombre
+      const apellido = nameParts.slice(1).join(" "); // Todo lo demás como apellido
   
       let registroComo = "";
       if (userEmail.endsWith("@correo.unimet.edu.ve")) {
@@ -98,8 +104,16 @@ const RegistrationForm = () => {
         setGeneralError("Ya estás registrado. Por favor, inicia sesión.");
         navigate("/login");
       } else {
+        // Guardar en Firestore
+        await setDoc(doc(db, "users", result.user.uid), {
+          nombre: nombre,
+          apellido: apellido,
+          email: userEmail,
+          telefono: "", // Google no proporciona teléfono directamente
+          tipoUser: registroComo,
+        });
+  
         console.log("Usuario registrado con Google:", userEmail, "como", registroComo);
-        // Aquí podrías guardar 'registroComo' en tu base de datos si es necesario
         navigate("/login");
       }
     } catch (error) {
@@ -107,6 +121,8 @@ const RegistrationForm = () => {
       setGeneralError("Error al autenticar con Google. Intenta nuevamente.");
     }
   };
+  
+  
 
   const handleRegister = async (e) => {
     e.preventDefault();

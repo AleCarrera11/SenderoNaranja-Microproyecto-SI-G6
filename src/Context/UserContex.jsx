@@ -1,51 +1,60 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { app } from "../credenciales";
 import { createContext, useEffect, useState } from "react";
+import { app } from "../credenciales";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+
+
 
 const UserContext = createContext(null);
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth = getAuth(app)
+
+const db = getFirestore(app)
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Cambiado a useState y null
-  const [profile, setProfile] = useState({});
-  const [logged, setLogged] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (userConnected) => {
-      if (userConnected) {
-        setUser(userConnected); // Establecer el objeto de usuario
-        const userDocRef = doc(db, "users", userConnected.uid);
-        try {
-          const docSnap = await getDoc(userDocRef);
+    const [user, setUser] = useState('')
+    const [profile, setProfile] = useState({})
 
-          if (!docSnap.exists()) {
-            console.log("No such document!");
-            setProfile({});
-          }
-          setProfile(docSnap.data());
-          setLogged(true);
-        } catch (error) {
-          console.log(error);
-          setProfile({});
-        }
-      } else {
-        setUser(null); // Establecer user a null si no hay usuario conectado
-        setProfile({});
-        setLogged(false);
-      }
-    });
+    const [logged, setLogged] = useState(false)
 
-    return () => unsubscribe();
-  }, []);
+    useEffect(() => {
 
-  return (
-    <UserContext.Provider value={{ user, setUser, profile, setProfile, logged }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
+        const unsubscribe = onAuthStateChanged(auth, async (userConnected) => {
+            if (userConnected) {
+                const userDocRef = doc(db, 'users', userConnected.uid)
 
-export { UserContext, UserProvider };
+                try {
+                    const docSnap = await getDoc(userDocRef)
+
+                    if (!docSnap.exists()) {
+                        console.log('No such document!');
+                        setProfile({})
+                    }
+
+                    setProfile({ ...docSnap.data(), uid: userConnected.uid });                    
+                    console.log(docSnap.data())
+                    setLogged(true)
+
+                } catch (error) {
+                    console.log(error)
+                    setProfile({})
+                }
+
+            } else {
+                setProfile({})
+                setLogged(false)
+            }
+
+        })
+
+
+        return () => unsubscribe()
+
+    }, [])
+    return (<UserContext value={{ user, setUser, profile, setProfile, logged }}  > {children}</UserContext>)
+
+
+}
+
+export { UserContext, UserProvider }

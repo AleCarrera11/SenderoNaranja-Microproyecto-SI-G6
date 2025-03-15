@@ -102,8 +102,8 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
   const handleLogin = async (e) => {
     e.preventDefault();
   
-    if (!email.endsWith("@correo.unimet.edu.ve")) {
-      setError("Debes usar un correo institucional (@correo.unimet.edu.ve).");
+    if (!email.endsWith("@correo.unimet.edu.ve") && !email.endsWith("@unimet.edu.ve")) {
+      setError("Debes usar un correo institucional (@unimet.edu.ve o @correo.unimet.edu.ve).");
       return;
     }
   

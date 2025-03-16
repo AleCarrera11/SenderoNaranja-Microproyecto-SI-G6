@@ -20,7 +20,7 @@ const TimeSlot = ({ time, type }) => {
   return <div className={getTimeSlotClass()}>{time}</div>;
 };
 
-const DayCell = ({ day }) => {
+const DayCell = ({ day, isToday }) => {
   const hasTimeSlots = [
     "1",
     "2",
@@ -39,7 +39,7 @@ const DayCell = ({ day }) => {
   ].includes(day);
 
   return (
-    <div className={styles.dayCell}>
+    <div className={`${styles.dayCell} ${isToday ? styles.today : ''}`}>
       <div className={styles.dayNumber}>{day}</div>
       {hasTimeSlots && (
         <>
@@ -79,6 +79,15 @@ const WeekdayHeader = () => {
 };
 
 const CalendarHeader = () => {
+  const getCurrentDate = () => {
+    const months = [
+      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    ];
+    const now = new Date();
+    return `${months[now.getMonth()]}, ${now.getFullYear()}`;
+  };
+
   return (
     <>
     <nav className={styles.breadcrumb} aria-label="breadcrumb">
@@ -98,7 +107,7 @@ const CalendarHeader = () => {
                  <li aria-current="page">Calendario</li>
                </ol>
     </nav>
-      <h1 className={styles.monthTitle}>Feb, 2025</h1>
+      <h1 className={styles.monthTitle}>{getCurrentDate()}</h1>
 
     </>
   );
@@ -110,6 +119,9 @@ const Calendar = () => {
     (i + 1).toString(),
   );
   const nextMonthDays = ["1", "2"];
+
+  // Obtener el día actual
+  const today = new Date().getDate().toString();
 
   return (
     <>
@@ -124,7 +136,11 @@ const Calendar = () => {
             </div>
           ))}
           {currentMonthDays.map((day) => (
-            <DayCell key={`current-${day}`} day={day} />
+            <DayCell 
+              key={`current-${day}`} 
+              day={day} 
+              isToday={day === today}
+            />
           ))}
           {nextMonthDays.map((day) => (
             <DayCell key={`next-${day}`} day={day} />

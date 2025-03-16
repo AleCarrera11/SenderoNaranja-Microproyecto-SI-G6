@@ -36,6 +36,7 @@
     margin-bottom: 1.5rem;
     font-size: 28px;
     font-weight: 700;
+    color: #ee9a12; /* Color naranja para mantener el estilo de la app */
   }
   
   .calendarGrid {
@@ -56,6 +57,8 @@
   
   .dayCell {
     padding: 0.5rem;
+    min-height: 100px;
+    transition: background-color 0.3s ease;
   }
   
   .dayNumber {
@@ -86,5 +89,11 @@
     margin-top: 0.25rem;
     padding: 0.25rem 0.5rem;
     font-size: 12px;
+  }
+  
+  .today {
+    background-color: rgba(22, 163, 74, 0.1); /* Verde claro semi-transparente */
+    border-radius: 8px;
+    border: 2px solid #16a34a; /* Borde verde */
   }
   

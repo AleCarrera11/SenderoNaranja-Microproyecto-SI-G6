@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./PerfilActividad.module.css";
 import Comentarios from "../components/Comentarios/Comentarios";
 import {Footer} from "../components/Footer/Footer";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const StarIcon = () => (
   <svg

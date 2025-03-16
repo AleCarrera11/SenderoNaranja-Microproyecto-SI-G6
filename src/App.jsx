@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/Home/HomePage.jsx';
 import Login from './pages/Login/Login.jsx';
 import Registration from './pages/Registration/RegistrationForm.jsx';
@@ -10,11 +10,12 @@ import PerfilActividad from './pages/PerfilActividad/PerfilActividad.jsx';
 import Calendario from './pages/Calendario/Calendario.jsx';
 import { Navigation1 } from './pages/components/Navigation/Navigation1.jsx';
 import Protected from './pages/components/Proctected.jsx';
+import ParqueNacionalPage from './pages/Galeria/ParqueNacionalPage';
 
 export default function App() {
   
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
@@ -27,9 +28,10 @@ export default function App() {
             <Route path="/sabasnieves" element={<PerfilActividad />} />
             <Route path="/calendario" element={<Calendario />} />
           </Route>
+          <Route path="/galeria" element={<ParqueNacionalPage />} />
         </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

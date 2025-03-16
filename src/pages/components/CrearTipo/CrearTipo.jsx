@@ -1,5 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./CrearTipo.module.css";
+import { collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getFirestore } from "firebase/firestore";
+import {app} from "../../../credenciales.js"
+
+const db = getFirestore(app)
 
 const EditIcon = () => (
   <img
@@ -87,32 +91,65 @@ function CrearTipo({ onClose }) {
   const [newDescription, setNewDescription] = useState("");
   const [activities, setActivities] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
-  
-  const handleAddActivity = () => {
+  const [editingDocId, setEditingDocId] = useState(null); // Nuevo estado para el ID del documento en edición
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "activities"), (snapshot) => {
+      const activityList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setActivities(activityList);
+    });
+
+    return () => unsubscribe(); // Limpia el listener cuando el componente se desmonta
+  }, []);
+
+  const handleAddActivity = async () => {
     if (newType && newDescription) {
-      setActivities([...activities, { type: newType, description: newDescription }]);
-      setNewType(""); // Clear input after adding
-      setNewDescription(""); // Clear input after adding
+      try {
+        await addDoc(collection(db, "activities"), {
+          type: newType,
+          description: newDescription,
+        });
+        setNewType("");
+        setNewDescription("");
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
     }
   };
 
-  const handleDeleteActivity = (indexToDelete) => {
-    setActivities(activities.filter((_, index) => index !== indexToDelete));
+  const handleDeleteActivity = async (idToDelete) => {
+    try {
+      await deleteDoc(doc(db, "activities", idToDelete));
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
   };
 
-  const handleEditActivity = (index) => {
+  const handleEditActivity = (index, docId) => {
     setEditingIndex(index);
-    setNewType(activities[index].type); // Set the input value to current type
-    setNewDescription(activities[index].description); // Set the input value to current description
+    setEditingDocId(docId); // Guarda el ID del documento que se está editando
+    setNewType(activities[index].type);
+    setNewDescription(activities[index].description);
   };
 
-  const handleSaveActivity = (index) => {
-    const updatedActivities = [...activities];
-    updatedActivities[index] = { type: newType, description: newDescription };
-    setActivities(updatedActivities);
-    setEditingIndex(null);
-    setNewType(""); // Clear input after saving
-    setNewDescription(""); // Clear input after saving
+  const handleSaveActivity = async (index) => {
+    if (editingDocId) {
+      try {
+        await updateDoc(doc(db, "activities", editingDocId), {
+          type: newType,
+          description: newDescription,
+        });
+        setEditingIndex(null);
+        setEditingDocId(null); // Limpia el ID del documento en edición
+        setNewType("");
+        setNewDescription("");
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
+    }
   };
 
   return (
@@ -129,7 +166,7 @@ function CrearTipo({ onClose }) {
           </button>
         </header>
 
-        <section className={styles.content}>
+          <section className={styles.content}>
           <h2 className={styles.contentTitle}>Tipos/Clasificación de actividades</h2>
 
           <div className={styles.activityList}>
@@ -150,7 +187,7 @@ function CrearTipo({ onClose }) {
 
             {activities.map((activity, index) => (
               <ActivityItem
-                key={index}
+                key={activity.id} // Usa el ID del documento como clave
                 index={index}
                 type={editingIndex === index ? newType : activity.type}
                 description={editingIndex === index ? newDescription : activity.description}
@@ -158,8 +195,8 @@ function CrearTipo({ onClose }) {
                 onChangeType={setNewType}
                 onChangeDescription={setNewDescription}
                 onSave={() => handleSaveActivity(index)}
-                onEdit={() => handleEditActivity(index)}
-                onDelete={() => handleDeleteActivity(index)}
+                onEdit={() => handleEditActivity(index, activity.id)} // Pasa el ID del documento
+                onDelete={() => handleDeleteActivity(activity.id)} // Pasa el ID del documento
               />
             ))}
           </div>

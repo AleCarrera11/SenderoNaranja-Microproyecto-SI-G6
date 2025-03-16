@@ -2,33 +2,24 @@ import React, { use} from "react";
 import styles from "./TrailCard.module.css";
 import { UserContext } from "../../../Context/UserContex"; // Importa el contexto
 
-export const TrailCard = ({
-  image,
-  title,
-  activity,
-  rating,
-  description,
-  difficulty,
-  distance,
-  duration,
-}) => {
+export const TrailCard = ({destino}) => {
   
   const { profile } = use(UserContext); // Accede al contexto
   const isAdmin = profile?.tipoUser === "Administrador"; // Verifica si es administrador
 
   return (
     <article className={styles.trailCard}>
-      <img src={image} alt={title} className={styles.trailImage} />
+      <img src={destino.foto} alt={destino.nombreActividad} className={styles.trailImage} />
       <div className={styles.trailInfo}>
         <div className={styles.trailHeader}>
           <div>
-            <a href="/sabasnieves" className={styles.navLink}>
-              <h2 className={styles.title}>{title}</h2>
+            <a href={`/destinos/${destino.nombreActividad}`} className={styles.navLink}>
+              <h2 className={styles.title}>{destino.nombreActividad}</h2>
             </a>
-            <h3 className={styles.subtitle}>{activity}</h3>
+            <h3 className={styles.subtitle}>{destino.tipo}</h3>
           </div>
           <div className={styles.rating}>
-            {isAdmin && ( // Mostrar solo si el usuario es administrador
+            {isAdmin && (
               <>
                 <button className={styles.modifyButton}>Modificar</button>
                 <img
@@ -38,7 +29,7 @@ export const TrailCard = ({
                 />
               </>
             )}
-            <span>{rating}</span>
+            <span>{destino.rating}</span>
             <svg
               width="32"
               height="32"
@@ -53,22 +44,22 @@ export const TrailCard = ({
             </svg>
           </div>
         </div>
-        <p className={styles.trailDescription}>{description}</p>
+        <p className={styles.trailDescription}>{destino.descripcion}</p>
         <div className={styles.trailDetails}>
           <p className={styles.detail}>
             <span className={styles.label}>Dificultad</span>
-            <span>: {difficulty}</span>
+            <span>: {destino.dificultad}</span>
           </p>
           <p className={styles.detail}>
             <span className={styles.label}>Distancia:</span>
-            <span>{distance}</span>
+            <span>{destino.distancia} km</span>
           </p>
           <p className={styles.detail}>
             <span className={styles.label}>Duración estimada:</span>
-            <span>{duration}</span>
+            <span>{destino.duracion} h</span>
           </p>
         </div>
-        {isAdmin && ( // Mostrar solo si el usuario es administrador
+        {isAdmin && (
           <button className={styles.assignGuide}>
             Asignar guía a la actividad
           </button>

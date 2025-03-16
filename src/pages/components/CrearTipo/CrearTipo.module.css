@@ -5,7 +5,7 @@
     max-width: 1032px;
     margin: 0 auto; /* Centrado horizontalmente, sin márgenes verticales */
     position: fixed;
-    top: 20%; /* Centrado verticalmente */
+    top: 30%; /* Centrado verticalmente */
     left: 50%; /* Centrado horizontalmente */
     transform: translate(-50%, -50%);
     z-index: 9999;

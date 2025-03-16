@@ -1,5 +1,6 @@
-import React from "react";
+import React, { use} from "react";
 import styles from "./TrailCard.module.css";
+import { UserContext } from "../../../Context/UserContex"; // Importa el contexto
 
 export const TrailCard = ({
   image,
@@ -11,6 +12,10 @@ export const TrailCard = ({
   distance,
   duration,
 }) => {
+  
+  const { profile } = use(UserContext); // Accede al contexto
+  const isAdmin = profile?.tipoUser === "Administrador"; // Verifica si es administrador
+
   return (
     <article className={styles.trailCard}>
       <img src={image} alt={title} className={styles.trailImage} />
@@ -18,11 +23,21 @@ export const TrailCard = ({
         <div className={styles.trailHeader}>
           <div>
             <a href="/sabasnieves" className={styles.navLink}>
-            <h2 className={styles.title}>{title}</h2>
+              <h2 className={styles.title}>{title}</h2>
             </a>
             <h3 className={styles.subtitle}>{activity}</h3>
           </div>
           <div className={styles.rating}>
+            {isAdmin && ( // Mostrar solo si el usuario es administrador
+              <>
+                <button className={styles.modifyButton}>Modificar</button>
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/726c283faec5ec198eddb1043c800cdd28efbcf3"
+                  alt="Settings"
+                  className={styles.settingsIcon}
+                />
+              </>
+            )}
             <span>{rating}</span>
             <svg
               width="32"
@@ -53,6 +68,11 @@ export const TrailCard = ({
             <span>{duration}</span>
           </p>
         </div>
+        {isAdmin && ( // Mostrar solo si el usuario es administrador
+          <button className={styles.assignGuide}>
+            Asignar guía a la actividad
+          </button>
+        )}
       </div>
     </article>
   );

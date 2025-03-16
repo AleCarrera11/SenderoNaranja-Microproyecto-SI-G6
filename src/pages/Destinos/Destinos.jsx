@@ -1,10 +1,13 @@
 "use client";
-import React from "react";
+import React, { use, useState} from "react";
 import styles from "./Destinos.module.css";
 import SearchBar from "../components/Searchbar/Searchbar";
-import {TrailCard} from "../components/TrailCard/TrailCard";
-import {Pagination} from "../components/Pagination/Pagination";
+import { TrailCard } from "../components/TrailCard/TrailCard";
+import { Pagination } from "../components/Pagination/Pagination";
 import { Footer } from "../components/Footer/Footer";
+import { UserContext } from "../../Context/UserContex";
+import  CrearTipo  from "../components/CrearTipo/CrearTipo";
+
 
 const trailsData = [
   {
@@ -33,21 +36,45 @@ const trailsData = [
   },
 ];
 
-
 function Destinos() {
+  const { profile } = use(UserContext); // Accede al perfil del usuario
+  const isAdmin = profile?.tipoUser === "Administrador"; // Verifica si es Administrador
+  const [isModalOpen, setModalOpen] = useState(false); // Estado para el modal
+  
   return (
     <main className={styles.homePage}>
       <SearchBar />
+      
+      {/* Solo muestra los botones si el usuario es Administrador */}
+      {isAdmin && (
+        <section className={styles.buttonContainer}>
+          <button className={styles.actionButton} onClick={() => setModalOpen(true)}>
+            Crear tipo
+          </button>          
+          <button className={styles.actionButton}>Crear actividad</button>
+        </section>
+      )}
+
       <section className={styles.contentContainer}>
-          {trailsData.map((trail, index) => (
-            <TrailCard key={index} {...trail} />
-          ))}
-          <TrailCard {...trailsData[0]} />
+        {trailsData.map((trail, index) => (
+          <TrailCard key={index} {...trail} />
+        ))}
       </section>
-      <Pagination/>
+
+      <Pagination />
       <Footer />
+       {/* Overlay */}
+      {isModalOpen && (
+        <div className={styles.overlay} onClick={() => setModalOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <CrearTipo onClose={() => setModalOpen(false)} />
+          </div>
+        </div>
+      )}
+    
     </main>
   );
 }
 
 export default Destinos;
+

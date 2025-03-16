@@ -20,13 +20,13 @@ export default function App() {
         <Route path="/register" element={<Registration />} />
         <Route element={<Navigation1/>}>
           <Route path="/" element={<HomePage />} />
-          <Route element={<Protected />}>
+          
             <Route path="/destinos" element={<Destinos />} />
             <Route path="/about" element={<SobreNosotros />} />
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/sabasnieves" element={<PerfilActividad />} />
             <Route path="/calendario" element={<Calendario />} />
-          </Route>
+          
         </Route>
       </Routes>
     </Router>

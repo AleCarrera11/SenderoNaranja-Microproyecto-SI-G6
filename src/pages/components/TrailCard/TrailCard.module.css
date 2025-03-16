@@ -32,6 +32,8 @@
 }
 .trailInfo {
   flex: 1;
+  display: flex; /* Añadimos flexbox al contenedor */
+  flex-direction: column; /* Aseguramos que los elementos se apilen verticalmente */
 }
 @media (width<=991px) {
   .trailInfo {
@@ -44,6 +46,7 @@
   margin-bottom: 20px;
   display: flex;
 }
+
 .title {
   color: #000;
   font-family: Figtree, sans-serif;
@@ -107,4 +110,28 @@
 }
 .label {
   font-weight: 700;
+}
+
+
+.modifyButton {
+  font-size: 16px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family:  Figtree, sans-serif;
+}
+
+.assignGuide {
+  color: #d01114;
+  margin-top: auto;
+  font-size: 16px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: right;
+  font-family:  Figtree, sans-serif;
 }

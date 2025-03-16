@@ -1,5 +1,5 @@
 import React, { use, useEffect } from 'react'
-import { Outlet, useNavigate } from 'react-router'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../Context/UserContex'
 
 

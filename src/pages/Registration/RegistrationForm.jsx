@@ -4,7 +4,7 @@ import logoSI from "/logoSI.png";
 import { app } from "../../credenciales";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const db = getFirestore(app);
 const auth = getAuth(app);

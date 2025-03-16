@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./Destinos.module.css";
-import Navigation from "../components/Navigation/Navigation";
 import SearchBar from "../components/Searchbar/Searchbar";
 import {TrailCard} from "../components/TrailCard/TrailCard";
 import {Pagination} from "../components/Pagination/Pagination";

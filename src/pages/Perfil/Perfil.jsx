@@ -1,5 +1,4 @@
 import React, { use } from "react";
-import  Navigation  from "../components/Navigation/Navigation";
 import  Perfil1  from "../Registration/Perfil1";
 import  ActAsignados  from "../components/ActAsignados/ActAsignados";
 import { Footer } from "../components/Footer/Footer";

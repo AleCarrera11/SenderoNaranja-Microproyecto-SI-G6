@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./SobreNosotros.module.css";
-import { Navigation1 } from "../components/Navigation/Navigation1";
 import { Footer } from "../components/Footer/Footer";
 import instagramlogo from '/instagramlogo.png'
 import facebooklogo from '/facebooklogo.png'

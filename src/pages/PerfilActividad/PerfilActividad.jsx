@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./PerfilActividad.module.css";
-import Navigation from "../components/Navigation/Navigation";
 import Comentarios from "../components/Comentarios/Comentarios";
 import {Footer} from "../components/Footer/Footer";
 import { Link } from "react-router";

@@ -1,23 +1,22 @@
 import React, { use } from "react";
+import { Link, Outlet, useLocation, useNavigate} from "react-router";
 import styles from "./Navigation.module.css";
-import logoSI from '/logoSI.png'
-import { Link, Outlet } from 'react-router'
+import logoSI from "/logoSI.png";
 import { UserContext } from "../../../Context/UserContex";
 import { getAuth, signOut } from "firebase/auth";
 import { app } from "../../../credenciales";
 
-const auth = getAuth(app)
+const auth = getAuth(app);
 
 export function Navigation1() {
-
-  const profileContext = use(UserContext)
-  const { logged} = profileContext
+  const { logged } = use(UserContext);
+  const location = useLocation(); // Detecta la URL actual
+  const navigate = useNavigate(); // Para redirigir después del logout
 
   const handleLogout = async () => {
-
-    await signOut(auth)
-}
-
+    await signOut(auth);
+    navigate("/"); // Redirige a la página principal después de cerrar sesión
+  };
 
   return (
     <>
@@ -44,7 +43,7 @@ export function Navigation1() {
           {logged ? (
             location.pathname === "/perfil" ? (
               <li>
-                <button className={styles.loginButton} onClick ={handleLogout}>
+                <button className={styles.loginButton} onClick={handleLogout}>
                   Cerrar Sesión
                 </button>
               </li>
@@ -75,11 +74,8 @@ export function Navigation1() {
           )}
         </ul>
       </nav>
-    
-    <Outlet/>
+
+      <Outlet />
     </>
-
   );
-  
 }
-

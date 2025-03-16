@@ -35,8 +35,8 @@ export function Navigation1() {
             </Link>
           </li>
           <li>
-            <Link to="/gallery" className={styles.navLink}>
-              Galería
+            <Link to="/galeria" className={styles.navLink}>
+              Galeria
             </Link>
           </li>
 

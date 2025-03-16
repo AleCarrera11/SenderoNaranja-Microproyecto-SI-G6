@@ -6,7 +6,6 @@ import ActividadesReservadas from "../components/ActividadesReservadas/Actividad
 import { UserContext } from "../../Context/UserContex";
 
 
-
 export default function Perfil() {
   const { profile } = use(UserContext);  // Corregido: useContext en lugar de use
 

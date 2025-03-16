@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <main className={styles.homepage}>
       <div className={styles.container}>
-        <Navigation1 />
+        
         <Page1 />
         <Footer />       
       </div>

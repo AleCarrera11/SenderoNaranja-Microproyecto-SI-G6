@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./Calendario.module.css";
-import  Navigation  from "../components/Navigation/Navigation";
 
 
 const TimeSlot = ({ time, type }) => {
@@ -114,7 +113,6 @@ const Calendar = () => {
 
   return (
     <>
-    <Navigation/>
     <div className={styles.calendarContainer}>
       <div className={styles.calendarWrapper}>
         <CalendarHeader />

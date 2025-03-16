@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import styles from "./PerfilActividad.module.css";
-import Navigation from "../components/Navigation/Navigation";
 import Comentarios from "../components/Comentarios/Comentarios";
 import {Footer} from "../components/Footer/Footer";
 import { Link } from "react-router";
@@ -24,7 +23,7 @@ const StarIcon = () => (
 const PerfilActividad = () => {
   return (
     <>
-      <Navigation />
+      
       <main className={styles.container}>
         <nav className={styles.breadcrumb} aria-label="breadcrumb">
           <ol>

@@ -2,34 +2,35 @@ import React, { useState } from "react";
 import styles from "./RegistrationForm.module.css";
 import logoSI from "/logoSI.png";
 import { app } from "../../credenciales";
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  fetchSignInMethodsForEmail,
-  sendEmailVerification,
-  signOut
-} from "firebase/auth";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, setDoc, doc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, fetchSignInMethodsForEmail } from "firebase/auth";
 import { useNavigate } from "react-router";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
-const auth = getAuth(app);
 const db = getFirestore(app);
+const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-const ButtonGroup = ({ handleGoogleSignIn, isLoading }) => {
+const ButtonGroup = ({ registroComo, setRegistroComo, handleGoogleSignIn }) => {
   return (
     <>
+      <div className={styles.registerAs}>
+        <label className={styles.label}>Registrar como:</label>
+        <select
+          className={styles.select}
+          value={registroComo}
+          onChange={(e) => setRegistroComo(e.target.value)}
+        >
+          <option value="Estudiante">Estudiante</option>
+          <option value="Guía">Guía</option>
+        </select>
+      </div>
       <div className={styles.buttonRegister}>
-        <button type="submit" className={styles.btnRegister} disabled={isLoading}>
+        <button type="submit" className={styles.btnRegister}>
           Registrarse
         </button>
       </div>
       <div className={styles.socialButtons}>
-        <button type="button" className={styles.btnGoogle} onClick={handleGoogleSignIn} disabled={isLoading}>
+        <button type="button" className={styles.btnGoogle} onClick={handleGoogleSignIn}>
           <i className="ti ti-brand-google" />
           <span>Usar Google</span>
         </button>
@@ -49,7 +50,7 @@ const FormHeader = () => {
   );
 };
 
-const FormInput = ({ label, type, placeholder, value, onChange, disabled, required }) => {
+const FormInput = ({ label, type, placeholder, value, onChange }) => {
   return (
     <div className={styles.formGroup}>
       <label className={styles.label}>{label}</label>
@@ -59,14 +60,13 @@ const FormInput = ({ label, type, placeholder, value, onChange, disabled, requir
         value={value}
         onChange={onChange}
         className={styles.input}
-        disabled={disabled}
-        required={required}
       />
     </div>
   );
 };
 
 const RegistrationForm = () => {
+  const [registroComo, setRegistroComo] = useState("Estudiante");
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -74,124 +74,107 @@ const RegistrationForm = () => {
   const [contraseña, setContraseña] = useState("");
   const [confirmContraseña, setConfirmContraseña] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [generalError, setGeneralError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [generalError, setGeneralError] = useState(""); // Nuevo estado para errores generales
   const navigate = useNavigate();
 
-  const validarContraseña = (password) => {
-    if (password.length < 8) return "La contraseña debe tener al menos 8 caracteres";
-    if (!/[A-Z]/.test(password)) return "La contraseña debe contener al menos una mayúscula";
-    if (!/[a-z]/.test(password)) return "La contraseña debe contener al menos una minúscula";
-    if (!/[0-9]/.test(password)) return "La contraseña debe contener al menos un número";
-    return "";
-  };
-
   const handleGoogleSignIn = async () => {
-    setIsLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      const userEmail = user.email;
-
-      if (!userEmail.endsWith("@correo.unimet.edu.ve")) {
-        toast.error("Solo se permiten correos @correo.unimet.edu.ve");
-        await signOut(auth);
-        setIsLoading(false);
+      const userEmail = result.user.email;
+      const displayName = result.user.displayName || ""; // Verifica si displayName existe
+  
+      // Separar el nombre y apellido
+      const nameParts = displayName.split(" ");
+      const nombre = nameParts[0]; // Primer nombre
+      const apellido = nameParts.slice(1).join(" "); // Todo lo demás como apellido
+  
+      let registroComo = "";
+      if (userEmail.endsWith("@correo.unimet.edu.ve")) {
+        registroComo = "Estudiante";
+      } else if (userEmail.endsWith("@unimet.edu.ve")) {
+        registroComo = "Guía";
+      } else {
+        setGeneralError("Solo se permiten correos @correo.unimet.edu.ve o @unimet.edu.ve");
         return;
       }
-
-      // Guardar datos del usuario en Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        nombre: user.displayName?.split(' ')[0] || '',
-        apellido: user.displayName?.split(' ')[1] || '',
-        email: userEmail,
-        telefono: user.phoneNumber || '',
-        fechaRegistro: new Date(),
-        provider: 'google'
-      });
-
-      toast.success("¡Registro exitoso!");
-      setTimeout(() => navigate("/login"), 2000);
-    } catch (error) {
-      console.error("Error al registrar con Google:", error);
-      if (error.code === 'auth/popup-closed-by-user') {
-        toast.error("Se canceló el registro con Google");
+  
+      const signInMethods = await fetchSignInMethodsForEmail(auth, userEmail);
+  
+      if (signInMethods.length > 0) {
+        setGeneralError("Ya estás registrado. Por favor, inicia sesión.");
+        navigate("/login");
       } else {
-        toast.error("Error al registrar con Google. Intenta nuevamente.");
+        // Guardar en Firestore
+        await setDoc(doc(db, "users", result.user.uid), {
+          nombre: nombre,
+          apellido: apellido,
+          email: userEmail,
+          telefono: "", // Google no proporciona teléfono directamente
+          tipoUser: registroComo,
+        });
+  
+        console.log("Usuario registrado con Google:", userEmail, "como", registroComo);
+        navigate("/login");
       }
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      console.error("Error al autenticar con Google:", error);
+      setGeneralError("Error al autenticar con Google. Intenta nuevamente.");
     }
   };
+  
+  
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setPasswordError("");
-    setGeneralError("");
-
-    if (!nombre || !apellido || !email || !telefono || !contraseña || !confirmContraseña) {
-      setGeneralError("Todos los campos son obligatorios");
-      setIsLoading(false);
-      return;
-    }
-
-    const errorContraseña = validarContraseña(contraseña);
-    if (errorContraseña) {
-      setPasswordError(errorContraseña);
-      setIsLoading(false);
-      return;
-    }
+    setGeneralError(""); // Limpiar errores generales al intentar registrar
 
     if (contraseña !== confirmContraseña) {
-      setPasswordError("Las contraseñas no coinciden");
-      setIsLoading(false);
+      setPasswordError("Las contraseñas no coinciden.");
       return;
     }
 
-    if (!email.endsWith("@correo.unimet.edu.ve")) {
-      setGeneralError("Por favor, usa un correo válido de @correo.unimet.edu.ve");
-      setIsLoading(false);
+    const emailRegex =
+      registroComo === "Estudiante"
+        ? /^[a-zA-Z0-9._-]+@correo\.unimet\.edu\.ve$/
+        : /^[a-zA-Z0-9._-]+@unimet\.edu\.ve$/;
+
+    if (!emailRegex.test(email)) {
+      setGeneralError(
+        `Por favor, usa un correo válido de ${
+          registroComo === "Estudiante"
+            ? "@correo.unimet.edu.ve"
+            : "@unimet.edu.ve"
+        }`
+      );
       return;
     }
 
     try {
-      // Crear usuario en Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, contraseña);
-      const user = userCredential.user;
+      console.log("Usuario registrado:", userCredential.user.email);
 
-      // Guardar datos del usuario en Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        nombre,
-        apellido,
-        email,
-        telefono,
-        fechaRegistro: new Date(),
-        provider: 'email'
-      });
+      await setDoc( doc (db,'users',userCredential.user.uid),{
+        nombre: nombre,
+        apellido: apellido,
+        email: email,
+        telefono: telefono,
+        tipoUser: registroComo,
+      })
+      
+      setNombre("");
+      setApellido("");
+      setEmail("");
+      setTelefono("");
+      setContraseña("");
+      setConfirmContraseña("");
 
-      toast.success("¡Registro exitoso!");
-      setTimeout(() => navigate("/login"), 2000);
+      if (registroComo === "Estudiante") {
+        navigate("/login");
+      }
     } catch (error) {
       console.error("Error al registrar:", error);
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          setGeneralError("Este correo ya está registrado");
-          break;
-        case 'auth/invalid-email':
-          setGeneralError("Correo electrónico inválido");
-          break;
-        case 'auth/operation-not-allowed':
-          setGeneralError("El registro con email/contraseña no está habilitado");
-          break;
-        case 'auth/weak-password':
-          setPasswordError("La contraseña es demasiado débil");
-          break;
-        default:
-          setGeneralError("Error al registrar. Por favor, intenta de nuevo.");
-      }
-    } finally {
-      setIsLoading(false);
+      setGeneralError("Error al registrar. Por favor, intenta de nuevo.");
     }
   };
 
@@ -208,8 +191,6 @@ const RegistrationForm = () => {
                 placeholder="Ingresa tu nombre..."
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
-                disabled={isLoading}
-                required
               />
               <FormInput
                 label="Apellido:"
@@ -217,19 +198,15 @@ const RegistrationForm = () => {
                 placeholder="Ingresa tu apellido..."
                 value={apellido}
                 onChange={(e) => setApellido(e.target.value)}
-                disabled={isLoading}
-                required
               />
             </div>
             <div className={styles.formRow}>
               <FormInput
                 label="Email (institucional):"
                 type="email"
-                placeholder="info@correo.unimet.edu.ve"
+                placeholder="info@unimet.edu.ve"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-                required
               />
               <FormInput
                 label="Número de teléfono:"
@@ -237,40 +214,30 @@ const RegistrationForm = () => {
                 placeholder="+58 414-3686749"
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
-                disabled={isLoading}
-                required
               />
             </div>
             <div className={styles.formRow}>
               <FormInput
                 label="Contraseña:"
                 type="password"
-                placeholder="Mínimo 8 caracteres"
+                placeholder="xxxxxxxxx"
                 value={contraseña}
                 onChange={(e) => setContraseña(e.target.value)}
-                disabled={isLoading}
-                required
               />
               <FormInput
                 label="Confirma tu contraseña:"
                 type="password"
-                placeholder="Repite tu contraseña"
+                placeholder="xxxxxxxxx"
                 value={confirmContraseña}
                 onChange={(e) => setConfirmContraseña(e.target.value)}
-                disabled={isLoading}
-                required
               />
             </div>
             {passwordError && <p className={styles.error}>{passwordError}</p>}
-            {generalError && <p className={styles.error}>{generalError}</p>}
-            <ButtonGroup 
-              handleGoogleSignIn={handleGoogleSignIn}
-              isLoading={isLoading}
-            />
+            {generalError && <p className={styles.error}>{generalError}</p>} {/* Mostrar errores generales */}
+            <ButtonGroup registroComo={registroComo} setRegistroComo={setRegistroComo} handleGoogleSignIn={handleGoogleSignIn} />
           </form>
         </section>
       </main>
-      <ToastContainer />
     </>
   );
 };

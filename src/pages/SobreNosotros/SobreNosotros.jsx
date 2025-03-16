@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./SobreNosotros.module.css";
-import { Navigation1 } from "../components/Navigation/Navigation1";
 import { Footer } from "../components/Footer/Footer";
 import instagramlogo from '/instagramlogo.png'
 import facebooklogo from '/facebooklogo.png'
@@ -10,7 +9,7 @@ import correologo from '/correologo.png'
 const SobreNosotros = () => {
   return (
     <main>
-        <Navigation1 />
+       
       <section className={styles.visionSection}>
         <div className={styles.container}>
           <div className={styles.content}>

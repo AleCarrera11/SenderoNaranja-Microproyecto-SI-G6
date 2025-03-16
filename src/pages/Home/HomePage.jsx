@@ -1,5 +1,4 @@
 import React from "react";
-import { Navigation1 } from "../components/Navigation/Navigation1";
 import { Page1 } from "../components/Page1/Page1";
 import { Footer } from "../components/Footer/Footer";
 import styles from "./HomePage.module.css";

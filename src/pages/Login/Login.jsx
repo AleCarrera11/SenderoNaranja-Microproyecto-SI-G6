@@ -3,7 +3,7 @@ import styles from "./Login.module.css";
 import logoSI from "/logoSI.png";
 import { app } from "../../credenciales";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const auth = getAuth(app);

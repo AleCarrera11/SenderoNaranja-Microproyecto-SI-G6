@@ -38,7 +38,6 @@ const trailsData = [
 function Destinos() {
   return (
     <main className={styles.homePage}>
-      <Navigation />
       <SearchBar />
       <section className={styles.contentContainer}>
           {trailsData.map((trail, index) => (

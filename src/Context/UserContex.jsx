@@ -52,7 +52,7 @@ const UserProvider = ({ children }) => {
         return () => unsubscribe()
 
     }, [])
-    return (<UserContext value={{ user, setUser, profile, setProfile, logged }}  > {children}</UserContext>)
+    return (<UserContext value={{ user, setUser, profile, setProfile, logged, setLogged }}  > {children}</UserContext>)
 
 
 }

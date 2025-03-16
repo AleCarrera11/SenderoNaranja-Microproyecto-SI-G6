@@ -10,7 +10,7 @@ import correologo from '/correologo.png'
 const SobreNosotros = () => {
   return (
     <main>
-        <Navigation1 />
+       
       <section className={styles.visionSection}>
         <div className={styles.container}>
           <div className={styles.content}>

@@ -24,7 +24,7 @@ const StarIcon = () => (
 const PerfilActividad = () => {
   return (
     <>
-      <Navigation />
+      
       <main className={styles.container}>
         <nav className={styles.breadcrumb} aria-label="breadcrumb">
           <ol>

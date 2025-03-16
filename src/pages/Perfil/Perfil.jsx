@@ -14,7 +14,7 @@ export default function Perfil() {
   return (
     <main >
       <div >
-        <Navigation />
+        
         <Perfil1 />
         {profile.tipoUser === "Estudiante" && <ActividadesReservadas />}
         {profile.tipoUser === "Guía" && <ActAsignados />}

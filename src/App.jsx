@@ -8,20 +8,26 @@ import SobreNosotros from './pages/SobreNosotros/SobreNosotros.jsx';
 import Perfil from './pages/Perfil/Perfil.jsx';
 import PerfilActividad from './pages/PerfilActividad/PerfilActividad.jsx';
 import Calendario from './pages/Calendario/Calendario.jsx';
+import { Navigation1 } from './pages/components/Navigation/Navigation1.jsx';
+import Protected from './pages/components/Proctected.jsx';
 
 export default function App() {
   
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Registration />} />
-        <Route path="/destinos" element={<Destinos />} />
-        <Route path="/about" element={<SobreNosotros />} />
-        <Route path="/perfil" element={<Perfil />} />
-        <Route path="/sabasnieves" element={<PerfilActividad />} />
-        <Route path="/calendario" element={<Calendario />} />
+        <Route element={<Navigation1/>}>
+          <Route path="/" element={<HomePage />} />
+          <Route element={<Protected />}>
+            <Route path="/destinos" element={<Destinos />} />
+            <Route path="/about" element={<SobreNosotros />} />
+            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/sabasnieves" element={<PerfilActividad />} />
+            <Route path="/calendario" element={<Calendario />} />
+          </Route>
+        </Route>
       </Routes>
     </Router>
   );

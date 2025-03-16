@@ -1,43 +1,85 @@
-import React from "react";
+import React, { use } from "react";
 import styles from "./Navigation.module.css";
 import logoSI from '/logoSI.png'
+import { Link, Outlet } from 'react-router'
+import { UserContext } from "../../../Context/UserContex";
+import { getAuth, signOut } from "firebase/auth";
+import { app } from "../../../credenciales";
+
+const auth = getAuth(app)
 
 export function Navigation1() {
+
+  const profileContext = use(UserContext)
+  const { logged} = profileContext
+
+  const handleLogout = async () => {
+
+    await signOut(auth)
+}
+
+
   return (
-    <nav className={styles.navigation}>
-      <img
-        src={logoSI} className={styles.logo} alt="SN logo" 
-      />
-      <h1 className={styles.brand}>Sendero Naranja</h1>
-      <ul className={styles.navLinks}>
-        <li>
-          <a href="/login" className={styles.navLink}>
-            Destinos
-          </a>
-        </li>
-        <li>
-          <a href="/about" className={styles.navLink}>
-            Sobre Nosotros
-          </a>
-        </li>
-        <li>
-          <a href="/gallery" className={styles.navLink}>
-            Galeria
-          </a>
-        </li>
-        <li>
-          <a href="/register" className={styles.navLink}>
-            Registrarte
-          </a>
-        </li>
-        <li>
-        <a href="/login" className={styles.loginButton}>
-            Iniciar Sesión
-          </a> 
-        </li>
-      </ul>
-     
-    </nav>
+    <>
+      <nav className={styles.navigation}>
+        <img src={logoSI} className={styles.logo} alt="SN logo" />
+        <h1 className={styles.brand}>Sendero Naranja</h1>
+        <ul className={styles.navLinks}>
+          <li>
+            <Link to="/destinos" className={styles.navLink}>
+              Destinos
+            </Link>
+          </li>
+          <li>
+            <Link to="/about" className={styles.navLink}>
+              Sobre Nosotros
+            </Link>
+          </li>
+          <li>
+            <Link to="/gallery" className={styles.navLink}>
+              Galería
+            </Link>
+          </li>
+
+          {logged ? (
+            location.pathname === "/perfil" ? (
+              <li>
+                <button className={styles.loginButton} onClick ={handleLogout}>
+                  Cerrar Sesión
+                </button>
+              </li>
+            ) : (
+              <li>
+                <Link to="/perfil">
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/1cba45b34d42aeba2e4dd2b7ba764ec3e19452406f2e1c69f3204903f6cddab5?placeholderIfAbsent=true&apiKey=2b87a35b18524de3a0e8a8f5cf91b8a5"
+                    alt="Perfil"
+                    className={styles.menuIcon}
+                  />
+                </Link>
+              </li>
+            )
+          ) : (
+            <>
+              <li>
+                <Link to="/register" className={styles.navLink}>
+                  Registrarte
+                </Link>
+              </li>
+              <li>
+                <Link to="/login" className={styles.loginButton}>
+                  Iniciar Sesión
+                </Link>
+              </li>
+            </>
+          )}
+        </ul>
+      </nav>
+    
+    <Outlet/>
+    </>
+
   );
+  
 }
 

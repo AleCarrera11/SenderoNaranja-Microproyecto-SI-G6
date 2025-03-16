@@ -24,7 +24,7 @@ export default function App() {
             <Route path="/destinos" element={<Destinos />} />
             <Route path="/about" element={<SobreNosotros />} />
             <Route path="/perfil" element={<Perfil />} />
-            <Route path="/sabasnieves" element={<PerfilActividad />} />
+            <Route path="/destinos/:nombreActividad" element={<PerfilActividad />} />
             <Route path="/calendario" element={<Calendario />} />
           
         </Route>

@@ -1,11 +1,18 @@
 import React, { use} from "react";
 import styles from "./TrailCard.module.css";
 import { UserContext } from "../../../Context/UserContex"; // Importa el contexto
+import { useNavigate } from "react-router";
+
 
 export const TrailCard = ({destino}) => {
   
   const { profile } = use(UserContext); // Accede al contexto
   const isAdmin = profile?.tipoUser === "Administrador"; // Verifica si es administrador
+  const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate(`/destinos/${destino.nombreActividad}`);
+    };
 
   return (
     <article className={styles.trailCard}>
@@ -13,9 +20,7 @@ export const TrailCard = ({destino}) => {
       <div className={styles.trailInfo}>
         <div className={styles.trailHeader}>
           <div>
-            <a href={`/destinos/${destino.nombreActividad}`} className={styles.navLink}>
-              <h2 className={styles.title}>{destino.nombreActividad}</h2>
-            </a>
+            <h2 className={styles.title} onClick={handleClick}>{destino.nombreActividad} </h2>
             <h3 className={styles.subtitle}>{destino.tipo}</h3>
           </div>
           <div className={styles.rating}>

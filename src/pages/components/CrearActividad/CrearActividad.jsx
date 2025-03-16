@@ -178,7 +178,7 @@ const CrearActividad =({ onClose })=> {
             >
             <DeleteIcon />
         </button>
-      </header>;
+      </header>
         <form className={styles.formContainer}>
           <div className={styles.twoColumnGrid}>
             <FormInput

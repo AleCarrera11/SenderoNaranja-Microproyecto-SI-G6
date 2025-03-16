@@ -52,6 +52,7 @@
   font-family: Figtree, sans-serif;
   font-size: 36px;
   font-weight: 700;
+  cursor: pointer;
 }
 @media (width<=640px) {
   .title {

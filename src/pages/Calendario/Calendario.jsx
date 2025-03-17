@@ -499,8 +499,6 @@ const Calendar = () => {
         <div className={styles.modalContent}>
           <PreReserva 
             selectedDay={selectedSlot?.date} 
-            selectedSlot={selectedSlot}
-            nombreActividad={nombreActividad}
             onClose={handleClosePreReserva}
           />
         </div>

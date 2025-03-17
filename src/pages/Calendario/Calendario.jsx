@@ -1,6 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Calendario.module.css";
+import PreReserva from "../Pre-Reserva/PreReserva";
 
 
 const TimeSlot = ({ time, type }) => {
@@ -20,7 +21,7 @@ const TimeSlot = ({ time, type }) => {
   return <div className={getTimeSlotClass()}>{time}</div>;
 };
 
-const DayCell = ({ day }) => {
+const DayCell = ({ day, onDayClick }) => {
   const hasTimeSlots = [
     "1",
     "2",
@@ -38,8 +39,17 @@ const DayCell = ({ day }) => {
     "2",
   ].includes(day);
 
+  const handleClick = () => {
+    if (hasTimeSlots) {
+      onDayClick(day);
+    }
+  };
+
   return (
-    <div className={styles.dayCell}>
+    <div 
+      className={`${styles.dayCell} ${hasTimeSlots ? styles.clickable : ''}`} 
+      onClick={handleClick}
+    >
       <div className={styles.dayNumber}>{day}</div>
       {hasTimeSlots && (
         <>
@@ -105,6 +115,18 @@ const CalendarHeader = () => {
 };
 
 const Calendar = () => {
+  const [showPreReserva, setShowPreReserva] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  const handleDayClick = (day) => {
+    setSelectedDay(day);
+    setShowPreReserva(true);
+  };
+
+  const handleClosePreReserva = () => {
+    setShowPreReserva(false);
+  };
+
   const prevMonthDays = ["27", "28", "29", "30", "31"];
   const currentMonthDays = Array.from({ length: 28 }, (_, i) =>
     (i + 1).toString(),
@@ -124,14 +146,33 @@ const Calendar = () => {
             </div>
           ))}
           {currentMonthDays.map((day) => (
-            <DayCell key={`current-${day}`} day={day} />
+            <DayCell 
+              key={`current-${day}`} 
+              day={day} 
+              onDayClick={handleDayClick}
+            />
           ))}
           {nextMonthDays.map((day) => (
-            <DayCell key={`next-${day}`} day={day} />
+            <DayCell 
+              key={`next-${day}`} 
+              day={day} 
+              onDayClick={handleDayClick}
+            />
           ))}
         </div>
       </div>
     </div>
+
+    {showPreReserva && (
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <PreReserva 
+            selectedDay={selectedDay} 
+            onClose={handleClosePreReserva}
+          />
+        </div>
+      </div>
+    )}
     </>
   );
 };

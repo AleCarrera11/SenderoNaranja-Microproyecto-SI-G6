@@ -1,0 +1,160 @@
+.container {
+    border-radius: 100px;
+    padding: 45px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    background-color: #fff;
+  }
+  @media (max-width: 991px) {
+    .container {
+      border-radius: 50px;
+      padding: 30px;
+    }
+  }
+  @media (max-width: 640px) {
+    .container {
+      border-radius: 25px;
+      padding: 20px;
+    }
+  }
+  .contentWrapper {
+    max-width: 951px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .closeButton {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #000;
+    cursor: pointer;
+    font: 48px "Noto Sans", sans-serif;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .title {
+    color: #da5702;
+    margin-bottom: 20px;
+    text-align: center;
+    font: 700 48px "Figtree", sans-serif;
+  }
+  @media (max-width: 991px) {
+    .title {
+      font-size: 36px;
+    }
+  }
+  @media (max-width: 640px) {
+    .title {
+      font-size: 28px;
+    }
+  }
+  .identifier {
+    text-align: center;
+    margin-bottom: 20px;
+    font: 32px "Figtree", sans-serif;
+  }
+  @media (max-width: 640px) {
+    .identifier {
+      font-size: 24px;
+    }
+  }
+  .trailName {
+    color: #da5702;
+    margin-bottom: 5px;
+    font: 700 48px "Figtree", sans-serif;
+  }
+  @media (max-width: 991px) {
+    .trailName {
+      font-size: 36px;
+    }
+  }
+  @media (max-width: 640px) {
+    .trailName {
+      font-size: 28px;
+    }
+  }
+  .activityType {
+    margin-bottom: 30px;
+    font: 24px "Figtree", sans-serif;
+  }
+  @media (max-width: 640px) {
+    .activityType {
+      font-size: 20px;
+    }
+  }
+  .infoContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
+  @media (max-width: 991px) {
+    .infoContainer {
+      flex-direction: column;
+    }
+  }
+  .detailsColumn {
+    flex: 1;
+  }
+  .detailItem {
+    font: 24px/50px "Figtree", sans-serif;
+  }
+  @media (max-width: 640px) {
+    .detailItem {
+      font-size: 18px;
+      line-height: 40px;
+    }
+  }
+  .detailLabel {
+    font-weight: 700;
+  }
+  .detailValue {
+    font-weight: 400;
+  }
+  .trailImage {
+    width: 261px;
+    height: 246px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  @media (max-width: 991px) {
+    .trailImage {
+      margin: 20px auto;
+      display: block;
+    }
+  }
+  @media (max-width: 640px) {
+    .trailImage {
+      width: 100%;
+      height: auto;
+    }
+  }
+  .recommendations {
+    text-align: center;
+    margin-bottom: 20px;
+    font: 24px "Figtree", sans-serif;
+  }
+  @media (max-width: 640px) {
+    .recommendations {
+      font-size: 18px;
+    }
+  }
+  .recommendationsLabel {
+    color: #ee9a12;
+    font-weight: 700;
+    margin-right: 5px;
+  }
+  .recommendationsText {
+    font-weight: 400;
+  }
+  .farewell {
+    color: #da5702;
+    text-align: center;
+    font: 700 32px "Figtree", sans-serif;
+  }
+  @media (max-width: 640px) {
+    .farewell {
+      font-size: 24px;
+    }
+  }

@@ -1,0 +1,209 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding: 64px;
+  }
+  
+  @media (max-width: 991px) {
+    .container {
+      padding: 32px;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .container {
+      padding: 16px;
+    }
+  }
+  
+  .breadcrumb {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 40px;
+    font: 20px Poppins, sans-serif;
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .breadcrumbItem {
+    color: #000;
+  }
+  
+  .breadcrumbItem a {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  .breadcrumbItem a:hover,
+  .breadcrumbItem a:focus {
+    text-decoration: underline;
+  }
+  
+  .breadcrumbSeparator {
+    color: #000;
+  }
+  
+  .currentPage {
+    color: #000;
+    font-weight: bold;
+  }
+  
+  .pageTitle {
+    color: #da5702;
+    margin-bottom: 24px;
+    font: 700 48px Figtree, sans-serif;
+  }
+  
+  .contentWrapper {
+    display: flex;
+    gap: 40px;
+  }
+  
+  @media (max-width: 991px) {
+    .contentWrapper {
+      flex-direction: column;
+    }
+  }
+  
+  .formSection {
+    flex: 1;
+  }
+  
+  .destinationTitle {
+    font: 700 36px Figtree, sans-serif;
+  }
+  
+  .activityType {
+    margin-bottom: 40px;
+    font: 24px Figtree, sans-serif;
+  }
+  
+  .ratingWrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  
+  .ratingScore {
+    font: 32px Figtree, sans-serif;
+  }
+  
+  .tripDetails {
+    margin-bottom: 40px;
+    font: 24px/40px Figtree, sans-serif;
+  }
+  
+  .boldText {
+    font-weight: 700;
+  }
+  
+  .formTitle {
+    color: #da5702;
+    margin-bottom: 16px;
+    font: 700 24px Figtree, sans-serif;
+  }
+  
+  .formGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+  
+  @media (max-width: 640px) {
+    .formGrid {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
+  
+  .formField {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .formLabel {
+    color: #555;
+    font: 24px Figtree, sans-serif;
+  }
+  
+  .formInput,
+  .formInputEmail {
+    background-color: #eee;
+    border-radius: 8px;
+    padding: 12px;
+    color: #555;
+    font: 20px Poppins, sans-serif;
+    border: 1px solid #ccc;
+  }
+  
+  .formInputEmail {
+    font-size: 16px;
+  }
+  
+  .formInput:focus,
+  .formInputEmail:focus {
+    outline: none;
+    border-color: #da5702;
+    box-shadow: 0 0 0 2px rgba(218, 87, 2, 0.2);
+  }
+  
+  .imageSection {
+    flex: 1;
+  }
+  
+  .tripImage {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .tripInfo {
+    font: 24px/40px Figtree, sans-serif;
+    margin-top: 20px;
+  }
+  
+  .collaborationSection {
+    margin-top: 40px;
+  }
+  
+  .collaborationTitle {
+    color: #da5702;
+    margin-bottom: 16px;
+    font: 700 24px Figtree, sans-serif;
+  }
+  
+  .collaborationText {
+    margin-bottom: 24px;
+    font: 20px/30px Figtree, sans-serif;
+  }
+  
+  .paymentButton {
+    width: 300px;
+    height: 40px;
+    background-color: #ee9a12;
+    border-radius: 100px;
+    color: #ffffff;
+    font: 700 16px Poppins, sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .paymentButton:hover,
+  .paymentButton:focus {
+    background-color: #d68a10;
+    outline: none;
+  }
+  
+  .paymentButton:focus {
+    box-shadow: 0 0 0 2px rgba(238, 154, 18, 0.4);
+  }
+  
+  @media (max-width: 640px) {
+    .paymentButton {
+      width: 100%;
+    }
+  }

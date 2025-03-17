@@ -11,6 +11,7 @@ import Calendario from './pages/Calendario/Calendario.jsx';
 import { Navigation1 } from './pages/components/Navigation/Navigation1.jsx';
 import Protected from './pages/components/Proctected.jsx';
 import ParqueNacionalPage from './pages/Galeria/ParqueNacionalPage';
+import ReservationForm from './pages/Reserva/ReservaForm';
 
 export default function App() {
   
@@ -30,6 +31,7 @@ export default function App() {
           </Route>
           <Route path="/galeria" element={<ParqueNacionalPage />} />
         </Route>
+        <Route path="/reserva" element={<ReservationForm />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,0 +1,246 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #fff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 60px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  background-color: #da5702;
+  color: #fff;
+  padding: 20px;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  margin: 0;
+  font-family: Poppins;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.content {
+  padding: 30px;
+}
+
+.fieldContainer {
+  margin-bottom: 24px;
+}
+
+.label {
+  display: block;
+  color: #555;
+  font-family: Poppins;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.valueContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.value {
+  color: #333;
+  font-family: Poppins;
+  font-size: 16px;
+}
+
+.editButton {
+  background-color: #ee9a12;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: Poppins;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.editButton:hover {
+  background-color: #d88a0f;
+}
+
+.editContainer {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.editInput {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: Poppins;
+  font-size: 16px;
+}
+
+.editTextarea {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: Poppins;
+  font-size: 16px;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.editActions {
+  display: flex;
+  gap: 8px;
+}
+
+.saveButton, .cancelButton {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: Poppins;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.saveButton {
+  background-color: #ee9a12;
+  color: #fff;
+  border: none;
+}
+
+.saveButton:hover {
+  background-color: #d88a0f;
+}
+
+.cancelButton {
+  background-color: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.cancelButton:hover {
+  background-color: #e5e5e5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.imageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.imagePreview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.imageActions {
+  display: flex;
+  gap: 12px;
+}
+
+.uploadButton {
+  background-color: #ee9a12;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: Poppins;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.uploadButton:hover {
+  background-color: #d88a0f;
+}
+
+.uploadButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-family: Poppins;
+  font-size: 16px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .modalContent {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .editContainer {
+    flex-direction: column;
+  }
+
+  .editActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

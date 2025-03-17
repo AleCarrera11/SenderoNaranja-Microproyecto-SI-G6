@@ -27,7 +27,7 @@ export default function App() {
             <Route path="/about" element={<SobreNosotros />} />
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/destinos/:nombreActividad" element={<PerfilActividad />} />
-            <Route path="/calendario" element={<Calendario />} />
+            <Route path="/calendario/:nombreActividad" element={<Calendario />} />
             <Route path="/reserva" element={<ReservationForm />} />
             <Route path="/galeria" element={<ParqueNacionalPage />} />
         </Route>

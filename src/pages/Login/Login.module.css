@@ -255,3 +255,54 @@
   margin-top: 10px;
   text-align: center; /* Centrar el texto de error */
 }
+
+.forgotPassword {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.resetPasswordButton {
+  background: none;
+  border: none;
+  color: #4A90E2;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.resetPasswordButton:disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.loginButton:disabled,
+.socialButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.inputField:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.loadingSpinner {
+  display: inline-flex;
+  align-items: center;
+}
+
+.loadingSpinner::after {
+  content: '';
+  width: 1em;
+  height: 1em;
+  margin-left: 0.5em;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

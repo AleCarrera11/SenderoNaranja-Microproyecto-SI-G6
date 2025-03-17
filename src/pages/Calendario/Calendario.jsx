@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Calendario.module.css";
 import { db, auth } from "../../credenciales";
-import { collection, addDoc, getDocs, query, where, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc } from "firebase/firestore";
 
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
@@ -14,6 +14,8 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
         return styles.middaySlot;
       case "afternoon":
         return styles.afternoonSlot;
+      case "evening":
+        return styles.eveningSlot;
       default:
         return "";
     }
@@ -33,7 +35,7 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
   );
 };
 
-const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, availableSlots }) => {
+const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDeleteSlot, availableSlots }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   const handleAddClick = () => {
@@ -69,10 +71,16 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, avai
             Agregar 8:00am
           </button>
           <button onClick={() => {
-            onAddSlot(day, "10:00am", "midday");
+            onAddSlot(day, "10:00am", "morning");
             setShowAddMenu(false);
           }}>
             Agregar 10:00am
+          </button>
+          <button onClick={() => {
+            onAddSlot(day, "12:00pm", "midday");
+            setShowAddMenu(false);
+          }}>
+            Agregar 12:00pm
           </button>
           <button onClick={() => {
             onAddSlot(day, "2:00pm", "afternoon");
@@ -80,16 +88,46 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, avai
           }}>
             Agregar 2:00pm
           </button>
+          <button onClick={() => {
+            onAddSlot(day, "4:00pm", "afternoon");
+            setShowAddMenu(false);
+          }}>
+            Agregar 4:00pm
+          </button>
+          <button onClick={() => {
+            onAddSlot(day, "6:00pm", "evening");
+            setShowAddMenu(false);
+          }}>
+            Agregar 6:00pm
+          </button>
+          <button onClick={() => {
+            onAddSlot(day, "8:00pm", "evening");
+            setShowAddMenu(false);
+          }}>
+            Agregar 8:00pm
+          </button>
         </div>
       )}
       {daySlots.map((slot) => (
-        <TimeSlot
-          key={`${slot.date}-${slot.time}`}
-          time={slot.time}
-          type={slot.type}
-          date={slot.date}
-          onSelect={() => {/* Manejar selección */}}
-        />
+        <div key={`${slot.date}-${slot.time}`} className={styles.slotContainer}>
+          <TimeSlot
+            time={slot.time}
+            type={slot.type}
+            date={slot.date}
+            onSelect={() => {/* Manejar selección */}}
+          />
+          {isAdmin && (
+            <button 
+              className={styles.deleteSlotButton}
+              onClick={() => {
+                console.log('Slot a eliminar:', slot); // Para depuración
+                onDeleteSlot(slot.id);
+              }}
+            >
+              ×
+            </button>
+          )}
+        </div>
       ))}
     </div>
   );
@@ -259,16 +297,43 @@ const Calendar = () => {
         available: true
       };
 
-      await addDoc(collection(db, 'availableSlots'), slotData);
-      // Recargar horarios
+      const docRef = await addDoc(collection(db, 'availableSlots'), slotData);
       const key = `${date}-${time}`;
+      
       setAvailableSlots(prev => ({
         ...prev,
-        [key]: slotData
+        [key]: { ...slotData, id: docRef.id }
       }));
     } catch (error) {
       console.error('Error adding time slot:', error);
       alert('Error al agregar el horario');
+    }
+  };
+
+  const handleDeleteTimeSlot = async (slotId) => {
+    if (!isAdmin) {
+      alert('Solo los administradores pueden eliminar horarios');
+      return;
+    }
+
+    try {
+      console.log('Intentando eliminar slot con ID:', slotId);
+      
+      await deleteDoc(doc(db, 'availableSlots', slotId));
+      
+      setAvailableSlots(prev => {
+        const newSlots = { ...prev };
+        Object.keys(newSlots).forEach(key => {
+          if (newSlots[key].id === slotId) {
+            delete newSlots[key];
+          }
+        });
+        return newSlots;
+      });
+    } catch (error) {
+      console.error('Error deleting time slot:', error);
+      console.error('Error details:', error.message);
+      alert('Error al eliminar el horario: ' + error.message);
     }
   };
 
@@ -341,6 +406,7 @@ const Calendar = () => {
               isCurrentMonth={true}
               isAdmin={isAdmin}
               onAddSlot={handleAddTimeSlot}
+              onDeleteSlot={handleDeleteTimeSlot}
               availableSlots={availableSlots}
             />
           ))}
@@ -352,6 +418,7 @@ const Calendar = () => {
               isCurrentMonth={false}
               isAdmin={isAdmin}
               onAddSlot={handleAddTimeSlot}
+              onDeleteSlot={handleDeleteTimeSlot}
               availableSlots={availableSlots}
             />
           ))}

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./Calendario.module.css";
 import { db, auth } from "../../credenciales";
 import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc } from "firebase/firestore";
+import PreReserva from '../Pre-Reserva/PreReserva';
 
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
@@ -35,7 +36,7 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
   );
 };
 
-const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDeleteSlot, availableSlots }) => {
+const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDeleteSlot, availableSlots, onTimeSlotSelect }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   const handleAddClick = () => {
@@ -114,7 +115,7 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDe
             time={slot.time}
             type={slot.type}
             date={slot.date}
-            onSelect={() => {/* Manejar selección */}}
+            onSelect={() => onTimeSlotSelect(slot)}
           />
           {isAdmin && (
             <button 
@@ -239,6 +240,7 @@ const Calendar = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [availableSlots, setAvailableSlots] = useState({});
+  const [showPreReserva, setShowPreReserva] = useState(false);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -382,6 +384,18 @@ const Calendar = () => {
     (_, i) => (i + 1).toString()
   );
 
+  const handleTimeSlotSelect = (slot) => {
+    if (!isAdmin) { // Solo para usuarios no administradores
+      setSelectedSlot(slot);
+      setShowPreReserva(true);
+    }
+  };
+
+  const handleClosePreReserva = () => {
+    setShowPreReserva(false);
+    setSelectedSlot(null);
+  };
+
   return (
     <>
     <div className={styles.calendarContainer}>
@@ -408,6 +422,7 @@ const Calendar = () => {
               onAddSlot={handleAddTimeSlot}
               onDeleteSlot={handleDeleteTimeSlot}
               availableSlots={availableSlots}
+              onTimeSlotSelect={handleTimeSlotSelect}
             />
           ))}
           {nextMonthDays.map((day) => (
@@ -420,6 +435,7 @@ const Calendar = () => {
               onAddSlot={handleAddTimeSlot}
               onDeleteSlot={handleDeleteTimeSlot}
               availableSlots={availableSlots}
+              onTimeSlotSelect={handleTimeSlotSelect}
             />
           ))}
         </div>
@@ -430,7 +446,7 @@ const Calendar = () => {
       <div className={styles.modalOverlay}>
         <div className={styles.modalContent}>
           <PreReserva 
-            selectedDay={selectedDay} 
+            selectedDay={selectedSlot?.date} 
             onClose={handleClosePreReserva}
           />
         </div>

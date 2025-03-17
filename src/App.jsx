@@ -28,10 +28,10 @@ export default function App() {
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/destinos/:nombreActividad" element={<PerfilActividad />} />
             <Route path="/calendario" element={<Calendario />} />
+            <Route path="/reserva" element={<ReservationForm />} />
           </Route>
           <Route path="/galeria" element={<ParqueNacionalPage />} />
         </Route>
-        <Route path="/reserva" element={<ReservationForm />} />
       </Routes>
     </BrowserRouter>
   );

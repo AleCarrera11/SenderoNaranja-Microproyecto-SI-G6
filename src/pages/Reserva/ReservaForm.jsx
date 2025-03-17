@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, use } from 'react';
 import styles from './ReservationForm.module.css';
+import BotonPaypal from '../components/BotonPaypal/BotonPaypal';
+import ReservationConfirmation from '../components/ReservaConfirmada/ReservationConfirmation';
+import { UserContext } from '../../Context/UserContex';
 
 const ReservationForm = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +11,9 @@ const ReservationForm = () => {
     email: 'maria.perez@correo.unimet.edu.ve',
     phone: '+58 414-3686749'
   });
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const { profile } = use(UserContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +26,10 @@ const ReservationForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
+  };
+
+  const handlePaymentSuccess = () => {
+    setShowConfirmation(true);
   };
 
   const breadcrumbItems = ['Destinos', 'Sabas Nieves', 'Calendario', 'Reserva'];
@@ -108,13 +118,31 @@ const ReservationForm = () => {
       </div>
       <section className={styles.collaborationSection}>
         <h3 className={styles.collaborationTitle}>Colaboración</h3>
-        <p className={styles.collaborationText}>
-          Para asegurar tu reserva, debes realizar <span className={styles.boldText}>una colaboración de 3$.</span> Tu aporte servirá para remunerar a nuestros guías expertos, quienes te guiarán a través de la ruta y para seguir organizando más aventuras
-        </p>
-        <button className={styles.paymentButton} onClick={() => console.log('Payment initiated')}>
-          Pagar con PayPal
-        </button>
+        {profile?.tipoUser === "Estudiante" ? (
+          <>
+            <p className={styles.collaborationText}>
+              Para asegurar tu reserva, debes realizar <span className={styles.boldText}>una colaboración de 3$.</span> Tu aporte servirá para remunerar a nuestros guías expertos, quienes te guiarán a través de la ruta y para seguir organizando más aventuras
+            </p>
+            <BotonPaypal onSuccess={handlePaymentSuccess} />
+          </>
+        ) : (
+          <p className={styles.collaborationText}>
+            Acceso especial para {profile?.tipoUser}
+          </p>
+        )}
       </section>
+
+      {/* Modal de Confirmación */}
+      {showConfirmation && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <ReservationConfirmation 
+              onClose={() => setShowConfirmation(false)}
+              formData={formData}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

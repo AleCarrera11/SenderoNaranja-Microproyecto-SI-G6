@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ReservationConfirmation.module.css';
 
-const ReservationConfirmation = () => {
+const ReservationConfirmation = ({ onClose }) => {
   const reservationDetails = [
     { label: 'Participante', value: 'María Perez' },
     { label: 'Email', value: 'maria.perez@correo.unimet.edu.ve' },
@@ -18,7 +18,13 @@ const ReservationConfirmation = () => {
       <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;700&family=Noto+Sans:wght@400&display=swap" rel="stylesheet" />
       <div className={styles.container}>
         <div className={styles.contentWrapper}>
-          <button className={styles.closeButton} aria-label="Cerrar">x</button>
+          <button 
+            className={styles.closeButton} 
+            onClick={onClose}
+            aria-label="Cerrar"
+          >
+            x
+          </button>
           <h1 className={styles.title}>¡Su reserva ha sido exitosa!</h1>
           <p className={styles.identifier}>Identificador: SN0702202586</p>
           <h2 className={styles.trailName}>SABAS NIEVES</h2>

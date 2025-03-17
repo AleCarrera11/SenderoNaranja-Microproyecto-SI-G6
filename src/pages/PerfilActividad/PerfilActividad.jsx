@@ -7,6 +7,7 @@ import { Link, useParams } from "react-router";
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import { app } from "../../credenciales";
 import { UserContext } from "../../Context/UserContex";
+import EditarActividad from "../components/EditarActividad/EditarActividad";
 
 const db = getFirestore(app);
 
@@ -22,7 +23,8 @@ const StarIcon = () => (
 const PerfilActividad = () => {
   const { nombreActividad } = useParams();
   const [actividad, setActividad] = useState(null);
-  const { profile } = useContext(UserContext); // Obtener el perfil del usuario
+  const { profile } = useContext(UserContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchActividad = async () => {
@@ -88,7 +90,7 @@ const PerfilActividad = () => {
               </div>
               <div className={styles.buttonContainer}>
                 {profile?.tipoUser === "Estudiante" && (
-                  <Link to="/calendario" className={styles.bookingButton}>
+                  <Link to={`/calendario/${nombreActividad}`} className={styles.bookingButton}>
                     Ver disponibilidad
                   </Link>
                 )}
@@ -99,12 +101,15 @@ const PerfilActividad = () => {
                 )}
                 {profile?.tipoUser === "Administrador" && (
                   <>
-                    <Link to="/calendario" className={styles.bookingButton}>
+                    <Link to={`/calendario/${nombreActividad}`} className={styles.bookingButton}>
                       Ver disponibilidad
                     </Link>
-                    <Link to="/editar" className={styles.bookingButton}>
+                    <button 
+                      className={styles.bookingButton}
+                      onClick={() => setIsModalOpen(true)}
+                    >
                       Editar
-                    </Link>
+                    </button>
                   </>
                 )}
               </div>
@@ -118,6 +123,13 @@ const PerfilActividad = () => {
       </main>
       <Comentarios />
       <Footer />
+      {isModalOpen && (
+        <div className={styles.overlay} onClick={() => setIsModalOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <EditarActividad onClose={() => setIsModalOpen(false)} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

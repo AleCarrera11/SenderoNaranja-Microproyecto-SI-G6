@@ -9,6 +9,7 @@
     align-items: center;
     padding: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
   }
   
   @media (max-width: 991px) {
@@ -81,6 +82,9 @@
     margin-bottom: 25px;
     padding-bottom: 15px;
     border-bottom: 2px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   
   .description {
@@ -105,9 +109,8 @@
   }
   
   .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    position: static;
+    margin-left: auto;
     background-color: rgba(255, 255, 255, 0.9);
     border: none;
     border-radius: 50%;

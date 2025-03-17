@@ -64,6 +64,13 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
         <div className={styles.title}>
           <span className={styles.boldOrange}>{nombreActividad}</span>
           <span className={styles.lightGray}>{actividadInfo?.tipo}</span>
+          <button 
+            className={styles.closeButton} 
+            onClick={onClose} 
+            aria-label="Cerrar"
+          >
+            x
+          </button>
         </div>
         
         <div className={styles.flexContainer}>
@@ -82,13 +89,6 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
           </div>
           <div className={styles.rightColumn}>
             <div className={styles.imageContainer}>
-              <button 
-                className={styles.closeButton} 
-                onClick={onClose} 
-                aria-label="Cerrar"
-              >
-                x
-              </button>
               {actividadInfo.foto ? (
                 <img
                   loading="lazy"

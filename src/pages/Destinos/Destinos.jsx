@@ -8,7 +8,7 @@ import { Footer } from "../components/Footer/Footer";
 import { UserContext } from "../../Context/UserContex";
 import  CrearTipo  from "../components/CrearTipo/CrearTipo";
 import CrearActividad from "../components/CrearActividad/CrearActividad";
-import { collection, onSnapshot, getFirestore } from "firebase/firestore";
+import { collection, onSnapshot, getFirestore, deleteDoc, doc } from "firebase/firestore";
 import { app } from "../../credenciales";
 
 const db = getFirestore(app);
@@ -19,6 +19,7 @@ function Destinos() {
   const [isModalTipoOpen, setModalTipoOpen] = useState(false); // Estado para el modal de CrearTipo
   const [isModalActividadOpen, setModalActividadOpen] = useState(false); // Estado para el modal de CrearActividad
   const [destinos, setDestinos] = useState([]); // Estado para los destinos
+  const [selectedActivityId, setSelectedActivityId] = useState(null); // State for selected activity
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "destinos"), (snapshot) => {
@@ -31,6 +32,21 @@ function Destinos() {
 
     return () => unsubscribe();
   }, []);
+
+  const handleDeleteActivity = async () => {
+    if (selectedActivityId) {
+      try {
+        await deleteDoc(doc(db, "destinos", selectedActivityId));
+        console.log(`Activity with ID: ${selectedActivityId} deleted successfully`);
+        // Reset the selected activity
+        setSelectedActivityId(null);
+      } catch (error) {
+        console.error("Error deleting activity: ", error);
+      }
+    } else {
+      console.log('No activity selected');
+    }
+  };
 
   return (
     <main className={styles.homePage}>
@@ -45,12 +61,26 @@ function Destinos() {
           <button className={styles.actionButton} onClick={() => setModalActividadOpen(true)}>
             Crear actividad
           </button>
+          <button className={styles.actionButton} onClick={handleDeleteActivity}>
+            Eliminar actividad
+          </button>
         </section>
       )}
 
       <section className={styles.contentContainer}>
         {destinos.map((destino) => (
-          <TrailCard key={destino.id} destino={destino} />
+          <div key={destino.id}>
+            {isAdmin && (
+              <input
+                type="radio"
+                name="selectedActivity"
+                value={destino.id}
+                checked={selectedActivityId === destino.id}
+                onChange={() => setSelectedActivityId(destino.id)}
+              />
+            )}
+            <TrailCard destino={destino} />
+          </div>
         ))}
       </section>
       <Pagination />

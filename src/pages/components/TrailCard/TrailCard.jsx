@@ -57,11 +57,11 @@ export const TrailCard = ({destino}) => {
           </p>
           <p className={styles.detail}>
             <span className={styles.label}>Distancia:</span>
-            <span>{destino.distancia} km</span>
+            <span>{destino.distancia}</span>
           </p>
           <p className={styles.detail}>
             <span className={styles.label}>Duración estimada:</span>
-            <span>{destino.duracion} h</span>
+            <span>{destino.duracion}</span>
           </p>
         </div>
         {isAdmin && (

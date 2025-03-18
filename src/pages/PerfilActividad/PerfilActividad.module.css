@@ -181,12 +181,13 @@
     justify-content: center; /* Centra la imagen horizontalmente */
   }
   
-  .mapImage {
-    object-fit: cover;
-    width: 675px;
-    height: 491px;
+  mapImage {
+    max-width: 100%; /* La imagen no superará el ancho de su contenedor */
+    max-height: 80vh; /* La imagen no superará el 80% del alto de la ventana */
+    object-fit: contain; /* Ajusta la imagen manteniendo su relación de aspecto */
+    display: block; /* Elimina el espacio extra debajo de la imagen */
     margin: 0 auto; /* Centra la imagen */
-  }
+}
   
   @media (width <= 991px) {
     .container {

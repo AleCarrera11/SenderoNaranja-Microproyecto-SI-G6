@@ -112,7 +112,7 @@ const PerfilActividad = () => {
           </div>
 
           <div className={styles.mapContainer}>
-            <img src={actividad.ubicaciónfoto} alt="Map of Sabas Nieves" className={styles.mapImage} />
+            <img src={actividad.ubicacionfoto} alt="Map of Sabas Nieves" className={styles.mapImage} />
           </div>
         </article>
       </main>

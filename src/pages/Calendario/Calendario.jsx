@@ -172,9 +172,9 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange }) => {
           </li>
           <li aria-hidden="true">/</li>
           <li>
-            <a href="/sabasnieves" className={styles.navLink}>
+            
               Sabas Nieves
-            </a>
+          
           </li>
           <li aria-hidden="true">/</li>
           <li aria-current="page">Calendario</li>

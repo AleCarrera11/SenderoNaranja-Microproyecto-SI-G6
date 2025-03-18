@@ -1,0 +1,102 @@
+.mainContent {
+    padding: 60px 100px;
+  }
+  
+  @media (width <= 991px) {
+    .mainContent {
+      padding-left: 50px;
+      padding-right: 50px;
+    }
+  }
+  
+  @media (width <= 640px) {
+    .mainContent {
+      padding: 40px 20px;
+    }
+  }
+  
+  .mainTitle {
+    color: #da5702;
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 48px;
+    font-weight: 600;
+  }
+  
+  @media (width <= 991px) {
+    .mainTitle {
+      font-size: 40px;
+    }
+  }
+  
+  @media (width <= 640px) {
+    .mainTitle {
+      font-size: 32px;
+    }
+  }
+  
+  .introduction {
+    margin-bottom: 40px;
+    font-size: 32px;
+  }
+  
+  @media (width <= 991px) {
+    .introduction {
+      font-size: 28px;
+    }
+  }
+  
+  @media (width <= 640px) {
+    .introduction {
+      font-size: 24px;
+    }
+  }
+  
+  .subtitle {
+    color: #ee9a12;
+    margin-bottom: 40px;
+    font-size: 40px;
+    font-weight: normal;
+  }
+  
+  @media (width <= 991px) {
+    .subtitle {
+      font-size: 36px;
+    }
+  }
+  
+  @media (width <= 640px) {
+    .subtitle {
+      font-size: 28px;
+    }
+  }
+  
+  .tipsList {
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+    font-size: 32px;
+  }
+  
+  @media (width <= 991px) {
+    .tipsList {
+      font-size: 28px;
+    }
+  }
+  
+  @media (width <= 640px) {
+    .tipsList {
+      font-size: 24px;
+    }
+  }
+  
+  .tipTitle {
+    font-weight: 700;
+  }
+  
+  .hikingImage {
+    width: 100%;
+    max-width: 637px;
+    margin: 40px auto 0;
+    display: block;
+  }

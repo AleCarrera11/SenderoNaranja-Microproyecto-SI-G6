@@ -13,8 +13,7 @@ import Protected from './pages/components/Proctected.jsx';
 import ParqueNacionalPage from './pages/Galeria/ParqueNacionalPage';
 import ReservationForm from './pages/Reserva/ReservaForm';
 import ConservationPage from './pages/Galeria/ConservationPage.jsx';
-import Senderismo from './pages/Galeria/Senderismo.jsx';
-import ParqueElAvila from './pages/Galeria/ParqueElAvila.jsx';
+
 export default function App() {
   
   return (
@@ -33,9 +32,8 @@ export default function App() {
             <Route path="/reserva" element={<ReservationForm />} />
           </Route>
           <Route path="/galeria" element={<ParqueNacionalPage />} />
-          <Route path="/parque-nacional-el-avila" element={<ParqueElAvila />} />
           <Route path="/importancia-conservacion" element={<ConservationPage />} />
-          <Route path="/tips-senderismo" element={<Senderismo />} />
+        
 
         </Route>
       </Routes>

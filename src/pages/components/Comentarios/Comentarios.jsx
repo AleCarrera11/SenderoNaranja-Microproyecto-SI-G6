@@ -1,15 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./Comentario.module.css";
 import { collection, addDoc, onSnapshot, getFirestore } from "firebase/firestore";
 import { app } from "../../../credenciales.js";
-<<<<<<< Updated upstream
-=======
 import { UserContext } from "../../../Context/UserContex";
 import logoSI from "/logoSI.png";
 import { Link, useParams } from "react-router";
 
->>>>>>> Stashed changes
 const db = getFirestore(app);
 
 const StarRating = ({ rating }) => {
@@ -107,10 +104,6 @@ const RatingSummary = ({ rating, totalReviews }) => {
 const Comentarios = () => {
   const [comentarios, setComentarios] = useState([]);
   const [usuario, setUsuario] = useState("Usuario Anónimo");
-<<<<<<< Updated upstream
-  const [rating, setRating] = useState(0);
-  const [activityid, setactivityid] = useState("");
-=======
   const [activity, setactivity] = useState("");
   const { profile } = useContext(UserContext); // Accede a la información del usuario
   const [actividad, setActividad] = useState(null);
@@ -128,7 +121,6 @@ const Comentarios = () => {
       fetchActividad();
     }, [nombreActividad]);
 
->>>>>>> Stashed changes
 
   // Obtener comentarios de Firestore
   useEffect(() => {
@@ -143,27 +135,6 @@ const Comentarios = () => {
   }, []);
 
   // Función para agregar un comentario
-<<<<<<< Updated upstream
-  const handleAgregarComentario = async (comentario) => {
-    
-    //if ()         (agregar un filtro para que sea solo para estudiantes)
-    const title="Comentario";
-    if (comentario.trim() !== "") {
-      try {
-        await addDoc(collection(db, "comentarios"), {
-          usuario: usuario,
-          title: title,
-          comentario: comentario,
-          rating: rating,
-          activityid: activityid,
-          fecha: new Date().toISOString(),
-        });
-      } catch (error) {
-        console.error("Error al agregar el comentario: ", error);
-      }
-    }
-  };
-=======
   const handleAgregarComentario = async (comentario, rating) => {
     if (profile?.tipoUser === "Estudiante") {
 
@@ -195,30 +166,12 @@ const Comentarios = () => {
 
   const comentarioslength = filtroActividad.length; 
   
->>>>>>> Stashed changes
   return (
     <section className={styles.commentsContainer}>
       <div className={styles.divider} />
       <RatingSummary rating={averageRating} totalReviews={comentarioslength} />
 
       <div className={styles.reviewsList}>
-<<<<<<< Updated upstream
-        {comentarios.map((comentario) => (
-          <ReviewCard
-          //filtro de actividad
-            key={comentario.id}
-            avatarUrl="/logoSI.png" //imagen usuario (falta agregar)
-            userName={comentario.usuario}
-            rating={comentario.rating}
-            title={comentario.title}
-            review={comentario.comentario}
-          />
-        ))}
-      </div>
-
-      <CommentInput
-        avatarUrl="/logoSI.png"
-=======
       {filtroActividad.map((comentario) => (
         <ReviewCard
           key={comentario.id}
@@ -233,7 +186,6 @@ const Comentarios = () => {
 
       <CommentInput
         avatarUrl={profile?.foto_perfil || logoSI}
->>>>>>> Stashed changes
         onCommentSubmit={handleAgregarComentario}
       />
     </section>

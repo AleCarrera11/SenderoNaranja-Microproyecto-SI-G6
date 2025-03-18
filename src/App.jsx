@@ -15,6 +15,7 @@ import ReservationForm from './pages/Reserva/ReservaForm';
 import ConservationPage from './pages/Galeria/ConservationPage.jsx';
 import ParqueElAvila from './pages/Galeria/ParqueElAvila.jsx';
 import Senderismo from './pages/Galeria/Senderismo.jsx';
+import VerParticipantes from './pages/components/ActAsignados/VerParticipantes.jsx';
 
 export default function App() {
   
@@ -35,6 +36,7 @@ export default function App() {
             <Route path="/importancia-conservacion" element={<ConservationPage />} />
             <Route path="/parque-nacional-el-avila" element={<ParqueElAvila />} />
             <Route path="/tips-senderismo" element={<Senderismo />} />
+            <Route path="/actividad/:nombreActividad/participantes" element={<VerParticipantes />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -87,19 +87,26 @@ const PerfilActividad = () => {
                 </p>
               </div>
               <div className={styles.buttonContainer}>
-                {profile?.tipoUser === "Estudiante" && (
-                  <Link to="/calendario" className={styles.bookingButton}>
-                    Ver disponibilidad
-                  </Link>
-                )}
+                { profile?.tipoUser === "Estudiante" && (
+                    <Link
+                      to={`/calendario/${actividad.nombreActividad}`} // Modifica esta línea
+                      className={styles.bookingButton}
+                    >
+                      Ver disponibilidad
+                    </Link>
+                  )}
                 {profile?.tipoUser === "Guía" && (
                   <Link to="/participantes" className={styles.bookingButton}>
                     Ver Participantes
                   </Link>
                 )}
+                {console.log("Nombre de la actividad:", actividad.nombreActividad)} {/* Agrega esta línea */}
                 {profile?.tipoUser === "Administrador" && (
                   <>
-                    <Link to="/calendario" className={styles.bookingButton}>
+                    <Link
+                      to={`/calendario/${actividad.nombreActividad}`} // Modifica esta línea
+                      className={styles.bookingButton}
+                    >
                       Ver disponibilidad
                     </Link>
                     <Link to="/editar" className={styles.bookingButton}>

@@ -1,9 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./Calendario.module.css";
-import { db, auth } from "../../credenciales";
-import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc } from "firebase/firestore";
+import {  app, auth } from "../../credenciales";
+import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, getFirestore } from "firebase/firestore";
 import PreReserva from '../Pre-Reserva/PreReserva';
+import { Link, useLocation, useParams } from "react-router";
+
+const db = getFirestore(app);
 
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
@@ -162,6 +165,9 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange }) => {
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
   ];
 
+  const location = useLocation();
+  const { nombreActividad } = useParams(); // Obtiene el nombre de la URL
+
   return (
     <>
       <nav className={styles.breadcrumb} aria-label="breadcrumb">
@@ -172,11 +178,13 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange }) => {
             </a>
           </li>
           <li aria-hidden="true">/</li>
+          <a href="/destinos/:nombreActividad">
           <li>
-            
-              Sabas Nieves
-          
+              <Link to={`/destinos/${nombreActividad}`} className={styles.navLink} >
+                {nombreActividad}
+              </Link>
           </li>
+          </a>
           <li aria-hidden="true">/</li>
           <li aria-current="page">Calendario</li>
         </ol>
@@ -241,6 +249,8 @@ const Calendar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [availableSlots, setAvailableSlots] = useState({});
   const [showPreReserva, setShowPreReserva] = useState(false);
+  const { nombreActividad } = useParams(); // Obtiene el nombre de la URL
+
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -296,7 +306,8 @@ const Calendar = () => {
         month: selectedMonth,
         year: selectedYear,
         createdAt: new Date(),
-        available: true
+        available: true,
+        nombreActividad: nombreActividad, // Agrega el nombre de la actividad
       };
 
       const docRef = await addDoc(collection(db, 'availableSlots'), slotData);

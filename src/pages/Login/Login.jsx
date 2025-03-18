@@ -20,7 +20,7 @@ const Header = () => {
   );
 };
 
-const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswordVisibility, isPasswordVisible }) => {
+const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswordVisibility, isPasswordVisible, disabled }) => {
   return (
     <div className={styles.formGroup}>
       <label className={styles.label}>
@@ -33,6 +33,7 @@ const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswo
           placeholder={placeholder}
           onChange={onChange}
           className={styles.inputField}
+          disabled={disabled}
         />
         <div
           className={
@@ -63,13 +64,14 @@ const InputField = ({ type, value, placeholder, iconType, onChange, togglePasswo
   );
 };
 
-const SocialButton = ({ platform, onClick }) => {
+const SocialButton = ({ platform, onClick, disabled }) => {
   return (
     <button
       className={`${styles.socialButton} ${
         platform === "google" ? styles.googleButton : styles.facebookButton
       }`}
       onClick={onClick}
+      disabled={disabled}
     >
       {platform === "google" ? (
         <i className="ti ti-brand-google" />
@@ -98,43 +100,56 @@ const LogoSection = () => {
 const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) => {
   const navigate = useNavigate();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
   
-    if (
-      !email.endsWith("@correo.unimet.edu.ve") && 
-      !email.endsWith("@unimet.edu.ve") &&
-      email !== "mperez@gmail.com"
-    ) {
+    if (!email.endsWith("@correo.unimet.edu.ve") && 
+        !email.endsWith("@unimet.edu.ve") &&
+        email !== "mperez@gmail.com") {
       setError("Debes usar un correo institucional (@unimet.edu.ve o @correo.unimet.edu.ve).");
+      setIsLoading(false);
       return;
     }
   
     try {
       await signInWithEmailAndPassword(auth, email, contraseña);
-      navigate("/destinos");
+      navigate("/destinos", { replace: true });
     } catch (error) {
       setError("Correo no registrado o contraseña incorrecta.");
       console.error("Error al iniciar sesión", error);
+      setIsLoading(false);
     }
   };
-  
+
   const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    setError("");
+    
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const userEmail = result.user.email;
   
-      if (!userEmail.endsWith("@correo.unimet.edu.ve")) {
-        setError("Debes usar un correo institucional (@correo.unimet.edu.ve).");
-        await auth.signOut(); // Cierra sesión inmediatamente si el correo no es válido
+      if (!userEmail.endsWith("@correo.unimet.edu.ve") && 
+          !userEmail.endsWith("@unimet.edu.ve")) {
+        await auth.signOut();
+        setError("Debes usar un correo institucional (@unimet.edu.ve o @correo.unimet.edu.ve).");
+        setIsLoading(false);
         return;
       }
   
-      navigate("/destinos");
+      navigate("/destinos", { replace: true });
     } catch (error) {
-      setError("Error al iniciar sesión con Google.");
-      console.error("Error con Google Sign-In", error);
+      if (error.code === 'auth/popup-closed-by-user') {
+        setError("");
+      } else {
+        setError("Error al iniciar sesión con Google.");
+        console.error("Error con Google Sign-In", error);
+      }
+      setIsLoading(false);
     }
   };
   
@@ -150,6 +165,7 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
         iconType="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        disabled={isLoading}
       />
       <InputField
         type="password"
@@ -159,11 +175,20 @@ const LoginForm = ({ email, setEmail, contraseña, setContraseña, setError }) =
         onChange={(e) => setContraseña(e.target.value)}
         togglePasswordVisibility={togglePasswordVisibility}
         isPasswordVisible={isPasswordVisible}
+        disabled={isLoading}
       />
-      <button type="submit" className={styles.loginButton}>
-        Inicia sesión
+      <button 
+        type="submit" 
+        className={styles.loginButton}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Iniciando sesión...' : 'Inicia sesión'}
       </button>
-      <SocialButton platform="google" onClick={handleGoogleLogin} />
+      <SocialButton 
+        platform="google" 
+        onClick={handleGoogleLogin}
+        disabled={isLoading}
+      />
     </form>
   );
 };

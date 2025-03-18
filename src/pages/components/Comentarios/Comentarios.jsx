@@ -1,6 +1,9 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Comentario.module.css";
+import { collection, addDoc, onSnapshot, getFirestore } from "firebase/firestore";
+import { app } from "../../../credenciales.js";
+const db = getFirestore(app);
 
 const StarRating = ({ rating }) => {
   return (
@@ -20,11 +23,7 @@ const StarRating = ({ rating }) => {
 const ReviewCard = ({ avatarUrl, userName, rating, title, review }) => {
   return (
     <article className={styles.reviewCard}>
-      <img
-        src={avatarUrl}
-        alt={`${userName} avatar`}
-        className={styles.userAvatar}
-      />
+      <img src={avatarUrl} alt={`${userName} avatar`} className={styles.userAvatar} />
       <div className={styles.reviewContent}>
         <h3 className={styles.userName}>{userName}</h3>
         <StarRating rating={rating} />
@@ -35,7 +34,14 @@ const ReviewCard = ({ avatarUrl, userName, rating, title, review }) => {
   );
 };
 
-const CommentInput = ({ avatarUrl }) => {
+const CommentInput = ({ avatarUrl, onCommentSubmit }) => {
+  const [comentario, setComentario] = useState("");
+
+  const handleSubmit = () => {
+    onCommentSubmit(comentario);
+    setComentario("");
+  };
+
   return (
     <div className={styles.commentInputContainer}>
       <img src={avatarUrl} alt="User avatar" className={styles.userAvatar} />
@@ -43,7 +49,12 @@ const CommentInput = ({ avatarUrl }) => {
         type="text"
         placeholder="Agregar Comentario...."
         className={styles.commentInput}
+        value={comentario}
+        onChange={(e) => setComentario(e.target.value)}
       />
+      <button onClick={handleSubmit} className={styles.commentButton}>
+        Enviar
+      </button>
     </div>
   );
 };
@@ -68,30 +79,66 @@ const RatingSummary = ({ rating, totalReviews }) => {
 };
 
 const Comentarios = () => {
+  const [comentarios, setComentarios] = useState([]);
+  const [usuario, setUsuario] = useState("Usuario Anónimo");
+  const [rating, setRating] = useState(0);
+  const [activityid, setactivityid] = useState("");
+
+  // Obtener comentarios de Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "comentarios"), (snapshot) => {
+      const comentariosList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setComentarios(comentariosList);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Función para agregar un comentario
+  const handleAgregarComentario = async (comentario) => {
+    
+    //if ()         (agregar un filtro para que sea solo para estudiantes)
+    const title="Comentario";
+    if (comentario.trim() !== "") {
+      try {
+        await addDoc(collection(db, "comentarios"), {
+          usuario: usuario,
+          title: title,
+          comentario: comentario,
+          rating: rating,
+          activityid: activityid,
+          fecha: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error("Error al agregar el comentario: ", error);
+      }
+    }
+  };
   return (
     <section className={styles.commentsContainer}>
       <div className={styles.divider} />
-      <RatingSummary rating="4,6" totalReviews="2" />
+      <RatingSummary rating="4,6" totalReviews={comentarios.length} />
 
       <div className={styles.reviewsList}>
-        <ReviewCard
-          avatarUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/980495d11781124c2c66b3c060e8f393a2c8ed81dd9b8d7429b454160ea568b4?placeholderIfAbsent=true&apiKey=ed74dcfaa95a44a29728b63f96c1becf"
-          userName="María Perez"
-          rating={5}
-          title="Increible"
-          review="¡La subida a Sabas Nieves fue increíble! No solo disfruté de la naturaleza y el ejercicio, sino que también aprendí mucho sobre la flora y fauna del lugar gracias a nuestro guía."
-        />
-
-        <ReviewCard
-          avatarUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/980495d11781124c2c66b3c060e8f393a2c8ed81dd9b8d7429b454160ea568b4?placeholderIfAbsent=true&apiKey=ed74dcfaa95a44a29728b63f96c1becf"
-          userName="María Perez"
-          rating={5}
-          title="Increible"
-          review="¡La subida a Sabas Nieves fue increíble! No solo disfruté de la naturaleza y el ejercicio, sino que también aprendí mucho sobre la flora y fauna del lugar gracias a nuestro guía."
-        />
+        {comentarios.map((comentario) => (
+          <ReviewCard
+          //filtro de actividad
+            key={comentario.id}
+            avatarUrl="/logoSI.png" //imagen usuario (falta agregar)
+            userName={comentario.usuario}
+            rating={comentario.rating}
+            title={comentario.title}
+            review={comentario.comentario}
+          />
+        ))}
       </div>
 
-      <CommentInput avatarUrl="https://cdn.builder.io/api/v1/image/assets/TEMP/980495d11781124c2c66b3c060e8f393a2c8ed81dd9b8d7429b454160ea568b4?placeholderIfAbsent=true&apiKey=ed74dcfaa95a44a29728b63f96c1becf" />
+      <CommentInput
+        avatarUrl="/logoSI.png"
+        onCommentSubmit={handleAgregarComentario}
+      />
     </section>
   );
 };

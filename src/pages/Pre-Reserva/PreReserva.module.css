@@ -1,23 +1,29 @@
 .preReserva {
-    border-radius: 100px;
+    border-radius: 20px;
     background-color: #fff;
     display: flex;
-    max-width: 906px;
+    max-width: 800px;
+    width: 90%;
     flex-direction: column;
     overflow: hidden;
     align-items: center;
-    padding: 41px 80px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
   }
   
   @media (max-width: 991px) {
     .preReserva {
-      padding: 0 20px;
+      padding: 20px;
+      width: 95%;
     }
   }
   
   .contentWrapper {
     width: 100%;
-    max-width: 716px;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
   }
   
   @media (max-width: 991px) {
@@ -27,15 +33,15 @@
   }
   
   .flexContainer {
-    gap: 20px;
+    gap: 40px;
     display: flex;
+    align-items: flex-start;
   }
   
   @media (max-width: 991px) {
     .flexContainer {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0;
+      flex-direction: column-reverse;
+      gap: 30px;
     }
   }
   
@@ -43,161 +49,155 @@
     display: flex;
     flex-direction: column;
     line-height: normal;
-    width: 60%;
-    margin-left: 0;
+    width: 50%;
   }
   
   @media (max-width: 991px) {
-    .leftColumn {
+    .leftColumn,
+    .rightColumn {
       width: 100%;
     }
   }
   
   .textContent {
     display: flex;
-    margin-top: 58px;
     flex-direction: column;
     font-family: Figtree, sans-serif;
     color: #000;
     letter-spacing: 0.5px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   }
   
   @media (max-width: 991px) {
     .textContent {
-      margin-top: 40px;
+      margin-top: 0;
     }
   }
   
   .title {
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 30px;
-    align-self: start;
+    width: 100%;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   
   .description {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 300;
-    line-height: 40px;
-    margin-top: 22px;
+    line-height: 32px;
   }
   
   .rightColumn {
     display: flex;
     flex-direction: column;
     line-height: normal;
-    width: 40%;
-    margin-left: 20px;
-  }
-  
-  @media (max-width: 991px) {
-    .rightColumn {
-      width: 100%;
-    }
+    width: 50%;
   }
   
   .imageContainer {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    color: #000;
-    white-space: nowrap;
-    text-align: center;
-    letter-spacing: 0.5px;
-    font: 300 48px/1 Noto Sans, -apple-system, Roboto, Helvetica, sans-serif;
-  }
-  
-  @media (max-width: 991px) {
-    .imageContainer {
-      margin-top: 40px;
-      font-size: 40px;
-      white-space: initial;
-    }
+    position: relative;
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
   
   .closeButton {
-    align-self: end;
-    background: none;
+    position: static;
+    margin-left: auto;
+    background-color: rgba(255, 255, 255, 0.9);
     border: none;
-    font-size: 32px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
     font-weight: bold;
     color: #000;
     cursor: pointer;
-    padding: 10px;
-    line-height: 1;
-    transition: color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
   }
   
   .closeButton:hover {
-    color: #da5702;
+    background-color: #ee9a12;
+    color: white;
+    transform: scale(1.1);
   }
   
   .excursionImage {
-    aspect-ratio: 1.06;
-    object-fit: contain;
-    object-position: center;
     width: 100%;
-    border-radius: 10px;
-    align-self: start;
-    margin-top: 37px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+  }
+  
+  .excursionImage:hover {
+    transform: scale(1.02);
   }
   
   .availableSpots {
-    color: #da5702;
+    color: #ee9a12;
     letter-spacing: 0.5px;
     text-align: center;
-    margin-top: 52px;
-    font: 700 32px/1 Figtree, sans-serif;
-  }
-  
-  @media (max-width: 991px) {
-    .availableSpots {
-      margin-top: 40px;
-    }
+    margin-top: 30px;
+    font: 700 24px/1 Figtree, sans-serif;
+    padding: 15px 25px;
+    background-color: #fff8ec;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(238, 154, 18, 0.15);
   }
   
   .reserveButton {
     border-radius: 40px;
     background-color: #ee9a12;
     border: none;
-    margin-top: 39px;
-    width: 212px;
+    margin-top: 30px;
+    width: 250px;
     max-width: 100%;
     color: #fff;
     text-align: center;
-    padding: 20px 39px;
-    font: 800 20px Figtree, sans-serif;
+    padding: 18px 35px;
+    font: 700 18px Figtree, sans-serif;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(238, 154, 18, 0.3);
   }
   
   .reserveButton:hover {
     background-color: #da5702;
-  }
-  
-  @media (max-width: 991px) {
-    .closeButton {
-      font-size: 28px;
-    }
-    
-    .reserveButton {
-      padding: 20px;
-    }
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(218, 87, 2, 0.4);
   }
   
   .boldOrange {
     font-weight: 700;
-    font-size: 48px;
-    color: #da5702;
+    font-size: 36px;
+    color: #ee9a12;
+    display: block;
+    margin-bottom: 5px;
   }
   
   .lightGray {
+    margin-top: 10px;
     font-weight: 300;
-    font-size: 24px;
+    font-size: 20px;
+    color: #666;
+    display: block;
   }
   
   .boldBlack {
-    font-weight: 700;
+    font-weight: 600;
+    color: #333;
   }
   
   .visually-hidden {

@@ -12,6 +12,7 @@ import { Navigation1 } from './pages/components/Navigation/Navigation1.jsx';
 import Protected from './pages/components/Proctected.jsx';
 import ParqueNacionalPage from './pages/Galeria/ParqueNacionalPage';
 import ReservationForm from './pages/Reserva/ReservaForm';
+import ConservationPage from './pages/Galeria/ConservationPage.jsx';
 
 export default function App() {
   
@@ -31,6 +32,8 @@ export default function App() {
             <Route path="/reserva" element={<ReservationForm />} />
           </Route>
           <Route path="/galeria" element={<ParqueNacionalPage />} />
+          <Route path="/importancia-conservacion" element={<ConservationPage />} />
+
         </Route>
       </Routes>
     </BrowserRouter>

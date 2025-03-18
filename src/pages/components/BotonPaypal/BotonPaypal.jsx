@@ -23,6 +23,7 @@ const PaypalButtonComponent = ({ onSuccess }) => {
         return actions.order.capture().then(function(details) {
             const name = details.payer.name.given_name;
             console.log(name);
+            alert("Gracias por tu compra " + name);
             onSuccess(); // Llamar a la función de éxito
         });
     }

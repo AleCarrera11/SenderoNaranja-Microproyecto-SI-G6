@@ -6,13 +6,15 @@ import { UserContext } from '../../Context/UserContex';
 
 const ReservationForm = () => {
   const [formData, setFormData] = useState({
-    name: 'Maria',
-    lastName: 'Pérez',
-    email: 'maria.perez@correo.unimet.edu.ve',
-    phone: '+58 414-3686749'
+    name: '',
+    lastName: '',
+    email: '',
+    phone: ''
   });
 
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [showPaypal, setShowPaypal] = useState(false);
   const { profile } = use(UserContext);
 
   const handleInputChange = (e) => {
@@ -21,11 +23,46 @@ const ReservationForm = () => {
       ...prevState,
       [name]: value
     }));
+    setFormError(''); // Limpiar error cuando el usuario empiece a escribir
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted:', formData);
+  const validateForm = () => {
+    // Validar que todos los campos estén llenos
+    if (!formData.name || !formData.lastName || !formData.email || !formData.phone) {
+      setFormError('Por favor, completa todos los campos del formulario.');
+      return false;
+    }
+
+    // Validar formato de email institucional
+    const emailRegex = /^[a-zA-Z0-9._-]+@correo\.unimet\.edu\.ve$/;
+    if (!emailRegex.test(formData.email)) {
+      setFormError('Por favor, usa un correo válido @correo.unimet.edu.ve');
+      return false;
+    }
+
+    // Validar formato de teléfono
+    const phoneRegex = /^\+?\d{1,3}[-.\s]?\d{1,14}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setFormError('Por favor, ingresa un número de teléfono válido');
+      return false;
+    }
+
+    // Validar que nombre y apellido no contengan números
+    const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    if (!nameRegex.test(formData.name) || !nameRegex.test(formData.lastName)) {
+      setFormError('El nombre y apellido no deben contener números ni caracteres especiales');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handlePaypalClick = () => {
+    if (!validateForm()) {
+      // Si la validación falla, el mensaje de error ya se habrá establecido
+      return;
+    }
+    setShowPaypal(true);
   };
 
   const handlePaymentSuccess = () => {
@@ -87,7 +124,7 @@ const ReservationForm = () => {
             ))}
           </div>
           <h3 className={styles.formTitle}>Verifica tus datos:</h3>
-          <form onSubmit={handleSubmit} className={styles.formGrid}>
+          <form className={styles.formGrid}>
             {formFields.map((field) => (
               <div key={field.id} className={styles.formField}>
                 <label htmlFor={field.id} className={styles.formLabel}>{field.label}</label>
@@ -104,6 +141,7 @@ const ReservationForm = () => {
               </div>
             ))}
           </form>
+          {formError && <p className={styles.error}>{formError}</p>}
         </section>
         <aside className={styles.imageSection}>
           <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/3cdf184df032abae184d8924fa29a18c23410d49" alt="Trip destination landscape" className={styles.tripImage} />
@@ -123,7 +161,16 @@ const ReservationForm = () => {
             <p className={styles.collaborationText}>
               Para asegurar tu reserva, debes realizar <span className={styles.boldText}>una colaboración de 3$.</span> Tu aporte servirá para remunerar a nuestros guías expertos, quienes te guiarán a través de la ruta y para seguir organizando más aventuras
             </p>
-            <BotonPaypal onSuccess={handlePaymentSuccess} />
+            {showPaypal ? (
+              <BotonPaypal onSuccess={handlePaymentSuccess} />
+            ) : (
+              <button 
+                className={styles.paymentButton}
+                onClick={handlePaypalClick}
+              >
+                Pagar con PayPal
+              </button>
+            )}
           </>
         ) : (
           <p className={styles.collaborationText}>

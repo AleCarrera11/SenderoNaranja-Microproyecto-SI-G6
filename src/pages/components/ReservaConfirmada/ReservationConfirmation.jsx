@@ -1,7 +1,15 @@
 import React from 'react';
 import styles from './ReservationConfirmation.module.css';
+import { useNavigate } from 'react-router';
 
 const ReservationConfirmation = ({ onClose }) => {
+  const navigate = useNavigate();
+  
+  const handleClose = () => {
+    onClose();
+    navigate('/destinos');
+  };
+
   const reservationDetails = [
     { label: 'Participante', value: 'María Perez' },
     { label: 'Email', value: 'maria.perez@correo.unimet.edu.ve' },
@@ -20,7 +28,7 @@ const ReservationConfirmation = ({ onClose }) => {
         <div className={styles.contentWrapper}>
           <button 
             className={styles.closeButton} 
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Cerrar"
           >
             x

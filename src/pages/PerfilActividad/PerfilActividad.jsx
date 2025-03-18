@@ -99,6 +99,7 @@ const PerfilActividad = () => {
                     Ver Participantes
                   </Link>
                 )}
+                {console.log("Nombre de la actividad:", actividad.nombreActividad)} {/* Agrega esta línea */}
                 {profile?.tipoUser === "Administrador" && (
                   <>
                     <Link to={`/calendario/${nombreActividad}`} className={styles.bookingButton}>

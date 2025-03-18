@@ -1,8 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./Comentario.module.css";
 import { collection, addDoc, onSnapshot, getFirestore } from "firebase/firestore";
 import { app } from "../../../credenciales.js";
+import { UserContext } from "../../../Context/UserContex";
+import logoSI from "/logoSI.png";
+
 const db = getFirestore(app);
 
 const StarRating = ({ rating }) => {
@@ -80,9 +83,9 @@ const RatingSummary = ({ rating, totalReviews }) => {
 
 const Comentarios = () => {
   const [comentarios, setComentarios] = useState([]);
-  const [usuario, setUsuario] = useState("Usuario Anónimo");
   const [rating, setRating] = useState(0);
   const [activityid, setactivityid] = useState("");
+  const { profile } = useContext(UserContext); // Accede a la información del usuario
 
   // Obtener comentarios de Firestore
   useEffect(() => {
@@ -99,23 +102,26 @@ const Comentarios = () => {
   // Función para agregar un comentario
   const handleAgregarComentario = async (comentario) => {
     
-    //if ()         (agregar un filtro para que sea solo para estudiantes)
-    const title="Comentario";
+    const title = "Comentario";
     if (comentario.trim() !== "") {
       try {
         await addDoc(collection(db, "comentarios"), {
-          usuario: usuario,
+          usuario: profile?.nombre && profile?.apellido
+          ? `${profile.nombre} ${profile.apellido}`
+          : "Usuario Anónimo",
           title: title,
           comentario: comentario,
           rating: rating,
           activityid: activityid,
           fecha: new Date().toISOString(),
+          avatarUrl: profile?.foto_perfil || {logoSI}, // Usa la foto del usuario o un valor predeterminado
         });
       } catch (error) {
         console.error("Error al agregar el comentario: ", error);
       }
     }
   };
+
   return (
     <section className={styles.commentsContainer}>
       <div className={styles.divider} />
@@ -124,9 +130,8 @@ const Comentarios = () => {
       <div className={styles.reviewsList}>
         {comentarios.map((comentario) => (
           <ReviewCard
-          //filtro de actividad
             key={comentario.id}
-            avatarUrl="/logoSI.png" //imagen usuario (falta agregar)
+            avatarUrl={comentario.avatarUrl} //imagen usuario (falta agregar)
             userName={comentario.usuario}
             rating={comentario.rating}
             title={comentario.title}
@@ -136,7 +141,7 @@ const Comentarios = () => {
       </div>
 
       <CommentInput
-        avatarUrl="/logoSI.png"
+        avatarUrl={profile?.foto_perfil || {logoSI}}
         onCommentSubmit={handleAgregarComentario}
       />
     </section>

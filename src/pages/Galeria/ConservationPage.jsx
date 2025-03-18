@@ -6,10 +6,6 @@ import styles from "./ConservationPage.module.css";
 function ConservationPage() {
   return (
     <>
-      <link
-        href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;600;700&family=Reddit+Sans:wght@400;500&display=swap"
-        rel="stylesheet"
-      />
       <main className={styles.pageContainer}>
         <section className={styles.mainContent}>
           <h2 className={styles.mainTitle}>IMPORTANCIA DE LA CONSERVACIÓN</h2>

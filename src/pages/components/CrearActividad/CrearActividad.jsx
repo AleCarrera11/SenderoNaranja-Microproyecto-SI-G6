@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import styles from "./CrearActividad.module.css";
 import { collection, onSnapshot, getFirestore, addDoc } from "firebase/firestore";
 import { app } from "../../../credenciales";
+import { getAuth } from "firebase/auth";
+import { uploadImage } from "../../../supabseCredentials";
 
 const db = getFirestore(app)
-
+const auth = getAuth(app);
 
 const FormInput = ({ label, type = "text", ...props }) => {
   return (
@@ -104,20 +106,37 @@ const CrearActividad =({ onClose })=> {
     const [diasExcursion, setDiasExcursion] = useState("");
     const [horas, setHoras] = useState("");
     const [nota, setNota] = useState("");
-    
+    const [isUploadingFoto, setIsUploadingFoto] = useState(false);
+    const [isUploadingUbicacion, setIsUploadingUbicacion] = useState(false);
 
-    const handleFotoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          setFoto(file);
-        }
-      };
+    const handleFotoChange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        setIsUploadingFoto(true);
+        const user = auth.currentUser;
+        const imageUrl = await uploadImage(file, "actividad-fotos", nombreActividad);
+        setFoto(imageUrl);
+      } catch (error) {
+        alert("Error al subir la imagen");
+      } finally {
+        setIsUploadingFoto(false);
+      }
+    };
       
-    const handleUbicacionChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        setUbicacionFoto(file);
-    }
+    const handleUbicacionChange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        setIsUploadingUbicacion(true);
+        const user = auth.currentUser;
+        const imageUrl = await uploadImage(file, "actividad-fotos", nombreActividad);
+        setUbicacionFoto(imageUrl);
+      } catch (error) {
+        alert("Error al subir la imagen");
+      } finally {
+        setIsUploadingUbicacion(false);
+      }
     };
 
     
@@ -135,7 +154,8 @@ const CrearActividad =({ onClose })=> {
                 diasExcursion,
                 horas,
                 nota,
-
+                foto,
+                ubicacionFoto,
             });
             console.log("Actividad guardada con éxito");
             // Limpia los estados después de guardar
@@ -225,25 +245,47 @@ const CrearActividad =({ onClose })=> {
             onChange={(e) => setDuracion(e.target.value)}
             />
           </div>
-
+          <div className={styles.uploadContainer}>
           <ButtonGroup
             buttons={[
-              { text: "Agregar foto", onClick: () => document.getElementById("fotoInput").click() },
-              { text: "Ubicación ruta", onClick: () =>document.getElementById("ubicacionInput").click() },
+              {
+                text: isUploadingFoto ? "Agregando..." : "Agregar foto",
+                onClick: () => document.getElementById("fotoInput").click(),
+                disabled: isUploadingFoto,
+              },
+              {
+                text: isUploadingUbicacion ? "Agregando..." : "Ubicación ruta",
+                onClick: () => document.getElementById("ubicacionInput").click(),
+                disabled: isUploadingUbicacion,
+              },
             ]}
+            />
+            {foto && (
+              <label className={styles.fileNameLabel}>
+                Foto: {typeof foto === "string" ? foto.split("/").pop() : foto.name}
+              </label>
+            )}
+            {ubicacionFoto && (
+              <label className={styles.fileNameLabel}>
+                Ubicación:{" "}
+                {typeof ubicacionFoto === "string"
+                  ? ubicacionFoto.split("/").pop()
+                  : ubicacionFoto.name}
+              </label>
+            )}
+          </div>
+          <input
+            type="file"
+            id="fotoInput"
+            style={{ display: "none" }}
+            onChange={handleFotoChange}
           />
           <input
-                type="file"
-                id="fotoInput"
-                style={{ display: "none" }}
-                onChange={handleFotoChange}
-            />
-            <input
-                type="file"
-                id="ubicacionInput"
-                style={{ display: "none" }}
-                onChange={handleUbicacionChange}
-            />
+            type="file"
+            id="ubicacionInput"
+            style={{ display: "none" }}
+            onChange={handleUbicacionChange}
+          />
 
           <div className={styles.twoColumnGrid}>
           <FormInput

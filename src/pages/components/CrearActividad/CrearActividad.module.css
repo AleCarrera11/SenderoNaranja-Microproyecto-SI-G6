@@ -163,7 +163,7 @@
   
   /* Button styles */
   .buttonGroup {
-    gap: 24px;
+    gap: 200px;
     margin-top: 24px;
     display: flex;
   }
@@ -278,3 +278,15 @@
     }
   }
   
+  .fileNameLabel {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+    font-family: Poppins;
+  }
+  
+  .uploadContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }

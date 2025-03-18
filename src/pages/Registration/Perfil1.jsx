@@ -3,6 +3,9 @@ import styles from "./RegistrationForm.module.css";
 import { UserContext } from "../../Context/UserContex";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { app } from "../../credenciales";
+import { uploadImage } from '../../supabseCredentials';
+import { getAuth } from 'firebase/auth'; // Importa getAuth
+import logoSI from "/logoSI.png";
 
 const FormInput = ({ label, type, placeholder, value, onChange, name }) => {
   return (
@@ -20,33 +23,47 @@ const FormInput = ({ label, type, placeholder, value, onChange, name }) => {
   );
 };
 
-const ProfileHeader = ({ email }) => {
-  
-  const { profile } = useContext(UserContext);  
+const ProfileHeader = ({ email, handleFileChange, isUploading }) => { // Agregado handleFileChange y isUploading
+  const { profile } = useContext(UserContext);
 
   return (
     <header className={styles.profileHeader}>
       <h1 className={styles.welcomeTitle}>Bienvenid@, {profile.nombre}</h1>
       <div className={styles.profileInfo}>
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/a12fbcf159d1ddc6a1e085c87c9da24a30d1b74e706207b3ae631e69563d7eae?placeholderIfAbsent=true&apiKey=33a69b4c6fa34f2ba1e9b1915119a1e2"
-          alt="Profile"
-          className={styles.profileImage}
-        />
+        <div className={styles.profileImageContainer}>
+          <img
+            src={profile.foto_perfil || logoSI}
+            alt="Profile"
+            className={styles.profileImage}
+          />
+          <input
+            type="file"
+            id="profileImageInput"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="profileImageInput" className={styles.fotoButton}>
+            {isUploading ? 'Cambiando...' : 'Cambiar foto'}
+          </label>
+        </div>
         <div className={styles.userInfo}>
           <h2 className={styles.userRole}>{profile.tipoUser}</h2>
           <p className={styles.userEmail}>{email}</p>
         </div>
       </div>
+      
     </header>
   );
 };
 
 const Perfil1 = () => {
 
+  const [isUploading, setIsUploading] = useState(false);
   const { profile, setProfile } = use(UserContext);  // Corregido: useContext en lugar de use
   const userEmail = profile?.email || "";  // Acceder al email de forma seguraa
   const db = getFirestore(app)
+  const auth = getAuth(app); // Inicializa getAuth
 
   const [nombre, setNombre] = useState(profile.nombre || "");
   const [apellido, setApellido] = useState(profile.apellido || "");
@@ -111,12 +128,41 @@ const Perfil1 = () => {
     }
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      setIsUploading(true);
+      //El usuario actual
+      const user = auth.currentUser;
+      //Subir la imagen a supabase con bucket de nombre foto-perfil y uid del usuario
+      const imageUrl = await uploadImage(file, 'foto-perfil', user.uid);
+
+      //actualizar en firebase
+      const userDocRef = doc(db, 'users', user.uid);
+      await updateDoc(userDocRef, {
+        foto_perfil: imageUrl
+      });
+
+      //actualizar el estado local
+      setProfile({
+        ...profile,
+        foto_perfil: imageUrl
+      });
+
+    } catch (error) {
+      alert('Error al subir la imagen');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
 
   return (
     <main className={styles.container1}>
       <section className={styles.content}>
         <div className={styles.headerContainer}>
-          <ProfileHeader email={userEmail} />
+          <ProfileHeader email={userEmail} handleFileChange={handleFileChange} isUploading={isUploading} />
           <button className={styles.editButton} onClick={handleEditClick}>
             Editar
           </button>

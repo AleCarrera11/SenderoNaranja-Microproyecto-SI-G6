@@ -1,16 +1,17 @@
 .navigation {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #D35400;
   color: #fff;
-  background-color: #da5702;
   width: 100%;
   min-height: 50px;
   font-family: Figtree, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 18px;
   font-weight: 700;
-  display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
   box-shadow: 0 4px 4px #00000040;
   box-sizing: border-box; /* Incluye padding y border en el ancho */
 }
@@ -22,39 +23,39 @@
 }
 
 .logo {
-  max-width: 150px; /* Ajustamos el ancho máximo */
-  width: auto;
-  margin: 10px;
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
 }
 
 .brandContainer {
   display: flex;
   align-items: center;
-  text-decoration: none; /* Quita el subrayado */
+  text-decoration: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .brand {
-  font-family: Reddit Sans, -apple-system, Roboto, Helvetica, sans-serif;
-  font-size: 24px;
-  font-weight: 500;
+  color: white;
   margin: 0;
-  color: #fff; /* Mantiene el color blanco */
+  font-size: 1.5rem;
 }
 
 .navLinks {
   display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  list-style: none;
-  padding: 10px;
   align-items: center;
-  justify-content: center; /* Centramos los enlaces */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-left: auto; /* Empuja los enlaces hacia la derecha */
+  gap: 2rem;
 }
 
 .navLink {
-  color: inherit;
+  color: white;
   text-decoration: none;
-  font-size: 16px; /* Ajustamos el tamaño de la fuente */
 }
 
 .loginButton {

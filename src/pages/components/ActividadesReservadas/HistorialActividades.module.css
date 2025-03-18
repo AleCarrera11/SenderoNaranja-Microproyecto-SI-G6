@@ -1,0 +1,393 @@
+.historialactividades {
+    background-color: #f4f4f4;
+    border-radius: 25px;
+    overflow: hidden;
+  }
+  
+  .header {
+    color: #fff;
+    text-align: center;
+    background-color: #da5702;
+    border: 1px solid #3f222200;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: 40px 100px;
+    width: 100%;
+    padding: 30px 40px 76px 80px;
+    font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    box-shadow: 0 12px 24px #010bfd1f;
+  }
+  
+  @media (width<=991px) {
+    .header {
+      max-width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+      font-size: 40px;
+    }
+  }
+  
+  .historialdeactividades {
+    margin-top: 10px;
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+  }
+  
+  @media (width<=991px) {
+    .historialdeactividades {
+      max-width: 100%;
+      font-size: 40px;
+    }
+  }
+  
+  .headerIcon {
+    aspect-ratio: 0.98;
+    object-fit: contain;
+    object-position: center;
+    flex-shrink: 0;
+    width: 54px;
+  }
+  
+  .activityCard {
+    z-index: 10;
+    background-color: #f9f9f9;
+    border: 2px solid #5556;
+    width: 100%;
+    margin-top: -35px;
+    padding: 30px 33px 30px 80px;
+    box-shadow: 0 4px 4px #00000040;
+  }
+  
+  .activityCard:not(:first-of-type) {
+    margin-top: 0;
+  }
+  
+  @media (width<=991px) {
+    .activityCard {
+      max-width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  .cardContent {
+    gap: 20px;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .cardContent {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+  }
+  
+  .column {
+    flex-direction: column;
+    align-items: stretch;
+    width: 28%;
+    margin-left: 0;
+    line-height: normal;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .column {
+      width: 100%;
+    }
+  }
+  
+  .activityImage {
+    aspect-ratio: 1.27;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 10px;
+    flex-grow: 1;
+    width: 100%;
+  }
+  
+  @media (width<=991px) {
+    .activityImage {
+      margin-top: 40px;
+    }
+  }
+  
+  .detailsColumn {
+    flex-direction: column;
+    align-items: stretch;
+    width: 72%;
+    margin-left: 20px;
+    line-height: normal;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .detailsColumn {
+      width: 100%;
+    }
+  }
+  
+  .activityDetails {
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .activityDetails {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .activityName {
+    color: #fff;
+    text-align: center;
+    background-color: #da5702;
+    border-radius: 8px;
+    padding: 1px 9px;
+    font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 12px 24px #010bfd1f;
+    margin: 0;
+  }
+  
+  .activityInfo {
+    color: #000;
+    letter-spacing: 0.5px;
+    width: 403px;
+    margin-top: 14px;
+    font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+  }
+  
+  .lightText {
+    font-weight: 300;
+  }
+  
+  .feedbackSection {
+    align-self: stretch;
+    margin-top: 14px;
+    width: 100%;
+  }
+  
+  @media (width<=991px) {
+    .feedbackSection {
+      max-width: 100%;
+    }
+  }
+  
+  .feedbackSection {
+    gap: 20px;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .feedbackSection {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+  }
+  
+  .ratingColumn {
+    flex-direction: column;
+    align-items: stretch;
+    width: 27%;
+    margin-left: 0;
+    line-height: normal;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .ratingColumn {
+      width: 100%;
+    }
+  }
+  
+  .ratingSection {
+    color: #000;
+    letter-spacing: 0.5px;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: stretch;
+    margin-top: 59px;
+    font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .ratingSection {
+      margin-top: 40px;
+    }
+  }
+  
+  .ratingTitle {
+    z-index: 10;
+    align-self: start;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .ratingStars {
+    aspect-ratio: 4.85;
+    object-fit: contain;
+    object-position: center;
+    width: 233px;
+  }
+  
+  .commentColumn {
+    flex-direction: column;
+    align-items: stretch;
+    width: 73%;
+    margin-left: 20px;
+    line-height: normal;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .commentColumn {
+      width: 100%;
+    }
+  }
+  
+  .forumSection {
+    color: #000;
+    letter-spacing: 0.5px;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: stretch;
+    font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .forumSection {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .forumTitle {
+    z-index: 10;
+    align-self: start;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+  }
+  
+  .commentContainer {
+    background-color: #ee9a1266;
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    margin-top: 11px;
+    padding: 14px 7px 14px 15px;
+    font-size: 16px;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .commentContainer {
+      max-width: 100%;
+    }
+  }
+  
+  .commentContent {
+    align-items: stretch;
+    display: flex;
+  }
+  
+  .commentText {
+    flex: auto;
+    width: 574px;
+    font-weight: 300;
+    line-height: 24px;
+    margin: 0;
+  }
+  
+  @media (width<=991px) {
+    .commentText {
+      max-width: 100%;
+    }
+  }
+  
+  .moreInfoButton {
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-self: start;
+    width: 111px;
+    margin-top: 46px;
+    font-weight: 700;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    text-align: left;
+  }
+  
+  @media (width<=991px) {
+    .moreInfoButton {
+      margin-top: 40px;
+    }
+  }
+  
+  .dividerImage {
+    aspect-ratio: 125;
+    object-fit: contain;
+    object-position: center;
+    align-self: end;
+    width: 127px;
+    max-width: 100%;
+  }
+  
+  @media (width<=991px) {
+    .dividerImage {
+      margin-right: 10px;
+    }
+  }
+  

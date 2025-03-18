@@ -1,0 +1,111 @@
+/* Main Content Styles */
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    padding: 60px 110px;
+  }
+  
+  @media (max-width: 991px) {
+    .mainContent {
+      padding: 60px 40px;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .mainContent {
+      padding: 60px 20px;
+    }
+  }
+  
+  .parkTitle {
+    color: #da5702;
+    margin-bottom: 40px;
+    font-family: Figtree, sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+  }
+  
+  @media (max-width: 640px) {
+    .parkTitle {
+      font-size: 36px;
+    }
+  }
+  
+  .parkSubtitle {
+    color: #ee9a12;
+    margin-bottom: 20px;
+    font-family: Figtree, sans-serif;
+    font-size: 40px;
+    font-weight: normal;
+  }
+  
+  .parkDescription {
+    color: #000;
+    margin-bottom: 40px;
+    font-family: Figtree, sans-serif;
+    font-size: 32px;
+  }
+  
+  .featuresTitle {
+    color: #ee9a12;
+    margin-bottom: 40px;
+    font-family: Figtree, sans-serif;
+    font-size: 40px;
+    font-weight: normal;
+  }
+  
+  .featureItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .featureIcon {
+    flex-shrink: 0;
+  }
+  
+  .featureTitle {
+    color: #da5702;
+    font-family: Figtree, sans-serif;
+    font-size: 32px;
+  }
+  
+  .featureDescription {
+    color: #000;
+    font-family: Figtree, sans-serif;
+    font-size: 32px;
+  }
+  
+  .imageGallery {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .galleryImage {
+    width: 100%;
+    height: 284px;
+    object-fit: cover;
+  }
+  
+  @media (max-width: 991px) {
+    .imageGallery {
+      flex-wrap: wrap;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .imageGallery {
+      flex-direction: column;
+    }
+  }
+  
+  .divider {
+    background-color: #ee9a12;
+    width: 100%;
+    height: 1px;
+    border: none;
+    margin-top: 40px;
+    margin-bottom: 0;
+  }

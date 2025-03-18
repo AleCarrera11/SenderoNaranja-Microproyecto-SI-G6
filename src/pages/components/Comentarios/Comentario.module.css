@@ -134,26 +134,16 @@
   
   .reviewTitle {
     color: #000;
-    margin-top: 25px;
-    font-family:
-      Poppins,
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
     font-size: 20px;
     font-weight: 500;
+    margin-bottom: 2px; /* Reducir o eliminar el margen inferior */
   }
   
   .reviewText {
     color: #000;
-    margin-top: 7px;
-    font-family:
-      Poppins,
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
+    margin-top: 2px; /* Reducir el margen superior */
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
     font-size: 20px;
     font-weight: 300;
   }
@@ -184,6 +174,16 @@
     font-size: 16px;
     font-weight: 400;
     padding: 14px 22px;
+  }
+
+  .commentButton {
+    background-color: #ee9a12;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
   }
   
   @media (width <= 991px) {

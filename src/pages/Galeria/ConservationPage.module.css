@@ -1,70 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;600;700&display=swap');
+
 .mainContent {
-    padding: 60px 126px;
+  padding: 60px 126px;
+  font-family: 'Figtree', sans-serif; /* Agregamos la fuente Figtree */
+}
+
+@media (width <= 991px) {
+  .mainContent {
+    padding: 40px 20px;
   }
-  
-  @media (width <= 991px) {
-    .mainContent {
-      padding: 40px 20px;
-    }
-  }
-  
+}
+
+.mainTitle {
+  color: #da5702;
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 48px;
+  font-weight: 600;
+}
+
+@media (width <= 640px) {
   .mainTitle {
-    color: #da5702;
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 48px;
-    font-weight: 600;
+    font-size: 36px;
   }
-  
-  @media (width <= 640px) {
-    .mainTitle {
-      font-size: 36px;
-    }
-  }
-  
-  .heroImage {
-    width: 100%;
-    height: auto;
-    margin-bottom: 40px;
-  }
-  
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  margin-bottom: 40px;
+}
+
+.mainDescription {
+  text-align: justify;
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: 300;
+}
+
+@media (width <= 640px) {
   .mainDescription {
-    text-align: justify;
-    margin-bottom: 30px;
-    font-size: 32px;
-    font-weight: 300;
+    font-size: 24px;
   }
-  
-  @media (width <= 640px) {
-    .mainDescription {
-      font-size: 24px;
-    }
-  }
-  
-  .subTitle {
-    color: #ee9a12;
-    margin-bottom: 30px;
-    font-size: 40px;
-    font-weight: normal;
-  }
-  
+}
+
+.subTitle {
+  color: #ee9a12;
+  margin-bottom: 30px;
+  font-size: 40px;
+  font-weight: normal;
+}
+
+.preservationTips {
+  text-align: justify;
+  font-size: 32px;
+}
+
+@media (width <= 991px) {
   .preservationTips {
-    text-align: justify;
-    font-size: 32px;
+    font-size: 28px;
   }
-  
-  @media (width <= 991px) {
-    .preservationTips {
-      font-size: 28px;
-    }
+}
+
+@media (width <= 640px) {
+  .preservationTips {
+    font-size: 24px;
   }
-  
-  @media (width <= 640px) {
-    .preservationTips {
-      font-size: 24px;
-    }
-  }
-  
-  .tipItem {
-    margin-bottom: 20px;
-  }
+}
+
+.tipItem {
+  margin-bottom: 20px;
+}

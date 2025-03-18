@@ -83,7 +83,10 @@ export const ParqueNacionalPage = () => {
         <InfoCard
           image="https://cdn.builder.io/api/v1/image/assets/TEMP/47bfb9ebfad7349c98eeee1782c227327aeb819f"
           title="Importancia de la conservación"
-          description="El Ávila, conocido oficialmente como Parque Nacional Waraira Repano, es un verdadero paraíso natural en el corazón de Caracas. Este majestuoso parque ofrece una gran diversidad de flora y fauna, paisajes impresionantes y una rica historia cultural. Aquí podrás disfrutar de senderos exuberantes, vistas panorámicas de la ciudad y la tranquilidad de la naturaleza."
+          description="La conservación del Parque Nacional El Ávila es vital para preservar su
+            rica biodiversidad y garantizar la provisión de agua a Caracas. Su
+            protección asegura un pulmón verde esencial y un espacio recreativo
+            invaluable para las generaciones futuras."
         />
 
         <InfoCard

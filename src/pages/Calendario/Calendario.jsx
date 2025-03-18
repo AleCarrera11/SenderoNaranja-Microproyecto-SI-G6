@@ -122,8 +122,9 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDe
             <button 
               className={styles.deleteSlotButton}
               onClick={() => {
-                console.log('Slot a eliminar:', slot); // Para depuración
-                onDeleteSlot(slot.id);
+                const slotId = `${slot.date}-${slot.time}`;
+                console.log('Slot a eliminar:', slotId);
+                onDeleteSlot(slotId);
               }}
             >
               ×
@@ -163,9 +164,6 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange, actividadN
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
   ];
 
-  const location = useLocation();
-  const { nombreActividad } = useParams(); // Obtiene el nombre de la URL
-
   return (
     <>
       <nav className={styles.breadcrumb} aria-label="breadcrumb">
@@ -176,11 +174,9 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange, actividadN
             </a>
           </li>
           <li aria-hidden="true">/</li>
-          <a href="/destinos/:nombreActividad">
           <li>
             {actividadName}
           </li>
-          </a>
           <li aria-hidden="true">/</li>
           <li aria-current="page">Calendario</li>
         </ol>
@@ -246,8 +242,6 @@ const Calendar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [availableSlots, setAvailableSlots] = useState({});
   const [showPreReserva, setShowPreReserva] = useState(false);
-  const { nombreActividad } = useParams(); // Obtiene el nombre de la URL
-
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -331,7 +325,7 @@ const Calendar = () => {
         year: selectedYear,
         createdAt: new Date(),
         available: true,
-        nombreActividad: nombreActividad, // Agrega el nombre de la actividad
+        id: `${date}-${time}`
       };
 
       const key = `${date}-${time}`;
@@ -387,6 +381,7 @@ const Calendar = () => {
         availableSlots: updatedSlots
       });
 
+      // Actualizar el estado local
       setAvailableSlots(prev => {
         const newSlots = { ...prev };
         delete newSlots[slotId];
@@ -397,6 +392,11 @@ const Calendar = () => {
       alert('Error al eliminar el horario');
     }
   };
+
+  useEffect(() => {
+    // Forzar la actualización del componente al cambiar los slots
+    setAvailableSlots(availableSlots);
+  }, [availableSlots]);
 
   const handleMonthChange = (increment) => {
     let newMonth = selectedMonth + increment;

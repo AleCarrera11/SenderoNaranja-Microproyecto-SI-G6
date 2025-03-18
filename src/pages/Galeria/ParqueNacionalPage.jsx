@@ -46,12 +46,20 @@ const PhotoGallery = () => {
   );
 };
 
+const rutas = {
+  "Parque Nacional El Ávila": "/parque-nacional-el-avila",
+  "Importancia de la conservación": "/importancia-conservacion",
+  "Tips para hacer senderismo": "/tips-senderismo",
+};
+
 const InfoCard = ({ image, title, description }) => {
   return (
     <article className="info-card">
       <img src={image} alt={title} className="card-image" />
       <div className="content">
-        <h3 className="card-title">{title}</h3>
+        <Link href={rutas[title] || "/"}>
+          <h3 className="card-title">{title}</h3>
+        </Link>
         <p className="card-description">{description}</p>
       </div>
     </article>

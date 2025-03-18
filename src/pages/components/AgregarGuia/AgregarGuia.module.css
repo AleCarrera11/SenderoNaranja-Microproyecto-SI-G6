@@ -1,0 +1,206 @@
+.container {
+    max-width: 874px;
+  }
+  
+  .contentWrapper {
+    background-color: #f9f9f9;
+    border-radius: 30px;
+    width: 100%;
+    padding-bottom: 100px;
+  }
+  
+  @media (width<=991px) {
+    .contentWrapper {
+      max-width: 100%;
+    }
+  }
+  
+  .headerWrapper {
+    background-color: #da5702;
+    border-radius: 30px;
+    width: 88%;
+    padding: 6px 36px 18px;
+  }
+  
+  @media (width<=991px) {
+    .headerWrapper {
+      max-width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  
+  .headerContent {
+    gap: 20px;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .headerContent {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+  }
+  
+  .logoColumn {
+    flex-direction: column;
+    align-items: stretch;
+    width: 19%;
+    margin-left: 0;
+    line-height: normal;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .logoColumn {
+      width: 100%;
+    }
+  }
+  
+  .logo {
+    aspect-ratio: 1.04;
+    object-fit: contain;
+    object-position: center;
+    flex-grow: 1;
+    flex-shrink: 0;
+    width: 146px;
+    max-width: 100%;
+  }
+  
+  @media (width<=991px) {
+    .logo {
+      margin-top: 37px;
+    }
+  }
+  
+  .titleColumn {
+    flex-direction: column;
+    align-items: stretch;
+    width: 81%;
+    margin-left: 20px;
+    line-height: normal;
+    display: flex;
+  }
+  
+  @media (width<=991px) {
+    .titleColumn {
+      width: 100%;
+    }
+  }
+  
+  .title {
+    color: #fff;
+    text-align: center;
+    align-self: stretch;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-family:
+      Reddit Sans,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+  }
+  
+  @media (width<=991px) {
+    .title {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .guidesSection {
+    color: #000;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%; /* Ajusta para que abarque todo el ancho */
+    font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    padding: 0; 
+    margin: 0;
+  }
+  
+  @media (width<=991px) {
+    .guidesSection {
+      margin-top: 40px;
+      margin-left: 10px;
+    }
+  }
+  
+  .guideWrapper {
+    padding: 20px; /* Margen de 20px en todos los lados */
+    width: 100%; /* Asegura que el wrapper abarque todo el ancho */
+    box-sizing: border-box; /* Incluye el padding en el ancho total */
+  }
+
+  .guideProfile {
+    justify-content: flex-start; /* Alinea los elementos al inicio */
+    align-items: center; /* Centra verticalmente los elementos */
+    gap: 20px;
+    display: flex;
+    margin-bottom: 0; /* Elimina el margen inferior */
+    width: 100%; /* Asegura que el profile abarque todo el ancho */
+    box-sizing: border-box; /* Incluye padding en el ancho total */
+  }
+  
+  .guideImage {
+    aspect-ratio: 1.2;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 50%;
+    flex-shrink: 0;
+    width: 100px; /* Ajusta el tamaño de la imagen */
+    max-width: 100%;
+  }
+  
+  .guideInfo {
+    margin-top: 0; /* Elimina los márgenes */
+    margin-bottom: 0;
+    justify-content: left;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Permite que el contenido se expanda */
+  }
+
+  .asignarButton {
+    background-color: #ee9a12;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 5px; 
+    width: 50%;
+  }
+ 
+  
+  .guideInfo span {
+    text-align: left;
+  }
+
+  .closeButton {
+    position: static;
+    margin-left: auto;
+    width: 36px;
+    height: 36px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background-color: #da5702;
+    border: none;
+    text-align: center;
+    align-self: stretch;
+    margin-top: auto;
+    margin-bottom: auto;
+  }

@@ -73,6 +73,7 @@ const RegistrationForm = () => {
   const [telefono, setTelefono] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [confirmContraseña, setConfirmContraseña] = useState("");
+  const [foto_perfil, setFotoPerfil] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [generalError, setGeneralError] = useState(""); // Nuevo estado para errores generales
   const navigate = useNavigate();
@@ -111,6 +112,7 @@ const RegistrationForm = () => {
           email: userEmail,
           telefono: "", // Google no proporciona teléfono directamente
           tipoUser: registroComo,
+          foto_perfil: foto_perfil,
         });
   
         console.log("Usuario registrado con Google:", userEmail, "como", registroComo);
@@ -160,6 +162,7 @@ const RegistrationForm = () => {
         email: email,
         telefono: telefono,
         tipoUser: registroComo,
+        foto_perfil: foto_perfil,
       })
       
       setNombre("");

@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import styles from './PreReserva.module.css';
 import { useNavigate } from 'react-router';
 import { db } from '../../credenciales';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 
 const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => {
   const navigate = useNavigate();
   const [actividadInfo, setActividadInfo] = useState(null);
+  const [nombreGuia, setNombreGuia] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Obtener información de la actividad
   useEffect(() => {
     const fetchActividadInfo = async () => {
       try {
@@ -21,8 +23,9 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
         
         if (!actividadSnapshot.empty) {
           const actividadData = actividadSnapshot.docs[0].data();
+          const actividadId = actividadSnapshot.docs[0].id;  // Obtén el id del documento
           console.log('Datos de la actividad:', actividadData);
-          setActividadInfo(actividadData);
+          setActividadInfo({ ...actividadData, id: actividadId });  // Añade el id a los datos de la actividad
         } else {
           console.log('No se encontró la actividad');
         }
@@ -32,11 +35,48 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
         setLoading(false);
       }
     };
-
+  
     if (nombreActividad) {
       fetchActividadInfo();
     }
   }, [nombreActividad]);
+
+  useEffect(() => {
+    const fetchGuiaAsignado = async () => {
+      console.log("ID de la actividad:", actividadInfo?.id);  // Verifica el ID
+      if (!actividadInfo?.id) return;
+  
+      try {
+        const guiasRef = collection(db, 'GuiasAsignados');
+        const q = query(guiasRef, where('actividadId', '==', actividadInfo?.id));
+        const querySnapshot = await getDocs(q);
+  
+        if (!querySnapshot.empty) {
+          // Accede al guiaId del primer documento encontrado
+          const guiaAsignado = querySnapshot.docs[0].data();
+          const guiaId = guiaAsignado.guiaId;  // Aquí usamos 'guiaId'
+          console.log('ID del guía:', guiaId);  // Verifica si obtienes el ID correctamente
+  
+          if (guiaId) {
+            const guiaDocRef = doc(db, 'users', guiaId);
+            const guiaDocSnap = await getDoc(guiaDocRef);
+  
+            if (guiaDocSnap.exists()) {
+              const guiaData = guiaDocSnap.data();
+              console.log('Datos del guía:', guiaData);  // Verifica los datos del guía
+              setNombreGuia(`${guiaData.nombre} ${guiaData.apellido}`);
+            }
+          }
+        } else {
+          console.log("No se encontró ningún guía asignado para esta actividad.");
+        }
+      } catch (error) {
+        console.error('Error al obtener el guía asignado:', error);
+      }
+    };
+  
+    fetchGuiaAsignado();
+  }, [actividadInfo]);
 
   const handleReserveClick = () => {
     onClose();
@@ -45,7 +85,8 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
         selectedDay,
         selectedTime: selectedSlot.time,
         actividadInfo,
-        nombreActividad
+        nombreActividad,
+        guia: nombreGuia  // ✅ Pasamos el nombre real del guía
       } 
     });
   };
@@ -83,7 +124,7 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
                 <br />
                 <span className={styles.boldBlack}>Duración estimada:</span> {actividadInfo.duracion}
                 <br />
-                <span className={styles.boldBlack}>Guía asignado:</span> {actividadInfo.guia || 'Por asignar'}
+                <span className={styles.boldBlack}>Guía asignado:</span> {nombreGuia}
               </div>
             </div>
           </div>

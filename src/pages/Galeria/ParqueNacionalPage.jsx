@@ -57,9 +57,9 @@ const InfoCard = ({ image, title, description }) => {
     <article className="info-card">
       <img src={image} alt={title} className="card-image" />
       <div className="content">
-        <Link href={rutas[title] || "/"}>
+        <a href={rutas[title] || "/"}>
           <h3 className="card-title">{title}</h3>
-        </Link>
+        </a>
         <p className="card-description">{description}</p>
       </div>
     </article>
@@ -89,7 +89,7 @@ export const ParqueNacionalPage = () => {
         <InfoCard
           image="https://cdn.builder.io/api/v1/image/assets/TEMP/ff8fecb267b0869005ea2164c8a463912e1f8d53"
           title="Tips para hacer senderismo"
-          description="El Ávila, conocido oficialmente como Parque Nacional Waraira Repano, es un verdadero paraíso natural en el corazón de Caracas. Este majestuoso parque ofrece una gran diversidad de flora y fauna, paisajes impresionantes y una rica historia cultural. Aquí podrás disfrutar de senderos exuberantes, vistas panorámicas de la ciudad y la tranquilidad de la naturaleza."
+          description="El Ávila, conocido oficialmente como Parque Nacional Waraira Repano, es un verdadero paraíso natural en el corazón de Caracas. Este majestuoso parque offers a great diversity of flora and fauna, impressive landscapes and a rich cultural history. Here you can enjoy exuberant trails, panoramic views of the city and the tranquility of nature."
         />
       </section>
       <Footer />

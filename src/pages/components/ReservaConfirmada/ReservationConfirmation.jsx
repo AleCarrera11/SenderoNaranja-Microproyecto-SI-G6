@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './ReservationConfirmation.module.css';
 import { useNavigate } from 'react-router';
 
-const ReservationConfirmation = ({ onClose }) => {
+const ReservationConfirmation = ({ onClose, formData, actividadInfo, selectedDay, selectedTime, nombreActividad }) => {
   const navigate = useNavigate();
   
   const handleClose = () => {
@@ -11,13 +11,13 @@ const ReservationConfirmation = ({ onClose }) => {
   };
 
   const reservationDetails = [
-    { label: 'Participante', value: 'María Perez' },
-    { label: 'Email', value: 'maria.perez@correo.unimet.edu.ve' },
-    { label: 'Numero de telefono', value: '+58 414-3686749' },
-    { label: 'Día de la excursión', value: 'Viernes 07 FEB' },
-    { label: 'Horarios', value: '8am' },
-    { label: 'Duración estimada', value: '2 h' },
-    { label: 'Guía asignado', value: 'Pedro Perez' },
+    { label: 'Participante', value: `${formData.name} ${formData.lastName}` },
+    { label: 'Email', value: formData.email },
+    { label: 'Numero de telefono', value: formData.phone },
+    { label: 'Día de la excursión', value: selectedDay },
+    { label: 'Horarios', value: selectedTime },
+    { label: 'Duración estimada', value: actividadInfo?.duracion },
+    { label: 'Guía asignado', value: actividadInfo?.guia || 'Por asignar' },
   ];
 
   return (
@@ -34,9 +34,9 @@ const ReservationConfirmation = ({ onClose }) => {
             x
           </button>
           <h1 className={styles.title}>¡Su reserva ha sido exitosa!</h1>
-          <p className={styles.identifier}>Identificador: SN0702202586</p>
-          <h2 className={styles.trailName}>SABAS NIEVES</h2>
-          <p className={styles.activityType}>Senderismo</p>
+          <p className={styles.identifier}>Identificador: SN{selectedDay.replace(/\D/g, '')}{selectedTime.replace(/\D/g, '')}</p>
+          <h2 className={styles.trailName}>{nombreActividad}</h2>
+          <p className={styles.activityType}>{actividadInfo?.tipo}</p>
           <div className={styles.infoContainer}>
             <div className={styles.detailsColumn}>
               {reservationDetails.map((detail, index) => (
@@ -47,9 +47,12 @@ const ReservationConfirmation = ({ onClose }) => {
               ))}
             </div>
             <img
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/62a68402f59f85cd7214be7067fd25f18d8f7e13"
-              alt="Imagen del sendero"
+              src={actividadInfo?.foto || "https://via.placeholder.com/400"}
+              alt={`Imagen de ${nombreActividad}`}
               className={styles.trailImage}
+              onError={(e) => {
+                e.target.src = "https://via.placeholder.com/400";
+              }}
             />
           </div>
           <p className={styles.recommendations}>

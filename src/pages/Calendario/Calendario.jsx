@@ -1,12 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./Calendario.module.css";
-import {  app, auth } from "../../credenciales";
-import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, getFirestore } from "firebase/firestore";
+import { db, auth } from "../../credenciales";
+import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import PreReserva from '../Pre-Reserva/PreReserva';
-import { Link, useLocation, useParams } from "react-router";
-
-const db = getFirestore(app);
+import { useParams } from "react-router-dom";
 
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
@@ -159,7 +157,7 @@ const WeekdayHeader = () => {
   );
 };
 
-const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange }) => {
+const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange, actividadName }) => {
   const months = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -180,9 +178,7 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange }) => {
           <li aria-hidden="true">/</li>
           <a href="/destinos/:nombreActividad">
           <li>
-              <Link to={`/destinos/${nombreActividad}`} className={styles.navLink} >
-                {nombreActividad}
-              </Link>
+            {actividadName}
           </li>
           </a>
           <li aria-hidden="true">/</li>
@@ -243,6 +239,7 @@ const ReservationModal = ({ slot, onClose, onConfirm }) => {
 };
 
 const Calendar = () => {
+  const { nombreActividad } = useParams();
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -256,7 +253,6 @@ const Calendar = () => {
     const checkAdminStatus = async () => {
       const user = auth.currentUser;
       if (user) {
-        // Verificar si el email es del administrador
         if (user.email === "mperez@gmail.com") {
           setIsAdmin(true);
         } else {
@@ -268,21 +264,33 @@ const Calendar = () => {
 
     const loadAvailableSlots = async () => {
       try {
-        const slotsQuery = query(
-          collection(db, 'availableSlots'),
-          where('year', '==', selectedYear),
-          where('month', '==', selectedMonth)
+        // Primero obtener el ID de la actividad
+        const actividadQuery = query(
+          collection(db, 'destinos'),
+          where('nombreActividad', '==', nombreActividad)
         );
-        const slotsSnapshot = await getDocs(slotsQuery);
-        const slotsData = {};
+        const actividadSnapshot = await getDocs(actividadQuery);
         
-        slotsSnapshot.forEach(doc => {
-          const data = doc.data();
-          const key = `${data.date}-${data.time}`;
-          slotsData[key] = { ...data, id: doc.id };
+        if (actividadSnapshot.empty) {
+          console.error('No se encontró la actividad');
+          return;
+        }
+
+        const actividadId = actividadSnapshot.docs[0].id;
+        const actividadDoc = actividadSnapshot.docs[0];
+
+        // Obtener los slots de la actividad
+        const slots = actividadDoc.data().availableSlots || {};
+        const filteredSlots = {};
+        
+        // Filtrar slots por mes y año seleccionados
+        Object.entries(slots).forEach(([key, slot]) => {
+          if (slot.month === selectedMonth && slot.year === selectedYear) {
+            filteredSlots[key] = slot;
+          }
         });
         
-        setAvailableSlots(slotsData);
+        setAvailableSlots(filteredSlots);
       } catch (error) {
         console.error("Error loading slots:", error);
       }
@@ -290,7 +298,7 @@ const Calendar = () => {
 
     checkAdminStatus();
     loadAvailableSlots();
-  }, [selectedMonth, selectedYear]);
+  }, [selectedMonth, selectedYear, nombreActividad]);
 
   const handleAddTimeSlot = async (date, time, type) => {
     if (!isAdmin) {
@@ -299,6 +307,22 @@ const Calendar = () => {
     }
 
     try {
+      // Obtener el ID de la actividad
+      const actividadQuery = query(
+        collection(db, 'destinos'),
+        where('nombreActividad', '==', nombreActividad)
+      );
+      const actividadSnapshot = await getDocs(actividadQuery);
+      
+      if (actividadSnapshot.empty) {
+        console.error('No se encontró la actividad');
+        return;
+      }
+
+      const actividadId = actividadSnapshot.docs[0].id;
+      const actividadDoc = actividadSnapshot.docs[0];
+      const currentSlots = actividadDoc.data().availableSlots || {};
+
       const slotData = {
         date,
         time,
@@ -310,12 +334,20 @@ const Calendar = () => {
         nombreActividad: nombreActividad, // Agrega el nombre de la actividad
       };
 
-      const docRef = await addDoc(collection(db, 'availableSlots'), slotData);
       const key = `${date}-${time}`;
-      
+      const updatedSlots = {
+        ...currentSlots,
+        [key]: slotData
+      };
+
+      // Actualizar el documento de la actividad con el nuevo slot
+      await updateDoc(doc(db, 'destinos', actividadId), {
+        availableSlots: updatedSlots
+      });
+
       setAvailableSlots(prev => ({
         ...prev,
-        [key]: { ...slotData, id: docRef.id }
+        [key]: slotData
       }));
     } catch (error) {
       console.error('Error adding time slot:', error);
@@ -330,23 +362,39 @@ const Calendar = () => {
     }
 
     try {
-      console.log('Intentando eliminar slot con ID:', slotId);
+      // Obtener el ID de la actividad
+      const actividadQuery = query(
+        collection(db, 'destinos'),
+        where('nombreActividad', '==', nombreActividad)
+      );
+      const actividadSnapshot = await getDocs(actividadQuery);
       
-      await deleteDoc(doc(db, 'availableSlots', slotId));
-      
+      if (actividadSnapshot.empty) {
+        console.error('No se encontró la actividad');
+        return;
+      }
+
+      const actividadId = actividadSnapshot.docs[0].id;
+      const actividadDoc = actividadSnapshot.docs[0];
+      const currentSlots = actividadDoc.data().availableSlots || {};
+
+      // Eliminar el slot específico
+      const updatedSlots = { ...currentSlots };
+      delete updatedSlots[slotId];
+
+      // Actualizar el documento de la actividad
+      await updateDoc(doc(db, 'destinos', actividadId), {
+        availableSlots: updatedSlots
+      });
+
       setAvailableSlots(prev => {
         const newSlots = { ...prev };
-        Object.keys(newSlots).forEach(key => {
-          if (newSlots[key].id === slotId) {
-            delete newSlots[key];
-          }
-        });
+        delete newSlots[slotId];
         return newSlots;
       });
     } catch (error) {
       console.error('Error deleting time slot:', error);
-      console.error('Error details:', error.message);
-      alert('Error al eliminar el horario: ' + error.message);
+      alert('Error al eliminar el horario');
     }
   };
 
@@ -415,6 +463,7 @@ const Calendar = () => {
           selectedMonth={selectedMonth} 
           selectedYear={selectedYear}
           onMonthChange={handleMonthChange}
+          actividadName={nombreActividad}
         />
         <div className={styles.calendarGrid}>
           <WeekdayHeader />

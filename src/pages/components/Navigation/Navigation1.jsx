@@ -21,8 +21,10 @@ export function Navigation1() {
   return (
     <>
       <nav className={styles.navigation}>
-        <img src={logoSI} className={styles.logo} alt="SN logo" />
-        <h1 className={styles.brand}>Sendero Naranja</h1>
+        <Link to="/" className={styles.brandContainer}>
+          <img src={logoSI} className={styles.logo} alt="SN logo" />
+          <h1 className={styles.brand}>Sendero Naranja</h1>
+        </Link>
         <ul className={styles.navLinks}>
           <li>
             <Link to="/destinos" className={styles.navLink}>

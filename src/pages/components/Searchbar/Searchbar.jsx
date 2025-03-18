@@ -1,40 +1,136 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import styles from "./SearchBar.module.css";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../credenciales";
+import ActivityIterator from "../../../utils/ActivityIterator";
 
 function SearchBar() {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activities, setActivities] = useState([]);
+  const [filteredActivities, setFilteredActivities] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Cargar actividades de Firebase
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "destinos"));
+        const activitiesList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setActivities(activitiesList);
+      } catch (error) {
+        console.error("Error fetching activities:", error);
+      }
+    };
+
+    fetchActivities();
+  }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const iterator = new ActivityIterator(activities);
+    const filtered = iterator.filterByName(searchTerm);
+    const results = [];
+    
+    while (filtered.hasNext()) {
+      results.push(filtered.next());
+    }
+
+    setFilteredActivities(results);
+    setShowResults(true);
+    setLoading(false);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    
+    if (value === "") {
+      setShowResults(false);
+      setFilteredActivities([]);
+    }
+  };
+
+  const handleItemClick = (activity) => {
+    navigate(`/destinos/${activity.nombreActividad}`);
+  };
+
   return (
-    <div className={styles.searchbarContainer}>
-      <div className={styles.stateLayer}>
-        <div className={styles.leadingIcon}>
-          <div className={styles.iconContainer}>
-            <div className={styles.iconStateLayer}>
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/1c98230f4487733e737f2e098720dda9c7e7b48092cafb27532e51215042b5a1?placeholderIfAbsent=true&apiKey=2b87a35b18524de3a0e8a8f5cf91b8a5"
-                alt="Search"
-                className={styles.searchIcon}
-              />
-            </div>
-          </div>
-        </div>
-        <input
-          type="text"
-          placeholder="Busca una actividad"
-          className={styles.searchInput}
-        />
-        <div className={styles.trailingElements}>
-          <div className={styles.trailingIcon}>
+    <div className={styles.searchContainer}>
+      <form onSubmit={handleSearch} className={styles.searchbarContainer}>
+        <div className={styles.stateLayer}>
+          <button 
+            type="button" 
+            className={styles.leadingIcon}
+            aria-label="Buscar"
+          >
             <div className={styles.iconContainer}>
               <div className={styles.iconStateLayer}>
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/386207518883442a607ffd5068af0d6571abcc6654e219af2e8d84919581a2c5?placeholderIfAbsent=true&apiKey=2b87a35b18524de3a0e8a8f5cf91b8a5"
-                  alt="Clear"
-                  className={styles.clearIcon}
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/1c98230f4487733e737f2e098720dda9c7e7b48092cafb27532e51215042b5a1"
+                  alt="Search"
+                  className={styles.searchIcon}
                 />
               </div>
             </div>
-          </div>
+          </button>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleInputChange}
+            placeholder="Busca una actividad"
+            className={styles.searchInput}
+          />
+          {searchTerm && (
+            <button 
+              type="submit"
+              className={styles.trailingIcon}
+              aria-label="Limpiar búsqueda"
+            >
+              <div className={styles.iconContainer}>
+                <div className={styles.iconStateLayer}>
+                  <img
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/386207518883442a607ffd5068af0d6571abcc6654e219af2e8d84919581a2c5"
+                    alt="Clear"
+                    className={styles.clearIcon}
+                  />
+                </div>
+              </div>
+            </button>
+          )}
         </div>
-      </div>
+      </form>
+
+      {/* Resultados de búsqueda */}
+      {showResults && (
+        <div className={styles.resultsContainer}>
+          {loading ? (
+            <p className={styles.message}>Buscando...</p>
+          ) : filteredActivities.length > 0 ? (
+            <ul className={styles.resultsList}>
+              {filteredActivities.map((activity) => (
+                <li 
+                  key={activity.id} 
+                  className={styles.resultItem}
+                  onClick={() => handleItemClick(activity)}
+                >
+                  <h3>{activity.nombreActividad}</h3>
+                  <p>{activity.tipo}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.message}>No se encontraron actividades con ese nombre</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -27,11 +27,18 @@
   margin: 10px;
 }
 
+.brandContainer {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Quita el subrayado */
+}
+
 .brand {
   font-family: Reddit Sans, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 24px;
   font-weight: 500;
   margin: 0;
+  color: #fff; /* Mantiene el color blanco */
 }
 
 .navLinks {

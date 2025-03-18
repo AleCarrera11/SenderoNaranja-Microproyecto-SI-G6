@@ -13,6 +13,8 @@ import Protected from './pages/components/Proctected.jsx';
 import ParqueNacionalPage from './pages/Galeria/ParqueNacionalPage';
 import ReservationForm from './pages/Reserva/ReservaForm';
 import ConservationPage from './pages/Galeria/ConservationPage.jsx';
+import ParqueElAvila from './pages/Galeria/ParqueElAvila.jsx';
+import Senderismo from './pages/Galeria/Senderismo.jsx';
 
 export default function App() {
   
@@ -23,18 +25,16 @@ export default function App() {
         <Route path="/register" element={<Registration />} />
         <Route element={<Navigation1/>}>
           <Route path="/" element={<HomePage />} />
-          <Route element={<Protected />}>
             <Route path="/destinos" element={<Destinos />} />
             <Route path="/about" element={<SobreNosotros />} />
             <Route path="/perfil" element={<Perfil />} />
             <Route path="/destinos/:nombreActividad" element={<PerfilActividad />} />
             <Route path="/calendario" element={<Calendario />} />
             <Route path="/reserva" element={<ReservationForm />} />
-          </Route>
-          <Route path="/galeria" element={<ParqueNacionalPage />} />
-          <Route path="/importancia-conservacion" element={<ConservationPage />} />
-        
-
+            <Route path="/galeria" element={<ParqueNacionalPage />} />
+            <Route path="/importancia-conservacion" element={<ConservationPage />} />
+            <Route path="/parque-nacional-el-avila" element={<ParqueElAvila />} />
+            <Route path="/tips-senderismo" element={<Senderismo />} />
         </Route>
       </Routes>
     </BrowserRouter>

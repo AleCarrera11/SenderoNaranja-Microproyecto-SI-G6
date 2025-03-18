@@ -3,10 +3,9 @@ import React from "react";
 import { Footer } from "../components/Footer/Footer";
 import styles from "./Senderismo.module.css";
 
-function HikingTipsPage() {
+function Senderismo() {
   return (
     <div className={styles.pageContainer}>
-      <Header />
       <main className={styles.mainContent}>
         <h1 className={styles.mainTitle}>TIPS PARA HACER SENDERISMO</h1>
         <p className={styles.introduction}>

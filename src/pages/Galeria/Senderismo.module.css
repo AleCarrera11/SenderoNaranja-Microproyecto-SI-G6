@@ -21,6 +21,7 @@
     margin-bottom: 40px;
     font-size: 48px;
     font-weight: 600;
+    font-family: Figtree, sans-serif;
   }
   
   @media (width <= 991px) {
@@ -38,6 +39,7 @@
   .introduction {
     margin-bottom: 40px;
     font-size: 32px;
+    font-family: Figtree, sans-serif;
   }
   
   @media (width <= 991px) {
@@ -57,6 +59,7 @@
     margin-bottom: 40px;
     font-size: 40px;
     font-weight: normal;
+    font-family: Figtree, sans-serif;
   }
   
   @media (width <= 991px) {
@@ -76,6 +79,7 @@
     flex-direction: column;
     row-gap: 24px;
     font-size: 32px;
+    font-family: Figtree, sans-serif;
   }
   
   @media (width <= 991px) {
@@ -92,6 +96,7 @@
   
   .tipTitle {
     font-weight: 700;
+    font-family: Figtree, sans-serif;
   }
   
   .hikingImage {

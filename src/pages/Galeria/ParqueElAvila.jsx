@@ -97,7 +97,7 @@ const MainContent = () => {
 };
 
 // Main component that combines all sections
-function ElAvilaPark() {
+function ParqueElAvila() {
   return (
     <div className={styles.container}>
       <MainContent />

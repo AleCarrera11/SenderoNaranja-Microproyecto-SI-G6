@@ -9,8 +9,7 @@
 
 .footer {
   width: 100%;
-  /* max-width: 1233px;  Eliminado max-width para que se ajuste al contenedor principal */
-  padding: 20px 2px; /* Reducido padding horizontal y añadido vertical para espaciado interno */
+  padding: 20px 2px; 
   font-family:
     Figtree,
     -apple-system,
@@ -21,8 +20,8 @@
 
 .content {
   display: flex;
-  padding: 20px; /* Añadido padding interno para separar contenido del borde del footer */
-  box-sizing: border-box; /* Incluir padding en el ancho total */
+  padding: 20px; 
+  box-sizing: border-box;
 }
 
 .branding {
@@ -37,7 +36,7 @@
   object-fit: contain;
   object-position: center;
   width: 100%;
-  max-width: 200px; /* Limitar el ancho máximo del logo en el footer */
+  max-width: 200px; 
 }
 
 .copyright {

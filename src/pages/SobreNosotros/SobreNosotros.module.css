@@ -1,0 +1,312 @@
+/* VisionSection.module.css */
+.visionSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 51px auto 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1201px;
+  margin-top: 50px;
+}
+
+.content {
+  display: flex;
+  gap: 80px;
+}
+
+.imageColumn {
+  width: 50%;
+}
+
+.visionImage {
+  aspect-ratio: 0.84;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 50px;
+  width: 100%;
+  max-width: 500px; /* Limita el ancho máximo */
+  max-height: 2000px;/* Limita el alto máximo */
+  margin-top: 9px;
+}
+
+.textColumn {
+  width: 50%;
+  color: #000;
+  font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.title {
+  color: #da5702;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin-left: 33px;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.visionItem {
+  margin-top: 37px;
+}
+
+.itemTitle {
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.itemDescription {
+  font-size: 20px;
+  font-weight: 100;
+  line-height: 24px;
+  text-align: justify;
+}
+
+@media (width <= 991px) {
+  .visionSection {
+      max-width: 100%;
+      padding: 0 20px;
+  }
+
+  .content {
+      flex-direction: column;
+  }
+
+  .imageColumn,
+  .textColumn {
+      width: 100%;
+  }
+
+  .visionImage {
+      margin-top: 40px;
+  }
+
+  .title {
+      margin-left: 10px;
+      font-size: 40px;
+  }
+
+  .itemDescription {
+      margin-right: 5px;
+  }
+}
+
+/* AboutUsSection.module.css */
+.aboutSection {
+  width: 100%;
+  max-width: 1158px;
+  margin: 51px auto 0;
+  text-align: center;
+}
+
+.aboutTitle {
+  color: #da5702;
+  font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+  font-size: 96px;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #ee9a12;
+  margin-top: 36px;
+  font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.aboutContent {
+  display: flex;
+  gap: 80px;
+  margin-top: 51px;
+}
+
+.textColumn {
+  width: 64%;
+}
+
+.description {
+  color: #000;
+  text-align: left;
+  font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+  font-size: 24px;
+  font-weight: 100;
+  margin-top: 70px;
+  text-align: justify;
+}
+
+.aboutImageColumn {
+  width: 36%;
+}
+
+.aboutImage {
+  aspect-ratio: 0.71;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 50px;
+  width: 100%;
+  max-width: 400px; /* Limita el ancho máximo */
+  max-height: 400px;/* Limita el alto máximo */
+}
+
+@media (width <= 991px) {
+  .aboutSection {
+      max-width: 100%;
+      margin-top: 40px;
+  }
+
+  .aboutTitle {
+      font-size: 40px;
+  }
+
+  .aboutContent {
+      flex-direction: column;
+  }
+
+  .textColumn,
+  .aboutImageColumn {
+      width: 100%;
+  }
+
+  .description {
+      margin-top: 10px;
+      font-size: 20px;
+  }
+
+  .aboutImage {
+      margin-top: 10px;
+  }
+}
+/* ContactSection.module.css */
+.contactSection {
+  width: 100%;
+  max-width: 1106px;
+  margin: 60px auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.contactContent {
+  display: flex;
+  gap: 20px;
+  text-align: center;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.contactImageColumn {
+  width: 59%;
+}
+
+.contactImage {
+  aspect-ratio: 1.38;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 600px;
+}
+
+.contactInfo {
+  width: 41%;
+  display: flex;
+  flex-direction: column;
+  margin: auto 0;
+  font-family:
+      Figtree,
+      -apple-system,
+      Roboto,
+      Helvetica,
+      sans-serif;
+}
+
+.contactTitle {
+  color: #da5702;
+  font-size: 48px;
+  font-weight: 600;
+}
+
+.contactLinks {
+  color: #000;
+  letter-spacing: 0.5px;
+  margin-top: 38px;
+  padding-left: 45px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 35px;
+}
+
+.contactLink {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  text-decoration: underline;
+  color: inherit;
+  margin-top: 15px;
+}
+
+.icon {
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 8px;
+  width: 40px;
+}
+
+/* Media Queries para pantallas pequeñas */
+@media (max-width: 768px) {
+  .contactContent {
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+  }
+
+  .contactImageColumn,
+  .contactInfo {
+      width: 100%;
+  }
+
+  .contactLinks {
+      padding-left: 20px;
+      text-align: center;
+  }
+
+  .contactLink {
+      gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactLinks {
+      padding-left: 10px;
+  }
+}

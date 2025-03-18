@@ -1,201 +1,308 @@
+/* General container styles */
 .container {
-    background-color: #fff;
-    min-height: 100vh;
-    padding: 16px 45px 91px;
-    font-family: Inter, sans-serif;
+  background-color: #fff;
+  min-height: 100vh;
+  padding: 16px 45px 91px;
+  font-family: Inter, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+ /* align-items: center;*/
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 16px;
   }
-  @media (width<=640px) {
-    .container {
-      padding: 16px;
-    }
-  }
+}
+
+/* Header styles */
+.header {
+  justify-content: right; /* Cambié esto a 'flex-start' para alinear a la izquierda */
+  align-items: center;
+  gap: 20px;
+  padding: 8px 45px;
+  display: flex;
+}
+
+@media (max-width: 640px) {
   .header {
-    justify-content: flex-end;
-    align-items: center;
-    gap: 20px;
-    padding: 8px 45px;
-    display: flex;
+    padding: 8px;
+    flex-direction: column; /* En pantallas pequeñas apilar los elementos */
+    align-items: flex-start;
   }
-  @media (width<=640px) {
-    .header {
-      padding: 8px;
-    }
-  }
-  .registerText {
-    letter-spacing: -0.36px;
-    font-size: 18px;
-  }
-  .registerLink {
-    color: #e15616;
-    cursor: pointer;
-    margin-left: 8px;
-  }
-  .homeIcon {
-    font-size: 24px;
-  }
+}
+
+/* Text and link styles */
+.registerText {
+  letter-spacing: -0.36px;
+  font-size: 18px;
+}
+
+.registerLink {
+  color: #e15616;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.homeIcon {
+  font-size: 24px;
+}
+
+/* Content container */
+.content {
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 40px;
+  display: flex;
+}
+
+@media (max-width: 991px) {
   .content {
-    gap: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 40px;
-    display: flex;
+    flex-direction: column;
   }
-  @media (width<=991px) {
-    .content {
-      flex-direction: column;
-    }
-  }
-  .leftSide {
-    flex: 1;
-  }
+}
+
+.leftSide {
+  flex: 1;
+}
+
+.hikingImage {
+  object-fit: cover;
+  border-radius: 20px;
+  width: 100%;
+  height: auto;
+  max-height: 500px; /* Limita la altura */
+}
+
+@media (max-width: 640px) {
   .hikingImage {
-    object-fit: cover;
-    border-radius: 30px;
-    width: 100%;
-    height: auto;
+    height: 300px;
   }
-  @media (width<=640px) {
-    .hikingImage {
-      height: 300px;
-    }
-  }
+}
+
+.rightSide {
+  flex: 1;
+  max-width: 500px;
+}
+
+@media (max-width: 991px) {
   .rightSide {
-    flex: 1;
-    max-width: 500px;
+    max-width: 100%;
   }
-  @media (width<=991px) {
-    .rightSide {
-      max-width: 100%;
-    }
-  }
-  .logoSection {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  .logo {
-    width: 146px;
-    margin-bottom: 20px;
-  }
-  .brandName {
-    color: #ee9a12;
-    font-size: 20px;
-    font-weight: 500;
-  }
-  .loginTitle {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 24px;
-    font-weight: 600;
-  }
+}
+
+/* Logo section */
+.logoSection {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 146px;
+  margin-bottom: 20px;
+}
+
+.brandName {
+  color: #ee9a12;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* Login title */
+.loginTitle {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Login form styles */
+.loginForm {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;  /* Centra el formulario */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 640px) {
   .loginForm {
-    width: 100%;
-  }
-  @media (width<=640px) {
-    .loginForm {
-      padding: 0 20px;
-    }
-  }
-  .formGroup {
-    margin-bottom: 24px;
-  }
-  .label {
-    color: #555;
-    margin-bottom: 10px;
-    font-family: Poppins, sans-serif;
-    font-size: 16px;
-  }
-  .inputContainer {
-    background-color: #eee;
-    border-radius: 8px;
-    align-items: center;
-    height: 50px;
-    display: flex;
-    position: relative;
-  }
-  .inputField {
-    color: #555;
-    background: 0 0;
-    border: none;
-    flex: 1;
     padding: 0 20px;
-    font-family: Poppins, sans-serif;
-    font-size: 14px;
   }
-  .iconContaineremail,
-  .iconContainerlock {
-    background-color: #ee9a12;
-    border-radius: 8px;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 50px;
-    display: flex;
-  }
-  .loginButton {
-    color: #fff;
-    cursor: pointer;
-    background-color: #ee9a12;
-    border: none;
-    border-radius: 8px;
-    gap: 10px;
-    width: 100%;
-    height: 50px;
-    margin-bottom: 16px;
-    font-family: Poppins, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-  }
-  .divider {
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-    display: flex;
-  }
-  .line {
-    background-color: #c2c2c2;
-    flex: 1;
-    height: 1px;
-  }
-  .orText {
-    color: #c2c2c2;
-    font-size: 14px;
-  }
-  .googleButton {
-    color: #fff;
-    cursor: pointer;
-    background-color: #ee9a12;
-    border: none;
-    border-radius: 8px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    height: 50px;
-    margin-bottom: 16px;
-    font-family: Poppins, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    display: flex;
-  }
-  .socialIcon {
-    width: 30px;
-    height: 30px;
-  }
-  .facebookButton {
-    color: #fff;
-    cursor: pointer;
-    background-color: #ee9a12;
-    border: none;
-    border-radius: 8px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    height: 50px;
-    margin-bottom: 16px;
-    font-family: Poppins, sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    display: flex;
-  }
-  
+}
+
+/* Form group and input styles */
+.formGroup {
+  margin-bottom: 24px;
+}
+
+.label {
+  color: #555;
+  margin-bottom: 10px;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+}
+
+.inputContainer {
+  background-color: #eee;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 0 10px;
+}
+
+.inputField {
+  color: #555;
+  background: transparent;
+  border: none;
+  flex: 1;
+  padding: 0 10px;
+  font-family: Poppins, sans-serif;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.inputField:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 165, 0, 0.6); /* Cambio de color en el foco */
+}
+
+.iconContaineremail, .iconContainerlock {
+  background-color: #ee9a12;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+/* Buttons */
+.loginButton {
+  color: #fff;
+  cursor: pointer;
+  background-color: #ee9a12;
+  border: none;
+  border-radius: 8px;
+  gap: 10px;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 16px;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.loginButton:hover {
+  background-color: #d88500;  /* Sombra de color más oscuro */
+  transform: scale(1.05); /* Ligero efecto al hacer hover */
+}
+
+.divider {
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  display: flex;
+}
+
+.line {
+  background-color: #c2c2c2;
+  flex: 1;
+  height: 1px;
+}
+
+.orText {
+  color: #c2c2c2;
+  font-size: 14px;
+}
+
+/* Social buttons */
+.socialButton {
+  color: #fff;
+  cursor: pointer;
+  background-color: #ee9a12;
+  border: none;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 16px;
+  font-family: Poppins, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.socialButton:hover {
+  background-color: #d88500;
+  transform: scale(1.05);
+}
+
+/* Error message styles */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center; /* Centrar el texto de error */
+}
+
+.forgotPassword {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.resetPasswordButton {
+  background: none;
+  border: none;
+  color: #4A90E2;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.resetPasswordButton:disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.loginButton:disabled,
+.socialButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.inputField:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.loadingSpinner {
+  display: inline-flex;
+  align-items: center;
+}
+
+.loadingSpinner::after {
+  content: '';
+  width: 1em;
+  height: 1em;
+  margin-left: 0.5em;
+  border: 2px solid #fff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

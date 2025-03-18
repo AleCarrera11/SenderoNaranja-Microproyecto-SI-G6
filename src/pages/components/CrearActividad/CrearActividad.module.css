@@ -1,0 +1,292 @@
+.container {
+    width: 100%;
+    min-height: 100vh; /* Cambiado a 100vh para ocupar toda la altura */
+    background-color: #d9d9d9;
+    justify-content: center;
+    padding: 20px;
+    display: flex;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .wrapper {
+    width: 100%;
+    max-width: 1032px;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .header {
+    color: #fff;
+    background-color: #da5702;
+    border-radius: 8px;
+    width: 100%;
+    height: auto; /* Cambiado a auto para ajustar la altura al contenido */
+    padding: 20px; /* Ajustado el padding */
+    margin-bottom: 30px;
+    font-family: Poppins; /* Cambiado a Poppins */
+    font-size: 36px; /* Ajustado el tamaño de la fuente */
+    font-weight: 700;
+    box-shadow: 0 12px 24px #010bfd1f;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrado el texto horizontalmente */
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+    gap: 50px
+  }
+  
+  .formContainer {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 60px #e2ecf980;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .twoColumnGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    display: grid;
+    margin-top: 20px;
+  }
+  
+  .threeColumnGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+    display: grid;
+  }
+  
+  .formSection {
+    margin-top: 24px;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .closeIcon {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+  }
+  /* Input styles */
+  .inputContainer {
+    flex-direction: column;
+    gap: 10px;
+    display: flex;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .label {
+    color: #555;
+    font-family: Poppins;
+    font-size: 16px;
+  }
+  
+  .input {
+    color: #555;
+    background-color: #eee;
+    border-radius: 8px;
+    width: 100%;
+    height: 51px;
+    padding-left: 23px;
+    padding-right: 23px;
+    font-family: Poppins;
+    font-size: 14px;
+    border: none;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  /* Select styles */
+  .selectContainer {
+    flex-direction: column;
+    gap: 10px;
+    display: flex;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .selectWrapper {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .select {
+    color: #555;
+    background-color: #eee;
+    border-radius: 8px;
+    width: 100%;
+    height: 51px;
+    padding-left: 23px;
+    padding-right: 40px;
+    font-family: Poppins;
+    font-size: 14px;
+    border: none;
+    appearance: none;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  /* Textarea styles */
+  .textareaContainer {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+    display: flex;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+
+  .textarea {
+    color: #555;
+    background-color: #eee;
+    border-radius: 8px;
+    width: 100%;
+    height: 103px;
+    padding: 23px;
+    font-family: Poppins;
+    font-size: 14px;
+    border: none;
+    resize: vertical;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  /* Button styles */
+  .buttonGroup {
+    gap: 200px;
+    margin-top: 24px;
+    display: flex;
+  }
+  
+  .button {
+    color: #fff;
+    background-color: #ee9a12;
+    border-radius: 40px;
+    height: 54px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-family: Poppins; /* Cambiado a Poppins */
+    font-size: 16px; /* Ajustado el tamaño de la fuente */
+    font-weight: 600; /* Ajustado el peso de la fuente */
+    box-shadow: 0 4px 4px #00000040;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .button:hover {
+    transform: translateY(-2px);
+  }
+  
+  .button:active {
+    transform: translateY(0);
+  }
+  
+  /* Date range styles */
+  .dateRangeContainer {
+    flex-direction: column;
+    gap: 10px;
+    display: flex;
+    box-sizing: border-box; /* Añadido para incluir padding y border en el ancho y alto */
+  }
+  
+  .dateInput {
+    color: #555;
+    background-color: #eee;
+    border-radius: 8px;
+    width: 80%;
+    height: 34px;
+    padding-left: 18px;
+    Font-family: Poppins;
+    font-size: 14px;
+    border: none;
+    margin-bottom: 15px;
+  }
+  
+  .dateInput:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* Submit button container */
+  .submitContainer {
+    justify-content: flex-end;
+    margin-top: 24px;
+    display: flex;
+  }
+  
+  .submitButton {
+    color: #fff;
+    background-color: #ee9a12;
+    border-radius: 40px;
+    height: 54px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-family: Poppins;
+    font-size: 20px;
+    font-weight: 800;
+    box-shadow: 0 4px 4px #00000040;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Focus states */
+  .input:focus,
+  .select:focus,
+  .textarea:focus,
+  .dateInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #ee9a12;
+  }
+  
+  /* Responsive styles */
+  @media (width <= 991px) {
+    .header {
+      font-size: 48px;
+    }
+  
+    .twoColumnGrid {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  
+    .threeColumnGrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  
+  @media (width <= 640px) {
+    .header {
+      font-size: 36px;
+    }
+  
+    .threeColumnGrid {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  
+    .buttonGroup {
+      flex-direction: column;
+    }
+  }
+  
+  .fileNameLabel {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+    font-family: Poppins;
+  }
+  
+  .uploadContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }

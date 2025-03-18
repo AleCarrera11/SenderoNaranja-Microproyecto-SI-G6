@@ -122,8 +122,9 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDe
             <button 
               className={styles.deleteSlotButton}
               onClick={() => {
-                console.log('Slot a eliminar:', slot); // Para depuración
-                onDeleteSlot(slot.id);
+                const slotId = `${slot.date}-${slot.time}`;
+                console.log('Slot a eliminar:', slotId);
+                onDeleteSlot(slotId);
               }}
             >
               ×
@@ -323,7 +324,8 @@ const Calendar = () => {
         month: selectedMonth,
         year: selectedYear,
         createdAt: new Date(),
-        available: true
+        available: true,
+        id: `${date}-${time}`
       };
 
       const key = `${date}-${time}`;
@@ -379,6 +381,7 @@ const Calendar = () => {
         availableSlots: updatedSlots
       });
 
+      // Actualizar el estado local
       setAvailableSlots(prev => {
         const newSlots = { ...prev };
         delete newSlots[slotId];
@@ -389,6 +392,11 @@ const Calendar = () => {
       alert('Error al eliminar el horario');
     }
   };
+
+  useEffect(() => {
+    // Forzar la actualización del componente al cambiar los slots
+    setAvailableSlots(availableSlots);
+  }, [availableSlots]);
 
   const handleMonthChange = (increment) => {
     let newMonth = selectedMonth + increment;

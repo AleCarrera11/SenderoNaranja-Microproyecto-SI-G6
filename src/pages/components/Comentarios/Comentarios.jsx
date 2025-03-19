@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./Comentario.module.css";
-import { collection, addDoc, onSnapshot, getFirestore } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, getFirestore, query, where, getDocs } from "firebase/firestore";
 import { app } from "../../../credenciales.js";
 import { UserContext } from "../../../Context/UserContex";
 import logoSI from "/logoSI.png";
@@ -30,7 +30,7 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const ReviewCard = ({ comentario, avatarUrl, userName, rating, title, review, onDelete }) => {
+const ReviewCard = ({ comentario, avatarUrl, userName, rating, title, review, onDelete, profile }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleDeleteClick = () => {
@@ -54,13 +54,15 @@ const ReviewCard = ({ comentario, avatarUrl, userName, rating, title, review, on
         <p className={styles.reviewText}>{review}</p>
       </div>
       {showConfirmation && (
-        <div className={styles.confirmationDialog}>
+      <div className={styles.confirmationDialog}>
           <p>¿Estás seguro de que quieres eliminar este comentario?</p>
           <button onClick={() => handleConfirmation(true)}>Sí</button>
           <button onClick={() => handleConfirmation(false)}>No</button>
         </div>
       )}
-      <button className={styles.deleteButton} onClick={handleDeleteClick}>Eliminar</button>
+      {profile && profile?.tipoUser === "Administrador" && (
+        <button className={styles.deleteButton} onClick={handleDeleteClick}>Eliminar</button>
+      )}
     </article>
   );
 };
@@ -218,6 +220,7 @@ const Comentarios = () => {
           title={comentario.title}
           review={comentario.comentario}
           onDelete={handleDeleteComment}
+          profile={profile}
         />
       ))}
     </div>

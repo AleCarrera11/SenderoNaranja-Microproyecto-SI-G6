@@ -77,8 +77,37 @@ const ReservationForm = () => {
     setShowPaypal(true);
   };
 
+  const updateQuota = async () => {
+    try {
+      // Obtener referencia al documento de la actividad
+      const actividadDocRef = doc(db, 'destinos', actividadInfo.id);
+
+      // Obtener el slotId
+      const slotId = `${selectedDay}-${selectedTime}`;
+
+      // Actualizar el número de cupos disponibles de forma atómica
+      await updateDoc(actividadDocRef, {
+        [`availableSlots.${slotId}.cuposDisponibles`]: actividadInfo.slot.cuposDisponibles - 1
+      });
+
+      // Actualizar el estado local de actividadInfo
+      setActividadInfo(prevState => ({
+        ...prevState,
+        slot: {
+          ...prevState.slot,
+          cuposDisponibles: prevState.slot.cuposDisponibles - 1
+        }
+      }));
+
+      console.log('Cupos disponibles actualizados correctamente');
+    } catch (error) {
+      console.error('Error al actualizar los cupos disponibles:', error);
+    }
+  };
+
   const handlePaymentSuccess = () => {
     setShowConfirmation(true);
+    updateQuota();
   };
 
   const breadcrumbItems = ['Destinos', actividadInfo?.nombreActividad, 'Calendario', 'Reserva'];

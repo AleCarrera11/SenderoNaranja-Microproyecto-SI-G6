@@ -86,14 +86,38 @@
     margin-top: 12px;
   }
   
-  .reviewCard {
+.reviewCard {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     gap: 18px;
     width: 100%;
+    position: relative; /* Para posicionar el diálogo de confirmación */
+  }
+
+  .confirmationDialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 2px solid #ee9a12;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10; /* Asegura que esté por encima del contenido */
   }
   
+.deleteButton {
+    background-color: #ee9a12;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
 .userAvatar {
     aspect-ratio: 1.03;
     object-fit: contain;
@@ -191,18 +215,18 @@
   }
 
 .commentButton {
-    background-color: #4CAF50; /* Verde llamativo */
+    background-color: #ee9a12; /* Naranja */
     color: white;
     border: none;
-    padding: 10px 16px; /* Aumentar el padding */
-    border-radius: 25px; /* Bordes más redondeados */
+    padding: 10px 16px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease; /* Transición suave */
+    transition: background-color 0.3s ease;
   }
 
   .commentButton:hover {
-    background-color: #367c39; /* Verde más oscuro al pasar el mouse */
+    background-color: #d18200; /* Naranja más oscuro al pasar el mouse */
   }
   
   @media (width <= 991px) {

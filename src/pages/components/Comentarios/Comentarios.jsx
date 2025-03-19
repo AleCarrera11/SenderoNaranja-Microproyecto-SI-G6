@@ -6,6 +6,7 @@ import { app } from "../../../credenciales.js";
 import { UserContext } from "../../../Context/UserContex";
 import logoSI from "/logoSI.png";
 import { Link, useParams } from "react-router";
+import { deleteDoc, doc } from "firebase/firestore";
 
 const db = getFirestore(app);
 
@@ -29,7 +30,20 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const ReviewCard = ({ avatarUrl, userName, rating, title, review }) => {
+const ReviewCard = ({ comentario, avatarUrl, userName, rating, title, review, onDelete }) => {
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const handleDeleteClick = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmation = (confirmed) => {
+    setShowConfirmation(false);
+    if (confirmed) {
+      onDelete(comentario.id);
+    }
+  };
+
   return (
     <article className={styles.reviewCard}>
       <img src={avatarUrl} alt={`${userName} avatar`} className={styles.userAvatar} />
@@ -39,6 +53,14 @@ const ReviewCard = ({ avatarUrl, userName, rating, title, review }) => {
         <h4 className={styles.reviewTitle}>{title}</h4>
         <p className={styles.reviewText}>{review}</p>
       </div>
+      {showConfirmation && (
+        <div className={styles.confirmationDialog}>
+          <p>¿Estás seguro de que quieres eliminar este comentario?</p>
+          <button onClick={() => handleConfirmation(true)}>Sí</button>
+          <button onClick={() => handleConfirmation(false)}>No</button>
+        </div>
+      )}
+      <button className={styles.deleteButton} onClick={handleDeleteClick}>Eliminar</button>
     </article>
   );
 };
@@ -138,6 +160,16 @@ const Comentarios = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteDoc(doc(db, "comentarios", commentId));
+      // Actualizar la lista de comentarios después de eliminar
+      setComentarios(comentarios.filter((comentario) => comentario.id !== commentId));
+    } catch (error) {
+      console.error("Error al eliminar el comentario: ", error);
+    }
+  };
+
   // Función para agregar un comentario
   const handleAgregarComentario = async (comentario, rating) => {
     if (profile?.tipoUser === "Estudiante") {
@@ -179,11 +211,13 @@ const Comentarios = () => {
       {filtroActividad.map((comentario) => (
         <ReviewCard
           key={comentario.id}
+          comentario={comentario}
           avatarUrl={comentario.avatarUrl}
           userName={comentario.usuario}
           rating={comentario.rating}
           title={comentario.title}
           review={comentario.comentario}
+          onDelete={handleDeleteComment}
         />
       ))}
     </div>

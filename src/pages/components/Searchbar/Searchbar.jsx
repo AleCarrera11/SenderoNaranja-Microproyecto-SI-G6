@@ -4,6 +4,7 @@ import styles from "./SearchBar.module.css";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../credenciales";
 import ActivityIterator from "../../../utils/ActivityIterator";
+import SearchTypes from "../SearchTypes/SearchTypes";
 
 function SearchBar() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function SearchBar() {
   const [filteredActivities, setFilteredActivities] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showSearchTypes, setShowSearchTypes] = useState(false);
 
   // Cargar actividades de Firebase
   useEffect(() => {
@@ -62,6 +64,19 @@ function SearchBar() {
     navigate(`/destinos/${activity.nombreActividad}`);
   };
 
+  const handleOpenSearchTypes = () => {
+    setShowSearchTypes(true);
+  };
+
+  const handleCloseSearchTypes = () => {
+    setShowSearchTypes(false);
+  };
+
+  const handleSearchResults = (results) => {
+    setFilteredActivities(results);
+    setShowResults(true);
+  };
+
   return (
     <div className={styles.searchContainer}>
       <form onSubmit={handleSearch} className={styles.searchbarContainer}>
@@ -70,6 +85,7 @@ function SearchBar() {
             type="button" 
             className={styles.leadingIcon}
             aria-label="Buscar"
+            onClick={handleOpenSearchTypes}
           >
             <div className={styles.iconContainer}>
               <div className={styles.iconStateLayer}>
@@ -107,6 +123,18 @@ function SearchBar() {
           )}
         </div>
       </form>
+
+      {showSearchTypes && (
+        <div className={styles.searchTypesOverlay}>
+          <div className={styles.searchTypesContainer}>
+            <SearchTypes 
+              onClose={() => setShowSearchTypes(false)}
+              activities={activities}
+              onSearchResults={handleSearchResults}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Resultados de búsqueda */}
       {showResults && (

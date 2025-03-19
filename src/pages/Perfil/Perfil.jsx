@@ -1,36 +1,40 @@
-import React, { use } from "react";
-import  Perfil1  from "../Registration/Perfil1";
-import  ActAsignados  from "../components/ActAsignados/ActAsignados";
+import React, { useState, useEffect } from "react";
+import Perfil1 from "../Registration/Perfil1";
+import ActAsignados from "../components/ActAsignados/ActAsignados";
 import { Footer } from "../components/Footer/Footer";
 import ActividadesReservadas from "../components/ActividadesReservadas/ActividadesReservadas";
-import { UserContext } from "../../Context/UserContex";
-import { getAuth } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { auth } from "../../credenciales";
+import styles from "./Perfil.module.css";
 
-const handleLogout = async () => {
-  const auth = getAuth();
-  const navigate = useNavigate();
-  
-  try {
-    await auth.signOut();
-    navigate("/"); // Esto redirigirá al usuario a la página principal (home)
-  } catch (error) {
-    console.error("Error al cerrar sesión:", error);
-  }
-};
+function Perfil() {
+  const [currentUser, setCurrentUser] = useState(null);
 
-export default function Perfil() {
-  const { profile } = use(UserContext);  // Corregido: useContext en lugar de use
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUser(user);
+      } else {
+        setCurrentUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
-    <main >
-      <div >
-        
-        <Perfil1 />
-        {profile.tipoUser === "Estudiante" && <ActividadesReservadas />}
-        {profile.tipoUser === "Guía" && <ActAsignados />}
-        <Footer />       
-      </div>
-    </main>
+    <div className={styles.container}>
+      <main className={styles.mainContent}>
+        <div className={styles.profileSection}>
+          <Perfil1 />
+        </div>
+        <div className={styles.activitiesSection}>
+          {currentUser && <ActividadesReservadas userId={currentUser.uid} />}
+          {currentUser && currentUser.tipoUser === "Guía" && <ActAsignados />}
+        </div>
+      </main>
+      <Footer />
+    </div>
   );
 }
+
+export default Perfil;

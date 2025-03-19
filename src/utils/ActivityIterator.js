@@ -49,6 +49,64 @@ class ActivityIterator {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
   }
+
+  sortByRating(order = 'desc') {
+    const sorted = [...this.activities].sort((a, b) => {
+      if (order === 'desc') {
+        return (b.rating || 0) - (a.rating || 0); // Mayor a menor
+      }
+      return (a.rating || 0) - (b.rating || 0); // Menor a mayor
+    });
+    return new ActivityIterator(sorted);
+  }
+
+  sortByDistance(order = 'desc') {
+    const sorted = [...this.activities].sort((a, b) => {
+      const distA = parseFloat(a.distancia?.replace('km', '')) || 0;
+      const distB = parseFloat(b.distancia?.replace('km', '')) || 0;
+      if (order === 'desc') {
+        return distB - distA; // Mayor a menor
+      }
+      return distA - distB; // Menor a mayor
+    });
+    return new ActivityIterator(sorted);
+  }
+
+  filterByDay(day) {
+    return new ActivityIterator(
+      this.activities.filter(activity => 
+        activity.diasDisponibles?.includes(day)
+      )
+    );
+  }
+
+  sortByDifficulty(order = 'desc') {
+    const difficultyOrder = ['Fácil', 'Moderado', 'Difícil'];
+    const sorted = [...this.activities].sort((a, b) => {
+      // Convertir dificultad numérica a texto si es necesario
+      const getDifficultyText = (activity) => {
+        if (typeof activity.dificultad === 'number' || activity.dificultad.includes('/')) {
+          const num = parseFloat(activity.dificultad);
+          if (num <= 3) return 'Fácil';
+          if (num <= 7) return 'Moderado';
+          return 'Difícil';
+        }
+        return activity.dificultad;
+      };
+
+      const diffA = getDifficultyText(a);
+      const diffB = getDifficultyText(b);
+      
+      const indexA = difficultyOrder.indexOf(diffA);
+      const indexB = difficultyOrder.indexOf(diffB);
+      
+      if (order === 'desc') {
+        return indexB - indexA; // Mayor a menor
+      }
+      return indexA - indexB; // Menor a mayor
+    });
+    return new ActivityIterator(sorted);
+  }
 }
 
 export default ActivityIterator; 

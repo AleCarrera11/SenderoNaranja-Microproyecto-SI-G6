@@ -559,12 +559,14 @@ const Calendar = () => {
     textAlign: 'center',
     fontSize: '1.2em',
     fontWeight: 'bold',
+    fontFamily: "Figtree",
     border: '2px solid #ee9a12'
   }}>Ingrese la cantidad de cupos máximos</h2>
  <input
     type="text"
     placeholder="Cupos máximos"
     value={newQuota}
+    style={{fontFamily: "Figtree",}}
    onChange={(e) => {
       const value = e.target.value;
       if (value === "" || /^\d*$/.test(value)) {
@@ -573,8 +575,9 @@ const Calendar = () => {
     }}
   />
   <div className={styles.modalButtons}>
-    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
-    <button onClick={async () => {
+    <button onClick={() => setShowAddQuota(false)}style={{ backgroundColor: '#ee9a12', color: 'white' , fontFamily: "Figtree",borderRadius: '25px', borderColor: "white" }}>Cancelar</button>
+    <button style={{ backgroundColor: "white", color: '#ee9a12' , fontFamily: "Figtree",borderRadius: '25px', borderColor: "white" }}
+    onClick={async () => {
       if (parseInt(newQuota, 10) <= 0) {
         alert('Por favor, ingrese un número de cupos mayor que 0.');
         return;

@@ -1,10 +1,10 @@
-/* VisionSection.module.css */
 .visionSection {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   margin: 51px auto 0;
+  padding: 0 20px; 
 }
 
 .container {
@@ -28,20 +28,15 @@
   object-position: center;
   border-radius: 50px;
   width: 100%;
-  max-width: 500px; /* Limita el ancho máximo */
-  max-height: 2000px;/* Limita el alto máximo */
+  max-width: 500px;
+  max-height: 2000px;
   margin-top: 9px;
 }
 
 .textColumn {
   width: 50%;
   color: #000;
-  font-family:
-      Figtree,
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
+  font-family: Figtree, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 32px;
   font-weight: 500;
 }
@@ -73,51 +68,65 @@
   text-align: justify;
 }
 
-@media (width <= 991px) {
-  .visionSection {
-      max-width: 100%;
-      padding: 0 20px;
-  }
-
+@media (max-width: 991px) {
   .content {
-      flex-direction: column;
+    flex-direction: column;
+    gap: 40px; 
   }
 
   .imageColumn,
   .textColumn {
-      width: 100%;
+    width: 100%;
   }
 
   .visionImage {
-      margin-top: 40px;
+    margin-top: 40px;
+    max-width: 100%; 
   }
 
   .title {
-      margin-left: 10px;
-      font-size: 40px;
+    margin-left: 0; 
+    font-size: 40px;
   }
 
   .itemDescription {
-      margin-right: 5px;
+    margin-right: 0; 
+  }
+
+  .itemTitle {
+    font-size: 28px; 
   }
 }
 
+@media (max-width: 480px) {
+  .title {
+    font-size: 36px; 
+  }
+
+  .visionImage {
+    margin-top: 20px;
+    max-width: 100%; 
+  }
+  .itemTitle {
+    font-size: 24px; 
+  }
+
+  .itemDescription {
+    font-size: 18px; 
+  }
+}
 /* AboutUsSection.module.css */
 .aboutSection {
   width: 100%;
   max-width: 1158px;
   margin: 51px auto 0;
   text-align: center;
+  padding: 0 20px;
 }
 
 .aboutTitle {
   color: #da5702;
-  font-family:
-      Figtree,
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
+  font-family: Figtree, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 96px;
   font-weight: 700;
 }
@@ -125,12 +134,7 @@
 .subtitle {
   color: #ee9a12;
   margin-top: 36px;
-  font-family:
-      Figtree,
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
+  font-family: Figtree, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 32px;
   font-weight: 400;
 }
@@ -148,12 +152,7 @@
 .description {
   color: #000;
   text-align: left;
-  font-family:
-      Figtree,
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
+  font-family: Figtree, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 24px;
   font-weight: 100;
   margin-top: 70px;
@@ -170,36 +169,51 @@
   object-position: center;
   border-radius: 50px;
   width: 100%;
-  max-width: 400px; /* Limita el ancho máximo */
-  max-height: 400px;/* Limita el alto máximo */
+  max-width: 400px;
+  max-height: 400px;
 }
 
-@media (width <= 991px) {
-  .aboutSection {
-      max-width: 100%;
-      margin-top: 40px;
-  }
-
+@media (max-width: 991px) {
   .aboutTitle {
-      font-size: 40px;
+    font-size: 40px;
   }
 
   .aboutContent {
-      flex-direction: column;
+    flex-direction: column;
+    gap: 40px;
   }
 
   .textColumn,
   .aboutImageColumn {
-      width: 100%;
+    width: 100%;
   }
 
   .description {
-      margin-top: 10px;
-      font-size: 20px;
+    margin-top: 10px;
+    font-size: 20px;
   }
 
   .aboutImage {
-      margin-top: 10px;
+    margin-top: 10px;
+    max-width: 100%; 
+  }
+
+  .subtitle {
+    font-size: 28px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutTitle {
+    font-size: 36px; 
+  }
+
+  .subtitle {
+    font-size: 24px;
+  }
+
+  .description {
+    font-size: 18px; 
   }
 }
 /* ContactSection.module.css */

@@ -14,7 +14,7 @@ export function Page1() {
               DE <br />
               EL ÁVILA
             </h2>
-            <a href="#routes" className={styles.ctaButton}>
+            <a href="/login" className={styles.ctaButton}>
               TOP RUTAS
             </a>
           </div>

@@ -36,13 +36,13 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
   );
 };
 
-const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota }) => {
+const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota, isPast }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
-    const handleAddClick = () => {
-        if (!isAdmin) return;
-        setShowAddMenu(true);
-    };
+  const handleAddClick = () => {
+    if (!isAdmin || isPast) return;
+    setShowAddMenu(true);
+  };
 
   const getSlotsForDay = () => {
     return Object.values(availableSlots).filter(slot => slot.date === day);
@@ -50,11 +50,11 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, a
 
   const daySlots = getSlotsForDay();
 
-  return (
-    <div className={`${styles.dayCell} ${isToday && isCurrentMonth ? styles.today : ''}`}>
+return (
+    <div className={`${styles.dayCell} ${isToday && isCurrentMonth ? styles.today : ''} ${isPast ? styles.pastDay : ''}`}>
       <div className={styles.dayNumber}>
         {day}
-        {isAdmin && isCurrentMonth && (
+        {isAdmin && isCurrentMonth && !isPast && (
           <button 
             className={styles.addSlotButton}
             onClick={handleAddClick}
@@ -487,20 +487,26 @@ const Calendar = () => {
               {day}
             </div>
           ))}
-          {currentMonthDays.map((day) => (
-            <DayCell 
-              key={`current-${day}`} 
-              day={day} 
-              isToday={parseInt(day) === currentDate && isCurrentMonth}
-              isCurrentMonth={true}
-              isAdmin={isAdmin}
-              onDeleteSlot={handleDeleteTimeSlot}
-              availableSlots={availableSlots}
-              onTimeSlotSelect={handleTimeSlotSelect}
-              setSelectedTimeSlot={setSelectedTimeSlot}
-              setShowAddQuota={setShowAddQuota}
-            />
-          ))}
+          {currentMonthDays.map((day) => {
+            const isPast = selectedYear < new Date().getFullYear() ||
+              (selectedYear === new Date().getFullYear() && selectedMonth < new Date().getMonth()) ||
+              (selectedYear === new Date().getFullYear() && selectedMonth === new Date().getMonth() && parseInt(day) < new Date().getDate());
+            return (
+              <DayCell
+                key={`current-${day}`}
+                day={day}
+                isToday={parseInt(day) === currentDate && isCurrentMonth}
+                isCurrentMonth={true}
+                isAdmin={isAdmin}
+                onDeleteSlot={handleDeleteTimeSlot}
+                availableSlots={availableSlots}
+                onTimeSlotSelect={handleTimeSlotSelect}
+                setSelectedTimeSlot={setSelectedTimeSlot}
+                setShowAddQuota={setShowAddQuota}
+                isPast={isPast}
+              />
+            );
+          })}
           {nextMonthDays.map((day) => (
             <DayCell
               key={`next-${day}`}
@@ -513,6 +519,7 @@ const Calendar = () => {
               onTimeSlotSelect={handleTimeSlotSelect}
               setSelectedTimeSlot={setSelectedTimeSlot}
               setShowAddQuota={setShowAddQuota}
+              isPast={false}
             />
           ))}
         </div>

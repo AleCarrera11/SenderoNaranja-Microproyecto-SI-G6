@@ -74,11 +74,17 @@
     font-size: 40px;
     display: flex;
   }
-  
   .scheduleRow {
-    gap: 5px;
     display: flex;
+    flex-direction: column; /* Muestra el Día arriba y el Horario abajo */
+    gap: 5px;
     margin: 0;
+  }
+  
+  .scheduleItem {
+    display: flex;
+    gap: 10px;
+    align-items: center;
   }
   
   .label {
@@ -140,3 +146,12 @@
       font-size: 24px;
     }
   }
+
+  .noActivities {
+    text-align: center;
+    color: #666;
+    font-size: 18px;
+    margin-top: 40px;
+    font-family: Figtree, -apple-system, Roboto, Helvetica, sans-serif;
+  }
+  

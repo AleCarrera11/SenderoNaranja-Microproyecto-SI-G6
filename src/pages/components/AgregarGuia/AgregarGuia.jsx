@@ -84,23 +84,23 @@ function AgregarGuia({ actividadId, onClose, onGuideAssigned }) { // Agrega onGu
 };
      
 
+const fetchGuiasDisponibles = async () => {
+  const qGuias = query(collection(db, "users"), where("tipoUser", "==", "Guía"));
+  const querySnapshotGuias = await getDocs(qGuias);
+  const guiasData = querySnapshotGuias.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 
-  const fetchGuiasDisponibles = async () => {
-    const qGuias = query(collection(db, "users"), where("tipoUser", "==", "Guía"));
-    const querySnapshotGuias = await getDocs(qGuias);
-    const guiasData = querySnapshotGuias.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+  // Obtener todos los guías asignados
+  const qTodosGuiasAsignados = await getDocs(collection(db, "GuiasAsignados"));
+  const todosGuiasAsignadosData = qTodosGuiasAsignados.docs.map((doc) => doc.data().guiaId);
 
-    const qGuiasAsignados = query(collection(db, "GuiasAsignados"), where("actividadId", "==", actividadId));
-    const querySnapshotGuiasAsignados = await getDocs(qGuiasAsignados);
-    const guiasAsignadosData = querySnapshotGuiasAsignados.docs.map((doc) => doc.data().guiaId);
-    setGuiasAsignados(guiasAsignadosData);
+  // Filtrar los guías disponibles
+  const guiasDisponibles = guiasData.filter((guia) => !todosGuiasAsignadosData.includes(guia.id));
+  setGuias(guiasDisponibles);
+};
 
-    const guiasDisponibles = guiasData.filter((guia) => !guiasAsignadosData.includes(guia.id));
-    setGuias(guiasDisponibles);
-  };
 
   useEffect(() => {
     if (actividadId) {

@@ -1,5 +1,4 @@
 "use client";
-import React, { useState, useEffect } from "react";
 import styles from "./Calendario.module.css";
 import { db, auth } from "../../credenciales";
 import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, updateDoc, onSnapshot } from "firebase/firestore";
@@ -36,13 +35,14 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
   );
 };
 
+import React, { useState, useEffect } from "react";
 const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
-    const handleAddClick = () => {
-        if (!isAdmin) return;
-        setShowAddMenu(true);
-    };
+  const handleAddClick = () => {
+    if (!isAdmin) return;
+    setShowAddMenu(true);
+  };
 
   const getSlotsForDay = () => {
     return Object.values(availableSlots).filter(slot => slot.date === day);
@@ -64,7 +64,7 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, a
         )}
       </div>
       {showAddMenu && (
-        <div className={styles.addSlotMenu}>
+        <div className={styles.addSlotMenu} ref={addMenuRef}>
           <button onClick={() => {
             setSelectedTimeSlot({ day, time: "8:00am", type: "morning" });
             setShowAddQuota(true);
@@ -554,25 +554,44 @@ const Calendar = () => {
     fontWeight: 'bold',
     border: '2px solid #ee9a12'
   }}>Ingrese la cantidad de cupos máximos</h2>
-  <input
-    type="number"
+ <input
+    type="text"
     placeholder="Cupos máximos"
     value={newQuota}
-    onChange={(e) => setNewQuota(e.target.value)}
+    onChange={(e) => {
+      const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
+      if (value === '' || (!isNaN(value) && value >= 0)) {
+        setNewQuota(value);
+      }
+    }}
+    style={{ MozAppearance: 'textfield' }}
   />
+  {newQuota === 0 && (
+    <p style={{ color: 'red' }}>
+      El número de cupos debe ser mayor a 0.
+    </p>
+  )}
   <div className={styles.modalButtons}>
-    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
-    <button onClick={async () => {
+    <button onClick={() => {
       setShowAddQuota(false);
+      setSelectedTimeSlot(null);
+      setNewQuota('');
+    }} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
+    <button onClick={async () => {
       if (selectedTimeSlot) {
-        await handleAddTimeSlotWithQuota(
-          selectedTimeSlot.day,
-          selectedTimeSlot.time,
-          selectedTimeSlot.type,
-          newQuota
-        );
-        setSelectedTimeSlot(null);
-        setNewQuota('');
+        if (newQuota > 0) {
+          await handleAddTimeSlotWithQuota(
+            selectedTimeSlot.day,
+            selectedTimeSlot.time,
+            selectedTimeSlot.type,
+            newQuota
+          );
+          setSelectedTimeSlot(null);
+          setNewQuota('');
+          setShowAddQuota(false);
+        } else {
+          alert('El número de cupos debe ser mayor a 0.');
+        }
       }
     }}>
       Confirmar

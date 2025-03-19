@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { db } from "../../../credenciales";
 import styles from "./Footer.module.css";
 import instagramlogo from '/instagramlogo.png'
 import ProyectoAvila from '/ProyectoAvila.png'
@@ -8,6 +11,36 @@ import youtubelogo from '/youtubelogo.png'
 import correologo from '/correologo.png'
 
 export function Footer() {
+  const [topDestinos, setTopDestinos] = useState([]);
+
+  useEffect(() => {
+    const fetchTopDestinos = async () => {
+      try {
+        // Obtener todos los documentos sin ordenamiento
+        const querySnapshot = await getDocs(collection(db, "destinos"));
+        const destinos = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        
+        // Ordenar manualmente por rating si existe, si no existe usar 0
+        const ordenados = destinos.sort((a, b) => 
+          (b.rating || 0) - (a.rating || 0)
+        ).slice(0, 4); // Tomar los primeros 4
+
+        console.log("Destinos ordenados:", ordenados);
+        setTopDestinos(ordenados);
+      } catch (error) {
+        console.error("Error fetching destinos:", error);
+      }
+    };
+
+    fetchTopDestinos();
+  }, []);
+
+  // Agregar un console.log para ver el estado
+  console.log("Estado actual de topDestinos:", topDestinos);
+
   return (
     <div className={styles.pageContainer}>
       <footer className={styles.footer}>
@@ -55,21 +88,13 @@ export function Footer() {
             <div className={styles.linkColumn}>
               <h3 className={styles.columnTitle}>Destinos</h3>
               <ul className={styles.linkList}>
-                <li>
-                  <a href="#sabas">Sabas Nieves</a>
-                </li>
-                <li>
-                  <a href="#quebrada">Quebrada Quintero</a>
-                </li>
-                <li>
-                  <a href="#lagunazo">El Lagunazo</a>
-                </li>
-                <li>
-                  <a href="#naiguata">Pico Naiguata</a>
-                </li>
-                <li>
-                  <a href="#vivero">Visita al vivero</a>
-                </li>
+                {topDestinos.map((destino) => (
+                  <li key={destino.id}>
+                    <Link to={`/destinos/${destino.nombreActividad}`}>
+                      {destino.nombreActividad}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -77,13 +102,13 @@ export function Footer() {
               <h3 className={styles.columnTitle}>Sección Informativa</h3>
               <ul className={styles.linkList}>
                 <li>
-                  <a href="#galeria">Galeria</a>
+                  <Link to="/galeria">Galeria</Link>
                 </li>
                 <li>
-                  <a href="#parque">Parque Nacional Waraira Repano</a>
+                  <Link to="/parque-nacional">Parque Nacional Waraira Repano</Link>
                 </li>
                 <li>
-                  <a href="#preservacion">Preservación</a>
+                  <Link to="/conservation">Preservación</Link>
                 </li>
               </ul>
             </div>
@@ -92,16 +117,16 @@ export function Footer() {
               <h3 className={styles.columnTitle}>Sobre Nosotros</h3>
               <ul className={styles.linkList}>
                 <li>
-                  <a href="#mision">Misión y Visión</a>
+                  <Link to="/sobre-nosotros">Misión y Visión</Link>
                 </li>
                 <li>
-                  <a href="#proyecto">Proyecto Avila</a>
+                  <Link to="/proyecto-avila">Proyecto Avila</Link>
                 </li>
                 <li>
-                  <a href="#unimet">UNIMET Sostenible</a>
+                  <Link to="/unimet-sostenible">UNIMET Sostenible</Link>
                 </li>
                 <li>
-                  <a href="#contactos">Contactos</a>
+                  <Link to="/sobre-nosotros#contacto">Contactos</Link>
                 </li>
               </ul>
             </div>

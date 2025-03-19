@@ -1,137 +1,217 @@
+.searchContainer {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
 .searchbarContainer {
-    background-color: #ece6f0;
-    border-radius: 28px;
-    justify-content: start;
-    align-self: center;
-    align-items: center;
-    gap: 4px;
-    width: 643px;
-    min-width: 360px;
-    max-width: 100%;
-    min-height: 65px;
-    margin-top: 56px;
-    display: flex;
-    overflow: hidden;
+  background-color: #ece6f0;
+  border-radius: 28px;
+  justify-content: start;
+  align-self: center;
+  align-items: center;
+  gap: 4px;
+  width: 643px;
+  min-width: 360px;
+  max-width: 100%;
+  min-height: 65px;
+  margin-top: 56px;
+  display: flex;
+  overflow: hidden;
+}
+
+@media (width<=991px) {
+  .searchbarContainer {
+    margin-top: 40px;
   }
-  
-  @media (width<=991px) {
-    .searchbarContainer {
-      margin-top: 40px;
-    }
-  }
-  
+}
+
+.stateLayer {
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: start;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 240px;
+  height: 100%;
+  padding: 4px;
+  display: flex;
+}
+
+@media (width<=991px) {
   .stateLayer {
-    flex-wrap: wrap;
-    flex: 1;
-    justify-content: start;
-    align-items: center;
-    gap: 4px;
-    width: 100%;
-    min-width: 240px;
-    height: 100%;
-    padding: 4px;
-    display: flex;
+    max-width: 100%;
   }
-  
-  @media (width<=991px) {
-    .stateLayer {
-      max-width: 100%;
-    }
-  }
-  
-  .leadingIcon {
-    flex-direction: column;
-    justify-content: center;
-    align-self: stretch;
-    align-items: center;
-    width: 48px;
-    min-height: 48px;
-    margin-top: auto;
-    margin-bottom: auto;
-    display: flex;
-  }
-  
-  .iconContainer {
-    border-radius: 100px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    max-width: 40px;
-    display: flex;
-    overflow: hidden;
-  }
-  
-  .iconStateLayer {
-    justify-content: center;
-    align-self: stretch;
-    align-items: center;
-    gap: 10px;
-    width: 40px;
-    margin-top: auto;
-    margin-bottom: auto;
-    padding: 8px;
-    display: flex;
-  }
-  
-  .searchIcon,
-  .clearIcon {
-    aspect-ratio: 1;
-    object-fit: contain;
-    object-position: center;
-    align-self: stretch;
-    width: 24px;
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-  
+}
+
+.leadingIcon, .trailingIcon {
+  flex-direction: column;
+  justify-content: center;
+  align-self: stretch;
+  align-items: center;
+  width: 48px;
+  min-height: 48px;
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.iconContainer {
+  border-radius: 100px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 40px;
+  display: flex;
+  overflow: hidden;
+  background: transparent;
+}
+
+.iconStateLayer {
+  justify-content: center;
+  align-self: stretch;
+  align-items: center;
+  gap: 10px;
+  width: 40px;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 8px;
+  display: flex;
+  background: transparent;
+}
+
+.searchIcon,
+.clearIcon {
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  align-self: stretch;
+  width: 24px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.searchInput {
+  line-height: 24px;
+  color: #49454f;
+  letter-spacing: 0.5px;
+  flex: 1;
+  align-self: center;
+  gap: 10px;
+  min-width: 240px;
+  height: 100%;
+  font-family:
+    Figtree,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+@media (width<=991px) {
   .searchInput {
-    line-height: 24px;
-    color: #49454f;
-    letter-spacing: 0.5px;
-    flex: 1;
-    align-self: center;
-    gap: 10px;
-    min-width: 240px;
-    height: 100%;
-    font-family:
-      Figtree,
-      -apple-system,
-      Roboto,
-      Helvetica,
-      sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    background: transparent;
-    border: none;
-    outline: none;
+    max-width: 100%;
   }
+}
+
+.trailingElements {
+  justify-content: end;
+  align-self: stretch;
+  align-items: center;
+  width: 48px;
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
   
-  @media (width<=991px) {
-    .searchInput {
-      max-width: 100%;
-    }
-  }
-  
-  .trailingElements {
-    justify-content: end;
-    align-self: stretch;
-    align-items: center;
-    width: 48px;
-    margin-top: auto;
-    margin-bottom: auto;
-    display: flex;
-  }
-  
-  .trailingIcon {
-    flex-direction: column;
-    justify-content: center;
-    align-self: stretch;
-    align-items: center;
-    width: 48px;
-    min-height: 48px;
-    margin-top: auto;
-    margin-bottom: auto;
-    display: flex;
-  }
+}
+
+.leadingIcon:hover, .trailingIcon:hover {
+  opacity: 0.8;
+}
+
+.resultsContainer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-top: 8px;
+  z-index: 1000;
+}
+
+.resultsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultItem {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.resultItem:hover {
+  background-color: #f5f5f5;
+}
+
+.resultItem h3 {
+  margin: 0;
+  font-size: 16px;
+  font-family:
+    Figtree,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  color: #333;
+}
+
+.resultItem p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.message {
+  padding: 16px;
+  text-align: center;
+  color: #666;
+}
+
+.searchTypesOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.searchTypesContainer {
+  position: relative;
+  background: white;
+  border-radius: 100px;
+  max-width: 90vw;
+  max-height: 90vh;
+}
   

@@ -93,7 +93,7 @@ const SobreNosotros = () => {
         </div>
       </section>
 
-      <section className={styles.contactSection}>
+      <section id="contacto" className={styles.contactSection}>
         <div className={styles.contactContent}>
           <div className={styles.contactImageColumn}>
             <img

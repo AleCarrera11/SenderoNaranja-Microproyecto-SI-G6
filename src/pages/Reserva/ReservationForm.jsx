@@ -3,7 +3,7 @@ import styles from './ReservationForm.module.css';
 import BotonPaypal from '../components/BotonPaypal/BotonPaypal';
 import ReservationConfirmation from '../components/ReservaConfirmada/ReservationConfirmation';
 import { UserContext } from '../../Context/UserContex';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 const ReservationForm = () => {
   const location = useLocation();
@@ -19,23 +19,7 @@ const ReservationForm = () => {
   const [formError, setFormError] = useState('');
   const [showPaypal, setShowPaypal] = useState(false);
   const { profile } = use(UserContext);
-  const { state } = useLocation();  // Extrae el estado pasado en la navegación
-  const { selectedDay, selectedTime, actividadInfo, nombreActividad, guia } = state || {};  // Asignación de valores
 
-  console.log(selectedDay, selectedTime, actividadInfo, nombreActividad, guia);  // Verifica si los datos están disponibles
-
-  // Inicializa el formulario con los datos del usuario
-  React.useEffect(() => {
-    if (profile) {
-      setFormData({
-        name: profile.nombre || '',  // Se asegura de usar el nombre correcto
-        lastName: profile.apellido || '',
-        email: profile.email || '',
-        phone: profile.telefono || ''
-      });
-    }
-  }, [profile]);
-  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -83,13 +67,12 @@ const ReservationForm = () => {
     setShowConfirmation(true);
   };
 
-  const breadcrumbItems = ['Destinos', actividadInfo?.nombreActividad, 'Calendario', 'Reserva'];
-  // Mostrar los datos de la actividad dinámicamente
+  const breadcrumbItems = ['Destinos', nombreActividad || 'Actividad', 'Calendario', 'Reserva'];
   const tripDetails = [
-    { label: 'Día de la excursión', value: selectedDay || 'No disponible' },
-    { label: 'Horarios', value: selectedTime || 'No disponible' },
-    { label: 'Duración estimada', value: actividadInfo?.duracion || 'No disponible' },
-    { label: 'Guía asignado', value: guia || 'No asignado' },
+    { label: 'Día de la excursión', value: selectedDay || 'No especificado' },
+    { label: 'Horarios', value: selectedTime || 'No especificado' },
+    { label: 'Duración estimada', value: actividadInfo?.duracion || 'No especificado' },
+    { label: 'Guía asignado', value: actividadInfo?.guia || 'Por asignar' },
   ];
   const formFields = [
     { label: 'Nombre:', type: 'text', name: 'name', id: 'name' },
@@ -127,8 +110,8 @@ const ReservationForm = () => {
       <h1 className={styles.pageTitle}>Reserva</h1>
       <div className={styles.contentWrapper}>
         <section className={styles.formSection}>
-          <h2 className={styles.destinationTitle}>{actividadInfo?.nombreActividad}</h2>
-          <p className={styles.activityType}>{actividadInfo?.tipo}</p>
+          <h2 className={styles.destinationTitle}>{nombreActividad}</h2>
+          <p className={styles.activityType}>{actividadInfo.tipo}</p>
           <div className={styles.ratingWrapper}>
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M7.7665 29.3333L9.93317 19.9667L2.6665 13.6667L12.2665 12.8333L15.9998 4L19.7332 12.8333L29.3332 13.6667L22.0665 19.9667L24.2332 29.3333L15.9998 24.3667L7.7665 29.3333Z" fill="#FFD522" />
@@ -163,7 +146,14 @@ const ReservationForm = () => {
           {formError && <p className={styles.error}>{formError}</p>}
         </section>
         <aside className={styles.imageSection}>
-          <img src={actividadInfo?.foto} />
+          <img 
+            src={actividadInfo.foto || "https://via.placeholder.com/400"} 
+            alt={`Imagen de ${nombreActividad}`} 
+            className={styles.tripImage}
+            onError={(e) => {
+              e.target.src = "https://via.placeholder.com/400";
+            }}
+          />
           <div className={styles.tripInfo}>
             {tripInfo.map((info, index) => (
               <p key={index}>
@@ -216,4 +206,4 @@ const ReservationForm = () => {
   );
 };
 
-export default ReservationForm;
+export default ReservationForm; 

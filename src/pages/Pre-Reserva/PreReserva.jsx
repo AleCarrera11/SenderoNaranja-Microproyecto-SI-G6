@@ -37,20 +37,39 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
 
           // Obtener la cantidad de cupos reservados
           const reservacionesRef = collection(db, 'reservaciones');
-          const reservacionesQuery = query(
+        
+          // Construir la consulta para obtener las reservaciones con el formato de fecha actual
+          const reservacionesQuery1 = query(
+            reservacionesRef,
+            where('actividadId', '==', actividadId),
+            where('fecha', '==', selectedDay +"/"+ selectedMonth +"/"+ selectedYear),
+            where('hora', '==', selectedSlot.time)
+          );
+        
+          // Construir la consulta para obtener las reservaciones con el formato de fecha anterior
+          const reservacionesQuery2 = query(
             reservacionesRef,
             where('actividadId', '==', actividadId),
             where('selectedDay', '==', selectedDay),
-            where('selectedTime', '==', selectedSlot.time)
+            where('hora', '==', selectedSlot.time)
           );
-          const reservacionesSnapshot = await getDocs(reservacionesQuery)
+        
+          // Ejecutar las consultas
+          const reservacionesSnapshot1 = await getDocs(reservacionesQuery1)
             .catch(error => {
-              console.error('Error al obtener las reservaciones:', error);
+              console.error('Error al obtener las reservaciones (formato de fecha actual):', error);
               return null;
             });
-
-          const cuposReservados = reservacionesSnapshot?.size || 0;
-          
+        
+          const reservacionesSnapshot2 = await getDocs(reservacionesQuery2)
+            .catch(error => {
+              console.error('Error al obtener las reservaciones (formato de fecha anterior):', error);
+              return null;
+            });
+        
+          // Contar los documentos que coinciden con las consultas
+          const cuposReservados = (reservacionesSnapshot1?.size || 0) + (reservacionesSnapshot2?.size || 0);
+        
           setActividadInfo({ ...actividadData, id: actividadId, slot: slot, cuposReservados: cuposReservados });
 
           // Agregar listener a la colección "reservaciones"
@@ -58,11 +77,14 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
             query(
               collection(db, 'reservaciones'),
               where('actividadId', '==', actividadId),
-              where('selectedDay', '==', selectedDay),
-              where('selectedTime', '==', selectedSlot.time)
+              where('fecha', '==', selectedDay +"/"+ selectedMonth +"/"+ selectedYear),
+              where('hora', '==', selectedSlot.time)
             ),
             async (snapshot) => {
-              const cuposReservados = snapshot.size;
+              let cuposReservados = 0;
+              snapshot.forEach(() => {
+                cuposReservados++;
+              });
               
               // Obtener el documento de la actividad para obtener los cupos disponibles
               const actividadDoc = await getDoc(doc(db, 'destinos', actividadId));

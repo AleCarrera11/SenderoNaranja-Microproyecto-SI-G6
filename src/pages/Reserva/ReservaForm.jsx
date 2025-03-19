@@ -3,8 +3,7 @@ import styles from './ReservationForm.module.css';
 import BotonPaypal from '../components/BotonPaypal/BotonPaypal';
 import ReservationConfirmation from '../components/ReservaConfirmada/ReservationConfirmation';
 import { UserContext } from '../../Context/UserContex';
-import { Link, useLocation } from 'react-router';
-import { doc, updateDoc } from 'firebase/firestore';
+import { useLocation } from 'react-router';
 
 const ReservationForm = () => {
 
@@ -86,21 +85,35 @@ const ReservationForm = () => {
       // Obtener el slotId
       const slotId = `${selectedDay}-${selectedTime}`;
 
-      // Actualizar el número de cupos disponibles de forma atómica
-      await updateDoc(actividadDocRef, {
-        [`availableSlots.${slotId}.cuposDisponibles`]: actividadInfo.slot.cuposDisponibles - 1
-      });
-
-      // Actualizar el estado local de actividadInfo
-      setActividadesInfo(prevState => ({
-        ...prevState,
-        slot: {
-          ...prevState.slot,
-          cuposDisponibles: prevState.slot.cuposDisponibles - 1
+      // Actualizar el número de cupos disponibles de forma atómica usando una transacción
+      await runTransaction(db, async (transaction) => {
+        const actividadDoc = await transaction.get(actividadDocRef);
+        if (!actividadDoc.exists()) {
+          throw "Document does not exist!";
         }
-      }));
 
-      console.log('Cupos disponibles actualizados correctamente');
+        const slot = actividadDoc.data().availableSlots?.[slotId];
+        if (!slot) {
+          throw "Slot does not exist!";
+        }
+
+        const newCuposDisponibles = slot.cuposDisponibles + 1;
+
+        transaction.update(actividadDocRef, {
+          [`availableSlots.${slotId}.cuposDisponibles`]: newCuposDisponibles
+        });
+
+        // Actualizar el estado local de actividadInfo
+        setActividadInfo(prevState => ({
+          ...prevState,
+          slot: {
+            ...prevState.slot,
+            cuposDisponibles: newCuposDisponibles
+          }
+        }));
+
+        console.log('Cupos disponibles actualizados correctamente');
+      });
     } catch (error) {
       console.error('Error al actualizar los cupos disponibles:', error);
     }
@@ -111,21 +124,7 @@ const ReservationForm = () => {
     updateQuota();
   };
 
-  const breadcrumbItems = [
-    {
-      to: `/destinos`,
-      label: 'Destinos'
-    },
-    {
-      to: `/destinos/${ actividadInfo?.nombreActividad}`,
-      label: actividadInfo?.nombreActividad
-    },
-    {
-      to: `/calendario/${actividadInfo?.nombreActividad}`,
-      label: 'Calendario'
-    },
-    'Reserva'
-  ];
+  const breadcrumbItems = ['Destinos', actividadInfo?.nombreActividad, 'Calendario', 'Reserva'];
   // Mostrar los datos de la actividad dinámicamente
   const tripDetails = [
     { label: 'Día de la excursión', value: selectedDay || 'No disponible' },
@@ -151,23 +150,21 @@ const ReservationForm = () => {
   return (
     <div className={styles.container}>
       <nav aria-label="Breadcrumb">
-          <ol className={styles.breadcrumb}>
-            {breadcrumbItems.map((item, index) => (
-              <React.Fragment key={index}>
-                {index > 0 && <li className={styles.breadcrumbSeparator} aria-hidden="true">/</li>}
-                <li className={index === breadcrumbItems.length - 1 ? styles.currentPage : styles.breadcrumbItem}>
-                  {typeof item === 'object' && item.to && item.label ? (
-                    <Link to={item.to} className={styles.navLink}>
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <span aria-current={index === breadcrumbItems.length - 1 ? "page" : undefined}>{item}</span>
-                  )}
-                </li>
-              </React.Fragment>
-            ))}
-          </ol>
-        </nav>
+        <ol className={styles.breadcrumb}>
+          {breadcrumbItems.map((item, index) => (
+            <React.Fragment key={index}>
+              {index > 0 && <li className={styles.breadcrumbSeparator} aria-hidden="true">/</li>}
+              <li className={index === breadcrumbItems.length - 1 ? styles.currentPage : styles.breadcrumbItem}>
+                {index === breadcrumbItems.length - 1 ? (
+                  <span aria-current="page">{item}</span>
+                ) : (
+                  <a href="#">{item}</a>
+                )}
+              </li>
+            </React.Fragment>
+          ))}
+        </ol>
+      </nav>
       <h1 className={styles.pageTitle}>Reserva</h1>
       <div className={styles.contentWrapper}>
         <section className={styles.formSection}>

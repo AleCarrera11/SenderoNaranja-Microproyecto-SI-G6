@@ -85,21 +85,35 @@ const ReservationForm = () => {
       // Obtener el slotId
       const slotId = `${selectedDay}-${selectedTime}`;
 
-      // Actualizar el número de cupos disponibles de forma atómica
-      await updateDoc(actividadDocRef, {
-        [`availableSlots.${slotId}.cuposDisponibles`]: actividadInfo.slot.cuposDisponibles - 1
-      });
-
-      // Actualizar el estado local de actividadInfo
-      setActividadInfo(prevState => ({
-        ...prevState,
-        slot: {
-          ...prevState.slot,
-          cuposDisponibles: prevState.slot.cuposDisponibles - 1
+      // Actualizar el número de cupos disponibles de forma atómica usando una transacción
+      await runTransaction(db, async (transaction) => {
+        const actividadDoc = await transaction.get(actividadDocRef);
+        if (!actividadDoc.exists()) {
+          throw "Document does not exist!";
         }
-      }));
 
-      console.log('Cupos disponibles actualizados correctamente');
+        const slot = actividadDoc.data().availableSlots?.[slotId];
+        if (!slot) {
+          throw "Slot does not exist!";
+        }
+
+        const newCuposDisponibles = slot.cuposDisponibles + 1;
+
+        transaction.update(actividadDocRef, {
+          [`availableSlots.${slotId}.cuposDisponibles`]: newCuposDisponibles
+        });
+
+        // Actualizar el estado local de actividadInfo
+        setActividadInfo(prevState => ({
+          ...prevState,
+          slot: {
+            ...prevState.slot,
+            cuposDisponibles: newCuposDisponibles
+          }
+        }));
+
+        console.log('Cupos disponibles actualizados correctamente');
+      });
     } catch (error) {
       console.error('Error al actualizar los cupos disponibles:', error);
     }

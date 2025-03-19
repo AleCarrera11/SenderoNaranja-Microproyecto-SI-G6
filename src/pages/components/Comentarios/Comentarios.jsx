@@ -6,6 +6,7 @@ import { app } from "../../../credenciales.js";
 import { UserContext } from "../../../Context/UserContex";
 import logoSI from "/logoSI.png";
 import { Link, useParams } from "react-router";
+import { deleteDoc, doc } from "firebase/firestore";
 
 const db = getFirestore(app);
 
@@ -15,23 +16,34 @@ const StarRating = ({ rating }) => {
       {[...Array(5)].map((_, index) => {
         const starValue = index + 1;
         return (
-          <img
+          <svg
             key={index}
-            src={
-              starValue <= rating
-                ? "https://cdn.builder.io/api/v1/image/assets/TEMP/af9501b3840757d6ca32944f8fe9c641d0ca15c3721bc0165797e288fad4afd4?placeholderIfAbsent=true&apiKey=ed74dcfaa95a44a29728b63f96c1becf"
-                : "https://cdn.builder.io/api/v1/image/assets/TEMP/af9501b3840757d6ca32944f8fe9c641d0ca15c3721bc0165797e288fad4afd4?placeholderIfAbsent=true&apiKey=ed74dcfaa95a44a29728b63f96c1becf&color=grey"
-            }
-            alt="star"
             className={styles.starIcon}
-          />
+            viewBox="0 0 24 24"
+            fill={starValue <= rating ? "#ffc107" : "#ccc"}
+          >
+            <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
+          </svg>
         );
       })}
     </div>
   );
 };
 
-const ReviewCard = ({ avatarUrl, userName, rating, title, review }) => {
+const ReviewCard = ({ comentario, avatarUrl, userName, rating, title, review, onDelete }) => {
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const handleDeleteClick = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmation = (confirmed) => {
+    setShowConfirmation(false);
+    if (confirmed) {
+      onDelete(comentario.id);
+    }
+  };
+
   return (
     <article className={styles.reviewCard}>
       <img src={avatarUrl} alt={`${userName} avatar`} className={styles.userAvatar} />
@@ -41,6 +53,14 @@ const ReviewCard = ({ avatarUrl, userName, rating, title, review }) => {
         <h4 className={styles.reviewTitle}>{title}</h4>
         <p className={styles.reviewText}>{review}</p>
       </div>
+      {showConfirmation && (
+        <div className={styles.confirmationDialog}>
+          <p>¿Estás seguro de que quieres eliminar este comentario?</p>
+          <button onClick={() => handleConfirmation(true)}>Sí</button>
+          <button onClick={() => handleConfirmation(false)}>No</button>
+        </div>
+      )}
+      <button className={styles.deleteButton} onClick={handleDeleteClick}>Eliminar</button>
     </article>
   );
 };
@@ -50,8 +70,8 @@ const CommentInput = ({ avatarUrl, onCommentSubmit }) => {
   const [rating, setRating] = useState(0);
 
   const handleSubmit = () => {
-    if (rating < 1 || rating > 5) {
-      alert("Por favor, ingresa un número entre 1 y 5 para la calificación.");
+    if (rating === 0) {
+      alert("Por favor, califica la actividad.");
       return;
     }
     onCommentSubmit(comentario, rating);
@@ -69,16 +89,22 @@ const CommentInput = ({ avatarUrl, onCommentSubmit }) => {
         value={comentario}
         onChange={(e) => setComentario(e.target.value)}
       />
-      <input
-        type="number"
-        min="1"
-        max="5"
-        placeholder="Calificación (1-5)"
-        className={styles.ratingInput}
-        value={rating}
-        onChange={(e) => setRating(parseInt(e.target.value))}
-      />
-      <StarRating rating={rating} />
+      <div className={styles.starRating}>
+        {[...Array(5)].map((_, index) => {
+          const starValue = index + 1;
+          return (
+            <svg
+              key={index}
+              className={styles.starIcon}
+              viewBox="0 0 24 24"
+              fill={starValue <= rating ? "#ffc107" : "#ccc"}
+              onClick={() => setRating(starValue)}
+            >
+              <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" />
+            </svg>
+          );
+        })}
+      </div>
       <button onClick={handleSubmit} className={styles.commentButton}>
         Enviar
       </button>
@@ -134,6 +160,16 @@ const Comentarios = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteDoc(doc(db, "comentarios", commentId));
+      // Actualizar la lista de comentarios después de eliminar
+      setComentarios(comentarios.filter((comentario) => comentario.id !== commentId));
+    } catch (error) {
+      console.error("Error al eliminar el comentario: ", error);
+    }
+  };
+
   // Función para agregar un comentario
   const handleAgregarComentario = async (comentario, rating) => {
     if (profile?.tipoUser === "Estudiante") {
@@ -175,11 +211,13 @@ const Comentarios = () => {
       {filtroActividad.map((comentario) => (
         <ReviewCard
           key={comentario.id}
+          comentario={comentario}
           avatarUrl={comentario.avatarUrl}
           userName={comentario.usuario}
           rating={comentario.rating}
           title={comentario.title}
           review={comentario.comentario}
+          onDelete={handleDeleteComment}
         />
       ))}
     </div>

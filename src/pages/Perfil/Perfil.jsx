@@ -28,7 +28,7 @@ function Perfil() {
           <Perfil1 />
         </div>
         <div className={styles.activitiesSection}>
-          {currentUser && <ActividadesReservadas userId={currentUser.uid} />}
+          {currentUser && currentUser.tipoUser === "Estudiante" && <ActividadesReservadas />}
           {currentUser && currentUser.tipoUser === "Guía" && <ActAsignados />}
         </div>
       </main>

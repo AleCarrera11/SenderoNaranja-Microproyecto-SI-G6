@@ -2,6 +2,10 @@
     flex-direction: column;
     align-items: center;
     display: flex;
+    border: 1px solid #ddd; /* Borde sutil */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 20px; /* Espacio interno */
+    border-radius: 10px; /* Bordes redondeados */
   }
   
   .divider {
@@ -82,21 +86,46 @@
     margin-top: 12px;
   }
   
-  .reviewCard {
+.reviewCard {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
     gap: 18px;
     width: 100%;
+    position: relative; /* Para posicionar el diálogo de confirmación */
+  }
+
+  .confirmationDialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 2px solid #ee9a12;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10; /* Asegura que esté por encima del contenido */
   }
   
-  .userAvatar {
+.deleteButton {
+    background-color: #ee9a12;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+.userAvatar {
     aspect-ratio: 1.03;
     object-fit: contain;
     object-position: center;
     border-radius: 50%;
     width: 74px;
     margin-top: 4px;
+    border: 2px solid #ffc107; /* Borde circular dorado */
   }
   
   .reviewContent {
@@ -118,18 +147,21 @@
     font-weight: 500;
   }
   
-  .starRating {
+.starRating {
     display: flex;
-    align-items: stretch;
-    gap: 6px;
+    align-items: center;
+    gap: 4px;
     margin-top: 4px;
   }
-  
-  .starIcon {
-    aspect-ratio: 1;
-    object-fit: contain;
-    object-position: center;
-    width: 16px;
+
+.starIcon {
+    width: 20px; /* Tamaño de estrella más grande */
+    height: 20px;
+    transition: transform 0.2s ease-in-out; /* Transición suave */
+  }
+
+  .starIcon:hover {
+    transform: scale(1.2); /* Zoom out al pasar el mouse */
   }
   
   .reviewTitle {
@@ -166,24 +198,35 @@
       sans-serif;
   }
   
-  .commentInput {
-    background-color: #e8e8e8;
-    border-radius: 8px;
-    border: none;
+.commentInput {
+    background-color: #f5f5f5; /* Color de fondo más claro */
+    border-radius: 25px; /* Bordes más redondeados */
+    border: 1px solid #ccc; /* Borde gris claro */
     flex: 1;
     font-size: 16px;
     font-weight: 400;
-    padding: 14px 22px;
+    padding: 12px 20px; /* Ajustar el padding */
+    transition: border-color 0.3s ease; /* Transición suave para el borde */
   }
 
-  .commentButton {
-    background-color: #ee9a12;
+  .commentInput:focus {
+    border-color: #ffc107; /* Cambiar el color del borde al enfocar */
+    outline: none; /* Eliminar el contorno predeterminado */
+  }
+
+.commentButton {
+    background-color: #ee9a12; /* Naranja */
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 10px 16px;
+    border-radius: 25px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .commentButton:hover {
+    background-color: #d18200; /* Naranja más oscuro al pasar el mouse */
   }
   
   @media (width <= 991px) {
@@ -217,4 +260,3 @@
       padding: 14px 20px;
     }
   }
-  

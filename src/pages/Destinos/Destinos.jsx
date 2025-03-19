@@ -35,13 +35,15 @@ function Destinos() {
 
   const handleDeleteActivity = async () => {
     if (selectedActivityId) {
-      try {
-        await deleteDoc(doc(db, "destinos", selectedActivityId));
-        console.log(`Activity with ID: ${selectedActivityId} deleted successfully`);
-        // Reset the selected activity
-        setSelectedActivityId(null);
-      } catch (error) {
-        console.error("Error deleting activity: ", error);
+      if (window.confirm("¿Seguro que quieres eliminar esta actividad?")) {
+        try {
+          await deleteDoc(doc(db, "destinos", selectedActivityId));
+          console.log(`Activity with ID: ${selectedActivityId} deleted successfully`);
+          // Reset the selected activity
+          setSelectedActivityId(null);
+        } catch (error) {
+          console.error("Error deleting activity: ", error);
+        }
       }
     } else {
       console.log('No activity selected');
@@ -104,4 +106,3 @@ function Destinos() {
 }
 
 export default Destinos;
-

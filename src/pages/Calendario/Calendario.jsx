@@ -124,7 +124,9 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDe
               onClick={() => {
                 const slotId = `${slot.date}-${slot.time}`;
                 console.log('Slot a eliminar:', slotId);
-                onDeleteSlot(slotId);
+                if (window.confirm("¿Seguro que quieres eliminar este horario?")) {
+                  onDeleteSlot(slotId);
+                }
               }}
             >
               ×

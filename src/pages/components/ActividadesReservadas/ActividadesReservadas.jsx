@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../../credenciales";
 import styles from "./ActividadesReservadas.module.css";
+import HistorialActividades from "./HistorialActividades";
 
 const ActivityCard = ({
   imageSrc,
@@ -41,6 +42,7 @@ const ActivityCard = ({
 function ActividadesReservadas({ userId }) {
   const [reservedActivities, setReservedActivities] = useState([]);
   const [loading, setLoading] = useState(true);
+   const [isModal, setModal] = useState(false);
 
   useEffect(() => {
     const fetchReservedActivities = async () => {
@@ -86,7 +88,7 @@ function ActividadesReservadas({ userId }) {
   return (
     <section className={styles.container}>
       <header className={styles.header}>
-        <button className={styles.historyButton}>Historial</button>
+        <button className={styles.historyButton} onClick={() => setModal(true)}>Historial</button>
         <h1 className={styles.title}>Actividades reservadas</h1>
       </header>
       {reservedActivities.length === 0 ? (
@@ -103,6 +105,15 @@ function ActividadesReservadas({ userId }) {
             description={activity.descripcion}
           />
         ))
+      )}
+      {isModal && (
+        <div className={styles.overlay} onClick={() => setModal(false)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <HistorialActividades
+              onClose={() => setModal(false)}
+             />
+          </div>
+        </div>
       )}
     </section>
   );

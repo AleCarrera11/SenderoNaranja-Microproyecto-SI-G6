@@ -9,6 +9,7 @@
     height: 569px;
     box-sizing: border-box;
     overflow: hidden;
+    top: 20%;
   }
   
   @media (max-width: 991px) {

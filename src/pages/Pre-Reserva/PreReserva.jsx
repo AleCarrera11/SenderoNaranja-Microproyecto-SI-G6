@@ -4,13 +4,12 @@ import { useNavigate } from 'react-router';
 import { db } from '../../credenciales';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
 
-const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => {
+const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selectedMonth}) => {
   const navigate = useNavigate();
   const [actividadInfo, setActividadInfo] = useState(null);
   const [nombreGuia, setNombreGuia] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Obtener información de la actividad
   useEffect(() => {
     const fetchActividadInfo = async () => {
       try {
@@ -86,7 +85,7 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
         selectedTime: selectedSlot.time,
         actividadInfo,
         nombreActividad,
-        guia: nombreGuia  // ✅ Pasamos el nombre real del guía
+        guia: nombreGuia  
       } 
     });
   };
@@ -118,7 +117,7 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose }) => 
           <div className={styles.leftColumn}>
             <div className={styles.textContent}>
               <div className={styles.description}>
-                <span className={styles.boldBlack}>Día de la excursión</span>: {selectedDay}
+                <span className={styles.boldBlack}>Día de la excursión</span>: {selectedDay +"/"+ selectedMonth}
                 <br />
                 <span className={styles.boldBlack}>Horario:</span> {selectedSlot.time}
                 <br />

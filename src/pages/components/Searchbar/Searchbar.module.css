@@ -186,12 +186,24 @@
   margin: 4px 0 0;
   font-size: 14px;
   color: #666;
+  font-family:
+  Figtree,
+  -apple-system,
+  Roboto,
+  Helvetica,
+  sans-serif;
 }
 
 .message {
   padding: 16px;
   text-align: center;
   color: #666;
+  font-family:
+  Figtree,
+  -apple-system,
+  Roboto,
+  Helvetica,
+  sans-serif;
 }
 
 .searchTypesOverlay {

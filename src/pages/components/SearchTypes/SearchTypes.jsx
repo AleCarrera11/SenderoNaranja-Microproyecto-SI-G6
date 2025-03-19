@@ -185,7 +185,7 @@ function SearchTypes({ onClose, activities, onSearchResults }) {
               className={`${styles.optionText} ${selectedOption === 'Clasificación' ? styles.selectedOption : ''}`}
               onClick={() => handleOptionToggle('Clasificación')}
             >
-              Clasificación
+              Puntuación
             </button>
             {selectedOption === 'Clasificación' && renderOptionButtons('Clasificación')}
           </div>

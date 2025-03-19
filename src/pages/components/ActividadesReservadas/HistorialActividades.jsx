@@ -20,17 +20,11 @@ function RatingDisplay({ rating }) {
 function ForumComment({ comment }) {
   return (
     <div className={styles.forumSection}>
-      <h3 className={styles.forumTitle}>Participación en el foro:</h3>
+      <h3 className={styles.forumTitle}>Comentario:</h3>
       <div className={styles.commentContainer}>
         <div className={styles.commentContent}>
           <p className={styles.commentText}>"{comment}".</p>
-          <button className={styles.moreInfoButton}>Más información</button>
         </div>
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/93d8b91549a062d1a1cb2ba40c9eccba25bc680e158beb9788978ad82ff588e0?placeholderIfAbsent=true&apiKey=b35c72053759436189f8972d183adf0c"
-          alt="Separador"
-          className={styles.dividerImage}
-        />
       </div>
     </div>
   );
@@ -84,7 +78,7 @@ function ActivityCard({
 }
 
 // Main HistorialActividades Component
-function HistorialActividades() {
+function HistorialActividades({onClose}) {
   const activities = [
     {
       id: 1,
@@ -124,6 +118,7 @@ function HistorialActividades() {
           src="https://cdn.builder.io/api/v1/image/assets/TEMP/f86d4e47ee3c75386ded66b978574b311788d76f2e80ca0bcc3a292c7fee4622?placeholderIfAbsent=true&apiKey=b35c72053759436189f8972d183adf0c"
           alt="Actividades icon"
           className={styles.headerIcon}
+          onClick={onClose}
         />
       </header>
 

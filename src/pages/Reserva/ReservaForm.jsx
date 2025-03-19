@@ -6,8 +6,7 @@ import { UserContext } from '../../Context/UserContex';
 import { useLocation } from 'react-router';
 
 const ReservationForm = () => {
-  const location = useLocation();
-  const { selectedDay, selectedTime, actividadInfo, nombreActividad } = location.state || {};
+
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -22,8 +21,7 @@ const ReservationForm = () => {
   const { state } = useLocation();  // Extrae el estado pasado en la navegación
   const { selectedDay, selectedTime, actividadInfo, nombreActividad, guia } = state || {};  // Asignación de valores
 
-  console.log(selectedDay, selectedTime, actividadInfo, nombreActividad, guia);  // Verifica si los datos están disponibles
-
+  console.log(selectedDay, selectedTime, actividadInfo, nombreActividad, guia, profile.uid, actividadInfo.id);  // Verifica si los datos están disponibles
   // Inicializa el formulario con los datos del usuario
   React.useEffect(() => {
     if (profile) {
@@ -208,6 +206,8 @@ const ReservationForm = () => {
               selectedDay={selectedDay}
               selectedTime={selectedTime}
               nombreActividad={nombreActividad}
+              guia={guia}
+              userId={profile.uid}
             />
           </div>
         </div>

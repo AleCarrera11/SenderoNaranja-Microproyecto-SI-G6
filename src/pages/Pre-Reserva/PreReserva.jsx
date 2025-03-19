@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import styles from './PreReserva.module.css';
 import { useNavigate } from 'react-router';
 import { db } from '../../credenciales';
-import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
 
-const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selectedMonth}) => {
+const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selectedMonth, quota }) => {
   const navigate = useNavigate();
-  const [actividadInfo, setActividadInfo] = useState(null);
-  const [nombreGuia, setNombreGuia] = useState("");
-  const [loading, setLoading] = useState(true);
+    const [actividadInfo, setActividadInfo] = useState(null);
+    const [nombreGuia, setNombreGuia] = useState("");
+    const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchActividadInfo = async () => {
@@ -18,27 +18,73 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
           collection(db, 'destinos'),
           where('nombreActividad', '==', nombreActividad)
         );
-        const actividadSnapshot = await getDocs(actividadQuery);
+        const actividadSnapshot = await getDocs(actividadQuery)
+          .catch(error => {
+            console.error('Error al obtener el snapshot de la actividad:', error);
+            setActividadInfo(null);
+            setLoading(false);
+            return null; // Importante retornar null para que el código no continue si hay un error
+          });
         
-        if (!actividadSnapshot.empty) {
-          const actividadData = actividadSnapshot.docs[0].data();
-          const actividadId = actividadSnapshot.docs[0].id;  // Obtén el id del documento
-          console.log('Datos de la actividad:', actividadData);
-          setActividadInfo({ ...actividadData, id: actividadId });  // Añade el id a los datos de la actividad
+        if (!actividadSnapshot?.empty) {
+          const actividadDoc = actividadSnapshot.docs[0];
+          const actividadData = actividadDoc.data();
+          const actividadId = actividadDoc.id;
+          
+          // Obtener información del slot específico
+          const slotId = `${selectedDay}-${selectedSlot.time}`;
+          const slot = actividadData.availableSlots ? actividadData.availableSlots[slotId] : null;
+
+          // Obtener la cantidad de cupos reservados
+          const reservacionesRef = collection(db, 'reservaciones');
+          const reservacionesQuery = query(
+            reservacionesRef,
+            where('actividadId', '==', actividadId),
+            where('selectedDay', '==', selectedDay),
+            where('selectedTime', '==', selectedSlot.time)
+          );
+          const reservacionesSnapshot = await getDocs(reservacionesQuery)
+            .catch(error => {
+              console.error('Error al obtener las reservaciones:', error);
+              return null;
+            });
+
+          const cuposReservados = reservacionesSnapshot?.size || 0;
+          
+          setActividadInfo({ ...actividadData, id: actividadId, slot: slot, cuposReservados: cuposReservados });
+
+          // Agregar listener a la colección "reservaciones"
+          const unsubscribe = onSnapshot(
+            query(
+              collection(db, 'reservaciones'),
+              where('actividadId', '==', actividadId),
+              where('selectedDay', '==', selectedDay),
+              where('selectedTime', '==', selectedSlot.time)
+            ),
+            (snapshot) => {
+              const cuposReservados = snapshot.size;
+              setActividadInfo(prevState => ({ ...prevState, cuposReservados: cuposReservados }));
+            },
+            (error) => {
+              console.error('Error al obtener las reservaciones:', error);
+            }
+          );
+
+          return () => unsubscribe();
         } else {
           console.log('No se encontró la actividad');
+          setActividadInfo(null);
         }
-        setLoading(false);
       } catch (error) {
         console.error('Error al obtener la información de la actividad:', error);
+        setActividadInfo(null);
+      } finally {
         setLoading(false);
       }
     };
   
-    if (nombreActividad) {
-      fetchActividadInfo();
-    }
-  }, [nombreActividad]);
+    fetchActividadInfo();
+  }, [nombreActividad, selectedDay, selectedSlot, quota]);
 
   useEffect(() => {
     const fetchGuiaAsignado = async () => {
@@ -48,9 +94,13 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
       try {
         const guiasRef = collection(db, 'GuiasAsignados');
         const q = query(guiasRef, where('actividadId', '==', actividadInfo?.id));
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await getDocs(q)
+          .catch(error => {
+            console.error('Error al obtener el snapshot de guías asignados:', error);
+            return null; // Importante retornar null para que el código no continue si hay un error
+          });
   
-        if (!querySnapshot.empty) {
+        if (!querySnapshot?.empty) {
           // Accede al guiaId del primer documento encontrado
           const guiaAsignado = querySnapshot.docs[0].data();
           const guiaId = guiaAsignado.guiaId;  // Aquí usamos 'guiaId'
@@ -58,9 +108,13 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
   
           if (guiaId) {
             const guiaDocRef = doc(db, 'users', guiaId);
-            const guiaDocSnap = await getDoc(guiaDocRef);
+            const guiaDocSnap = await getDoc(guiaDocRef)
+              .catch(error => {
+                console.error('Error al obtener el documento del guía:', error);
+                return null; // Importante retornar null para que el código no continue si hay un error
+              });
   
-            if (guiaDocSnap.exists()) {
+            if (guiaDocSnap?.exists()) {
               const guiaData = guiaDocSnap.data();
               console.log('Datos del guía:', guiaData);  // Verifica los datos del guía
               setNombreGuia(`${guiaData.nombre} ${guiaData.apellido}`);
@@ -153,9 +207,9 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
         </div>
         
         <div className={styles.availableSpots}>
-          CUPOS DISPONIBLES: <span style={{ color: '#000' }}> {actividadInfo.cuposDisponibles || '0'}/{actividadInfo.cuposMaximos || '10'}</span>
+          CUPOS DISPONIBLES: <span style={{ color: '#000' }}> {actividadInfo?.cuposReservados || '0'}/{actividadInfo?.slot?.quota || '10'}</span>
         </div>
-        <button 
+        <button
           className={styles.reserveButton}
           onClick={handleReserveClick}
         >

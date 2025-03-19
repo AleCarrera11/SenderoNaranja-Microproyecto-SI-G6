@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Calendario.module.css";
 import { db, auth } from "../../credenciales";
-import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import PreReserva from '../Pre-Reserva/PreReserva';
 import { useParams } from "react-router-dom";
-
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
   const getTimeSlotClass = () => {
@@ -37,13 +36,13 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
   );
 };
 
-const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDeleteSlot, availableSlots, onTimeSlotSelect }) => {
+const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
-  const handleAddClick = () => {
-    if (!isAdmin) return;
-    setShowAddMenu(true);
-  };
+    const handleAddClick = () => {
+        if (!isAdmin) return;
+        setShowAddMenu(true);
+    };
 
   const getSlotsForDay = () => {
     return Object.values(availableSlots).filter(slot => slot.date === day);
@@ -67,43 +66,50 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDe
       {showAddMenu && (
         <div className={styles.addSlotMenu}>
           <button onClick={() => {
-            onAddSlot(day, "8:00am", "morning");
+            setSelectedTimeSlot({ day, time: "8:00am", type: "morning" });
+            setShowAddQuota(true);
             setShowAddMenu(false);
           }}>
             Agregar 8:00am
           </button>
           <button onClick={() => {
-            onAddSlot(day, "10:00am", "morning");
+            setSelectedTimeSlot({ day, time: "10:00am", type: "morning" });
+            setShowAddQuota(true);
             setShowAddMenu(false);
           }}>
             Agregar 10:00am
           </button>
           <button onClick={() => {
-            onAddSlot(day, "12:00pm", "midday");
+            setSelectedTimeSlot({ day, time: "12:00pm", type: "midday" });
+            setShowAddQuota(true);
             setShowAddMenu(false);
           }}>
             Agregar 12:00pm
           </button>
           <button onClick={() => {
-            onAddSlot(day, "2:00pm", "afternoon");
+            setSelectedTimeSlot({ day, time: "2:00pm", type: "afternoon" });
+            setShowAddQuota(true);
             setShowAddMenu(false);
           }}>
             Agregar 2:00pm
           </button>
           <button onClick={() => {
-            onAddSlot(day, "4:00pm", "afternoon");
+            setSelectedTimeSlot({ day, time: "4:00pm", type: "afternoon" });
+            setShowAddQuota(true);
             setShowAddMenu(false);
           }}>
             Agregar 4:00pm
           </button>
           <button onClick={() => {
-            onAddSlot(day, "6:00pm", "evening");
+            setSelectedTimeSlot({ day, time: "6:00pm", type: "evening" });
+            setShowAddQuota(true);
             setShowAddMenu(false);
           }}>
             Agregar 6:00pm
           </button>
           <button onClick={() => {
-            onAddSlot(day, "8:00pm", "evening");
+            setSelectedTimeSlot({ day, time: "8:00pm", type: "evening" });
+            setShowAddQuota(true);
             setShowAddMenu(false);
           }}>
             Agregar 8:00pm
@@ -119,7 +125,7 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onAddSlot, onDe
             onSelect={() => onTimeSlotSelect(slot)}
           />
           {isAdmin && (
-            <button 
+            <button
               className={styles.deleteSlotButton}
               onClick={() => {
                 const slotId = `${slot.date}-${slot.time}`;
@@ -244,6 +250,9 @@ const Calendar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [availableSlots, setAvailableSlots] = useState({});
   const [showPreReserva, setShowPreReserva] = useState(false);
+  const [showAddQuota, setShowAddQuota] = useState(false);
+  const [newQuota, setNewQuota] = useState('');
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -296,7 +305,7 @@ const Calendar = () => {
     loadAvailableSlots();
   }, [selectedMonth, selectedYear, nombreActividad]);
 
-  const handleAddTimeSlot = async (date, time, type) => {
+  const handleAddTimeSlotWithQuota = async (date, time, type, quota) => {
     if (!isAdmin) {
       alert('Solo los administradores pueden agregar horarios');
       return;
@@ -309,47 +318,49 @@ const Calendar = () => {
         where('nombreActividad', '==', nombreActividad)
       );
       const actividadSnapshot = await getDocs(actividadQuery);
-      
+  
       if (actividadSnapshot.empty) {
         console.error('No se encontró la actividad');
         return;
       }
-
+  
       const actividadId = actividadSnapshot.docs[0].id;
-      const actividadDoc = actividadSnapshot.docs[0];
-      const currentSlots = actividadDoc.data().availableSlots || {};
+        const actividadDoc = actividadSnapshot.docs[0];
+        const currentSlots = actividadDoc.data().availableSlots || {};
 
-      const slotData = {
-        date,
-        time,
-        type,
-        month: selectedMonth,
-        year: selectedYear,
-        createdAt: new Date(),
-        available: true,
-        id: `${date}-${time}`
-      };
+        const slotData = {
+          date,
+          time,
+          type,
+          month: selectedMonth,
+          year: selectedYear,
+          createdAt: new Date(),
+          available: true,
+          id: `${date}-${time}`,
+          quota: quota,
+          cuposDisponibles: quota // Inicializar cupos disponibles con el valor de quota
+        };
 
-      const key = `${date}-${time}`;
-      const updatedSlots = {
-        ...currentSlots,
-        [key]: slotData
-      };
-
-      // Actualizar el documento de la actividad con el nuevo slot
-      await updateDoc(doc(db, 'destinos', actividadId), {
-        availableSlots: updatedSlots
-      });
-
-      setAvailableSlots(prev => ({
-        ...prev,
-        [key]: slotData
-      }));
-    } catch (error) {
-      console.error('Error adding time slot:', error);
-      alert('Error al agregar el horario');
-    }
-  };
+        const key = `${date}-${time}`;
+        const updatedSlots = {
+          ...currentSlots,
+          [key]: slotData
+        };
+  
+        // Actualizar el documento de la actividad con el nuevo slot
+        await updateDoc(doc(db, 'destinos', actividadId), {
+          availableSlots: updatedSlots
+        });
+  
+        setAvailableSlots(prev => ({
+          ...prev,
+          [key]: slotData
+        }));
+      } catch (error) {
+        console.error('Error adding time slot:', error);
+        alert('Error al agregar el horario');
+      }
+    };
 
   const handleDeleteTimeSlot = async (slotId) => {
     if (!isAdmin) {
@@ -481,23 +492,25 @@ const Calendar = () => {
               isToday={parseInt(day) === currentDate && isCurrentMonth}
               isCurrentMonth={true}
               isAdmin={isAdmin}
-              onAddSlot={handleAddTimeSlot}
               onDeleteSlot={handleDeleteTimeSlot}
               availableSlots={availableSlots}
               onTimeSlotSelect={handleTimeSlotSelect}
+              setSelectedTimeSlot={setSelectedTimeSlot}
+              setShowAddQuota={setShowAddQuota}
             />
           ))}
           {nextMonthDays.map((day) => (
-            <DayCell 
-              key={`next-${day}`} 
+            <DayCell
+              key={`next-${day}`}
               day={day}
               isToday={false}
               isCurrentMonth={false}
               isAdmin={isAdmin}
-              onAddSlot={handleAddTimeSlot}
               onDeleteSlot={handleDeleteTimeSlot}
               availableSlots={availableSlots}
               onTimeSlotSelect={handleTimeSlotSelect}
+              setSelectedTimeSlot={setSelectedTimeSlot}
+              setShowAddQuota={setShowAddQuota}
             />
           ))}
         </div>
@@ -513,10 +526,59 @@ const Calendar = () => {
             selectedSlot={selectedSlot}
             nombreActividad={nombreActividad}
             onClose={handleClosePreReserva}
+            quota={selectedTimeSlot?.quota}
           />
         </div>
       </div>
     )}
+
+      {showAddQuota && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+<div style={{
+  backgroundColor: '#ee9a12',
+  borderRadius: '25px',
+  padding: '20px',
+  color: 'white'
+}}>
+  <h2 style={{ 
+    backgroundColor: 'white', 
+    color: '#ee9a12',
+    borderRadius: '25px',
+    padding: '10px',
+    textAlign: 'center',
+    fontSize: '1.2em',
+    fontWeight: 'bold',
+    border: '2px solid #ee9a12'
+  }}>Ingrese la cantidad de cupos máximos</h2>
+  <input
+    type="number"
+    placeholder="Cupos máximos"
+    value={newQuota}
+    onChange={(e) => setNewQuota(e.target.value)}
+  />
+  <div className={styles.modalButtons}>
+    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
+    <button onClick={async () => {
+      setShowAddQuota(false);
+      if (selectedTimeSlot) {
+        await handleAddTimeSlotWithQuota(
+          selectedTimeSlot.day,
+          selectedTimeSlot.time,
+          selectedTimeSlot.type,
+          newQuota
+        );
+        setSelectedTimeSlot(null);
+        setNewQuota('');
+      }
+    }}>
+      Confirmar
+    </button>
+  </div>
+</div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

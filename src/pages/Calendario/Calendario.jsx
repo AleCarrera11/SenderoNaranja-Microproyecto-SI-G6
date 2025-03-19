@@ -554,15 +554,24 @@ const Calendar = () => {
     fontWeight: 'bold',
     border: '2px solid #ee9a12'
   }}>Ingrese la cantidad de cupos máximos</h2>
-  <input
-    type="number"
+ <input
+    type="text"
     placeholder="Cupos máximos"
     value={newQuota}
-    onChange={(e) => setNewQuota(e.target.value)}
+   onChange={(e) => {
+      const value = e.target.value;
+      if (value === "" || /^\d*$/.test(value)) {
+        setNewQuota(value);
+      }
+    }}
   />
   <div className={styles.modalButtons}>
     <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
     <button onClick={async () => {
+      if (parseInt(newQuota, 10) <= 0) {
+        alert('Por favor, ingrese un número de cupos mayor que 0.');
+        return;
+      }
       setShowAddQuota(false);
       if (selectedTimeSlot) {
         await handleAddTimeSlotWithQuota(

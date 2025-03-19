@@ -81,7 +81,7 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
     onClose();
     navigate('/reserva', { 
       state: { 
-        selectedDay,
+        selectedDay: selectedDay +"/"+ selectedMonth,
         selectedTime: selectedSlot.time,
         actividadInfo,
         nombreActividad,
@@ -117,7 +117,7 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
           <div className={styles.leftColumn}>
             <div className={styles.textContent}>
               <div className={styles.description}>
-                <span className={styles.boldBlack}>Día de la excursión</span>: {selectedDay +"/"+ selectedMonth}
+                <span className={styles.boldBlack}>Día de la excursión</span>: {selectedDay +"/" +selectedMonth}
                 <br />
                 <span className={styles.boldBlack}>Horario:</span> {selectedSlot.time}
                 <br />

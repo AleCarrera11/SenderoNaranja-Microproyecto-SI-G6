@@ -34,7 +34,6 @@ const ReservationConfirmation = ({ onClose, formData, actividadInfo, selectedDay
         duracion: actividadInfo?.duracion,
         foto: actividadInfo?.foto,
         identificador: identificador,
-        // Agrega otros campos necesarios de actividadInfo y formData
       });
 
       console.log('Reserva creada con éxito');

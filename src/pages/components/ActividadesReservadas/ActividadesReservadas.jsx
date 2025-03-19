@@ -10,9 +10,9 @@ const ActivityCard = ({
   imageSrc,
   title,
   date,
+  hour,
   guide,
-  participants,
-  description,
+  localizador,
 }) => {
   return (
     <article className={styles.activityCard}>
@@ -24,14 +24,14 @@ const ActivityCard = ({
           <div className={styles.detailsContent}>
             <h2 className={styles.activityTitle}>{title}</h2>
             <div className={styles.activityInfo}>
+              Localizador: <span className={styles.lightText}>{localizador}</span>
+              <br />
               Fecha pautada: <span className={styles.lightText}>{date}</span>
               <br />
-              Guía asignado: <span className={styles.lightText}>{guide}</span>
+              Hora: <span className={styles.lightText}>{hour}</span>
               <br />
-              Participantes:{" "}
-              <span className={styles.lightText}>{participants}</span>
+              Guía asignado: <span className={styles.lightText}>{guide}</span>
             </div>
-            <p className={styles.activityDescription}>{description}</p>
           </div>
         </div>
       </div>
@@ -42,32 +42,20 @@ const ActivityCard = ({
 function ActividadesReservadas({ userId }) {
   const [reservedActivities, setReservedActivities] = useState([]);
   const [loading, setLoading] = useState(true);
-   const [isModal, setModal] = useState(false);
+  const [isModal, setModal] = useState(false);
 
   useEffect(() => {
     const fetchReservedActivities = async () => {
       try {
-        const reservasRef = collection(db, "reservas");
+        const reservasRef = collection(db, "reservaciones");
         const q = query(reservasRef, where("userId", "==", userId));
         const querySnapshot = await getDocs(q);
-        
-        const activities = [];
-        for (const doc of querySnapshot.docs) {
-          const reserva = doc.data();
-          // Obtener detalles de la actividad
-          const actividadRef = doc.ref.parent.parent.collection("actividades").doc(reserva.actividadId);
-          const actividadDoc = await actividadRef.get();
-          const actividadData = actividadDoc.data();
-          
-          activities.push({
-            id: doc.id,
-            ...actividadData,
-            fechaReserva: reserva.fecha,
-            participantes: reserva.participantes,
-            guia: reserva.guia
-          });
-        }
-        
+
+        const activities = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(activities); // Agregar esta línea
         setReservedActivities(activities);
       } catch (error) {
         console.error("Error al cargar actividades reservadas:", error);
@@ -97,21 +85,19 @@ function ActividadesReservadas({ userId }) {
         reservedActivities.map((activity) => (
           <ActivityCard
             key={activity.id}
-            imageSrc={activity.imagen}
+            imageSrc={activity.foto} 
             title={activity.nombreActividad}
-            date={activity.fechaReserva}
+            date={activity.fecha} 
+            hour={activity.hora}
             guide={activity.guia}
-            participants={activity.participantes}
-            description={activity.descripcion}
+            localizador={activity.identificador}
           />
         ))
       )}
       {isModal && (
         <div className={styles.overlay} onClick={() => setModal(false)}>
           <div onClick={(e) => e.stopPropagation()}>
-            <HistorialActividades
-              onClose={() => setModal(false)}
-             />
+            <HistorialActividades onClose={() => setModal(false)} />
           </div>
         </div>
       )}

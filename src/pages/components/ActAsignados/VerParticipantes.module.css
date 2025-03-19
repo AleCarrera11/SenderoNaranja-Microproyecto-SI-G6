@@ -1,9 +1,14 @@
 /* Dashboard Container */
+
+
 .dashboardContainer {
   flex-direction: column;
   gap: 16px;
   padding: 32px;
   display: flex;
+  background-color: white;
+  max-height: 90vh; /* Ajusta la altura máxima según tus necesidades */
+  overflow-y: auto; /* Permite el scroll si el contenido excede la altura */
 }
 
 @media (width<=991px) {
@@ -24,7 +29,7 @@
   border-radius: 8px;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 90%;
   height: 111px;
   padding-left: 32px;
   padding-right: 32px;
@@ -36,7 +41,7 @@
   color: #fff;
   text-align: center;
   font-family: Figtree;
-  font-size: 64px;
+  font-size: 40px;
   font-weight: 700;
   line-height: 45px;
 }

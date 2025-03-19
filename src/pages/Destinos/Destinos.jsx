@@ -85,7 +85,6 @@ function Destinos() {
           </div>
         ))}
       </section>
-      <Pagination />
       <Footer />
       {isModalTipoOpen && (
         <div className={styles.overlay} onClick={() => setModalTipoOpen(false)}>

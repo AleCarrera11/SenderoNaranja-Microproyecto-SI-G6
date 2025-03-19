@@ -155,3 +155,15 @@
     font-family: Figtree, -apple-system, Roboto, Helvetica, sans-serif;
   }
   
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Asegura que esté sobre otros elementos */
+  }

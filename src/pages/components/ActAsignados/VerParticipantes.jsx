@@ -30,7 +30,7 @@ const DashboardHeader = ({ title, onClose }) => {
   );
 };
 
-const StatisticsCard = () => {
+const StatisticsCard = ({ totalParticipantes }) => {
   return (
     <section className={styles.statsCard}>
       <div className={styles.statsContent}>
@@ -75,177 +75,54 @@ const StatisticsCard = () => {
         </div>
         <div className={styles.statsInfo}>
           <span className={styles.statsLabel}>Total Participantes</span>
-          <h2 className={styles.statsValue}>15</h2>
-          <div className={styles.statsGrowth}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10 17L10 5"
-                stroke="#00AC4F"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M4.16663 10.0001L9.99996 4.16675L15.8333 10.0001"
-                stroke="#00AC4F"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className={styles.growthText}>
-              <strong>16%</strong> este mes
-            </span>
-          </div>
+          <h2 className={styles.statsValue}>{totalParticipantes}</h2>
         </div>
       </div>
     </section>
   );
 };
 
-const Pagination = () => {
+const VerParticipantes = ({ participantes, onClose }) => {
   return (
-    <nav className={styles.pagination} aria-label="Pagination">
-      <button className={styles.pageButton} aria-label="Previous page">
-        &lt;
-      </button>
-      <button className={styles.pageButton + " " + styles.active}>1</button>
-      <button className={styles.pageButton}>2</button>
-      <span className={styles.ellipsis}>...</span>
-      <button className={styles.pageButton}>3</button>
-      <button className={styles.pageButton} aria-label="Next page">
-        &gt;
-      </button>
-    </nav>
-  );
-};
-
-const ParticipantsTable = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("Nuevos");
-
-  const participants = [
-    {
-      name: "Jane Cooper",
-      username: "user",
-      phone: "(225) 555-0118",
-      email: "user@correo.unimet.edu.ve",
-      country: "United States",
-    },
-    {
-      name: "Floyd Miles",
-      username: "user",
-      phone: "(205) 555-0100",
-      email: "user@correo.unimet.edu.ve",
-      country: "Kiribati",
-    },
-  ];
-
-  return (
-    <section className={styles.tableContainer}>
+    <main className={styles.dashboardContainer}>
+      <DashboardHeader title="Lista Participantes" onClose={onClose} />
+      <StatisticsCard totalParticipantes={participantes.length} />
+      {participantes.length === 0 ? (
+        <p>No hay participantes registrados.</p>
+      ) : (
+        <section className={styles.tableContainer}>
       <div className={styles.tableHeader}>
         <div className={styles.headerInfo}>
-          <h2 className={styles.tableTitle}>Todos los Participantes</h2>
-          <p className={styles.tableSubtitle}>Miembros activos</p>
-        </div>
-        <div className={styles.tableControls}>
-          <div className={styles.searchContainer}>
-            <svg
-              width="24"
-              height="22"
-              viewBox="0 0 24 22"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11 16.751C15.4183 16.751 19 13.6565 19 9.83915C19 6.02181 15.4183 2.92725 11 2.92725C6.58172 2.92725 3 6.02181 3 9.83915C3 13.6565 6.58172 16.751 11 16.751Z"
-                stroke="#7E7E7E"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M20.9999 18.479L16.6499 14.7207"
-                stroke="#7E7E7E"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <input
-              type="text"
-              placeholder="Buscar"
-              className={styles.searchInput}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className={styles.sortContainer}>
-            <span className={styles.sortLabel}>Ordenar por : </span>
-            <span className={styles.sortValue}>{sortBy}</span>
-            <svg
-              width="9"
-              height="5"
-              viewBox="0 0 9 5"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M1.23315 1.28149L4.31682 3.64121L7.40048 1.28149"
-                stroke="#3D3C42"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
+          <h2 className={styles.tableTitle}>Participantes</h2>
         </div>
       </div>
-
       <div className={styles.tableWrapper}>
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Usuario</th>
-              <th>Phone Number</th>
-              <th>Email</th>
-              <th>País</th>
+              <th>Nombre Completo</th>
+              <th>Telefono</th>
+              <th>Correo</th>
+              
             </tr>
           </thead>
           <tbody>
-            {participants.map((participant, index) => (
+            {participantes.map((participant, index) => (
               <tr key={index}>
-                <td>{participant.name}</td>
-                <td>{participant.username}</td>
-                <td>{participant.phone}</td>
+                <td>{participant.participantes}</td>
+                <td>{participant.telefono}</td>
                 <td>{participant.email}</td>
-                <td>{participant.country}</td>
+               
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      <Pagination />
     </section>
-  );
-};
-
-const VerParticipantes = ({ onClose }) => {
-  return (
-    <main className={styles.dashboardContainer}>
-      <DashboardHeader title="Sabas Nieves" onClose={onClose} />
-      <StatisticsCard />
-      <ParticipantsTable />
+      )}
     </main>
   );
 };
 
 export default VerParticipantes;
+

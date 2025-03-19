@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { db } from '../../credenciales';
 import { collection, query, where, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
 
-const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selectedMonth, quota }) => {
+const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selectedMonth, selectedYear, quota }) => {
   const navigate = useNavigate();
     const [actividadInfo, setActividadInfo] = useState(null);
     const [nombreGuia, setNombreGuia] = useState("");
@@ -149,7 +149,7 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
     onClose();
     navigate('/reserva', { 
       state: { 
-        selectedDay: selectedDay +"/"+ selectedMonth,
+        selectedDay: selectedDay +"/"+ selectedMonth +"/"+ selectedYear ,
         selectedTime: selectedSlot.time,
         actividadInfo,
         nombreActividad,

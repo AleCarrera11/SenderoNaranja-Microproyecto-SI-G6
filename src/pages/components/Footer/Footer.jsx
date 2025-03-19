@@ -105,10 +105,10 @@ export function Footer() {
                   <Link to="/galeria">Galeria</Link>
                 </li>
                 <li>
-                  <Link to="/parque-nacional">Parque Nacional Waraira Repano</Link>
+                  <Link to="/parque-nacional-el-avila">Parque Nacional El Ávila</Link>
                 </li>
                 <li>
-                  <Link to="/conservation">Preservación</Link>
+                  <Link to="/importancia-conservacion">Importancia de la Conservación</Link>
                 </li>
               </ul>
             </div>
@@ -117,16 +117,17 @@ export function Footer() {
               <h3 className={styles.columnTitle}>Sobre Nosotros</h3>
               <ul className={styles.linkList}>
                 <li>
-                  <Link to="/sobre-nosotros">Misión y Visión</Link>
+                  <Link to="/about">Misión y Visión</Link>
                 </li>
                 <li>
-                  <Link to="/proyecto-avila">Proyecto Avila</Link>
+                  <a href="https://www.unimet.edu.ve/unimet-sustentable/" target="_blank" rel="noopener noreferrer">
+                    UNIMET Sustentable
+                  </a>
                 </li>
                 <li>
-                  <Link to="/unimet-sostenible">UNIMET Sostenible</Link>
-                </li>
-                <li>
-                  <Link to="/sobre-nosotros#contacto">Contactos</Link>
+                  <a href="https://www.unimet.edu.ve/proyecto-avila/" target="_blank" rel="noopener noreferrer">
+                    Proyecto Ávila
+                  </a>
                 </li>
               </ul>
             </div>

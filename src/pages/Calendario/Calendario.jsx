@@ -523,6 +523,7 @@ const Calendar = () => {
           <PreReserva 
             selectedDay={selectedSlot?.date} 
             selectedMonth={selectedMonth+1}
+            selectedYear={selectedYear}
             selectedSlot={selectedSlot}
             nombreActividad={nombreActividad}
             onClose={handleClosePreReserva}

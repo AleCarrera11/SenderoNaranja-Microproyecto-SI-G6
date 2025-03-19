@@ -61,9 +61,23 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
               where('selectedDay', '==', selectedDay),
               where('selectedTime', '==', selectedSlot.time)
             ),
-            (snapshot) => {
+            async (snapshot) => {
               const cuposReservados = snapshot.size;
-              setActividadInfo(prevState => ({ ...prevState, cuposReservados: cuposReservados }));
+              
+              // Obtener el documento de la actividad para obtener los cupos disponibles
+              const actividadDoc = await getDoc(doc(db, 'destinos', actividadId));
+              const actividadData = actividadDoc.data();
+              const slotId = `${selectedDay}-${selectedSlot.time}`;
+              const cuposDisponibles = actividadData.availableSlots[slotId]?.cuposDisponibles || 0;
+
+              setActividadInfo(prevState => ({ 
+                ...prevState, 
+                cuposReservados: cuposReservados,
+                slot: {
+                  ...prevState.slot,
+                  cuposDisponibles: cuposDisponibles
+                }
+              }));
             },
             (error) => {
               console.error('Error al obtener las reservaciones:', error);
@@ -206,8 +220,12 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
           </div>
         </div>
         
-        <div className={styles.availableSpots}>
-          CUPOS DISPONIBLES: <span style={{ color: '#000' }}> {actividadInfo?.cuposReservados || '0'}/{actividadInfo?.slot?.quota || '10'}</span>
+<div className={styles.availableSpots} style={{
+  fontSize: '1.2em',
+  fontWeight: 'bold',
+  color: '#ee9a12'
+}}>
+          CUPOS DISPONIBLES: <span style={{ color: '#000' }}> {actividadInfo?.cuposReservados || '0'}/{actividadInfo?.slot?.cuposDisponibles || '10'}</span>
         </div>
         <button
           className={styles.reserveButton}

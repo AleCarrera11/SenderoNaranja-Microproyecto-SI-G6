@@ -552,17 +552,19 @@ const Calendar = () => {
     textAlign: 'center',
     fontSize: '1.2em',
     fontWeight: 'bold',
+    fontFamily: "Figtree",
     border: '2px solid #ee9a12'
   }}>Ingrese la cantidad de cupos máximos</h2>
   <input
     type="number"
     placeholder="Cupos máximos"
     value={newQuota}
+    style={{fontFamily: "Figtree",}}
     onChange={(e) => setNewQuota(e.target.value)}
   />
   <div className={styles.modalButtons}>
-    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
-    <button onClick={async () => {
+    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' , fontFamily: "Figtree",borderRadius: '25px', borderColor: "white" }}>Cancelar</button>
+    <button style={{ backgroundColor: "white", color: '#ee9a12' , fontFamily: "Figtree",borderRadius: '25px', borderColor: "white" }}onClick={async () => {
       setShowAddQuota(false);
       if (selectedTimeSlot) {
         await handleAddTimeSlotWithQuota(

@@ -82,6 +82,13 @@ const ImageField = ({ label, imageUrl, onImageChange, isUploading }) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    console.log("Archivo seleccionado:", file);
+
+    if (!file.type.startsWith("image/")) {
+      alert("Por favor, selecciona un archivo de imagen válido.");
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewUrl(reader.result);
@@ -168,7 +175,7 @@ const EditarActividad = ({ onClose }) => {
     }
   };
 
-  const handleImageUpload = async (file, field) => {
+const handleImageUpload = async (file, field) => {
     try {
       if (field === "foto") {
         setIsUploadingFoto(true);
@@ -176,11 +183,14 @@ const EditarActividad = ({ onClose }) => {
         setIsUploadingUbicacion(true);
       }
 
+      console.log("Subiendo imagen a Firebase Storage...");
       const imageUrl = await uploadImage(file, "actividad-fotos", actividad.nombreActividad);
+      console.log("URL de la imagen subida:", imageUrl);
       await handleFieldUpdate(field, imageUrl);
+      setActividad(prev => ({ ...prev, [field]: imageUrl })); // Actualiza el estado local inmediatamente
     } catch (error) {
       console.error("Error al subir la imagen:", error);
-      alert("Error al subir la imagen");
+      alert("Error al subir la imagen: " + error.message);
     } finally {
       if (field === "foto") {
         setIsUploadingFoto(false);
@@ -328,4 +338,4 @@ const EditarActividad = ({ onClose }) => {
   );
 };
 
-export default EditarActividad; 
+export default EditarActividad;

@@ -24,7 +24,7 @@ const ReservationConfirmation = ({ onClose, formData, actividadInfo, selectedDay
         userId: userId, // Usar el userId pasado como prop
         actividadId: actividadInfo.id, // Usar el ID de la actividad
         nombreActividad: nombreActividad,
-        fecha: selectedDay,
+        fecha: selectedDay +"/"+ selectedMonth +"/"+ selectedYear,
         hora: selectedTime,
         participantes: `${formData.name} ${formData.lastName}`,
         email: formData.email,

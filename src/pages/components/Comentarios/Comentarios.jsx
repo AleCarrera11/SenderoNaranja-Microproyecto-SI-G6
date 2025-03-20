@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./Comentario.module.css";
-import { collection, addDoc, onSnapshot, getFirestore, query, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, getFirestore, query, where, getDocs, updateDoc } from "firebase/firestore";
 import { app } from "../../../credenciales.js";
 import { UserContext } from "../../../Context/UserContex";
 import logoSI from "/logoSI.png";
@@ -31,16 +31,18 @@ const StarRating = ({ rating }) => {
 };
 
 const ReviewCard = ({ comentario, avatarUrl, userName, rating, title, review, onDelete, profile }) => {
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [respuesta, setRespuesta] = useState(comentario.respuesta || "");
+  const [editando, setEditando] = useState(false);
 
-  const handleDeleteClick = () => {
-    setShowConfirmation(true);
-  };
-
-  const handleConfirmation = (confirmed) => {
-    setShowConfirmation(false);
-    if (confirmed) {
-      onDelete(comentario.id);
+  const handleResponder = async () => {
+    if (respuesta.trim() !== "") {
+      try {
+        const comentarioRef = doc(db, "comentarios", comentario.id);
+        await updateDoc(comentarioRef, { respuesta });
+        setEditando(false);
+      } catch (error) {
+        console.error("Error al guardar la respuesta:", error);
+      }
     }
   };
 
@@ -52,16 +54,46 @@ const ReviewCard = ({ comentario, avatarUrl, userName, rating, title, review, on
         <StarRating rating={rating} />
         <h4 className={styles.reviewTitle}>{title}</h4>
         <p className={styles.reviewText}>{review}</p>
+
+        {/* Mostrar respuesta si existe */}
+        {comentario.respuesta && (
+          <div className={styles.commentInputContainer}>
+            <img src={avatarUrl} alt="User avatar" className={styles.userAvatar} />
+            <div>
+              <strong className={styles.reviewTitle}>
+                Respuesta del Guía {profile?.nombre + " " + profile?.apellido}:
+              </strong>
+              <p className={styles.reviewText}>{comentario.respuesta}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Área de respuesta para guías */}
+        {profile?.tipoUser === "Guía" && (
+          <div className={styles.commentInputContainer}>
+            {editando ? (
+              <>
+                <input
+                  type="text"
+                  value={respuesta}
+                  onChange={(e) => setRespuesta(e.target.value)}
+                  className={styles.commentInput}
+                  placeholder="Escribe una respuesta..."
+                />
+                <button onClick={handleResponder} className={styles.commentButton}>Responder</button>
+                <button onClick={() => setEditando(false)} className={styles.commentButton}>Cancelar</button>
+              </>
+            ) : (
+              <button onClick={() => setEditando(true)} className={styles.commentButton}>
+                Responder
+              </button>
+            )}
+          </div>
+        )}
       </div>
-      {showConfirmation && (
-      <div className={styles.confirmationDialog}>
-          <p>¿Estás seguro de que quieres eliminar este comentario?</p>
-          <button onClick={() => handleConfirmation(true)}>Sí</button>
-          <button onClick={() => handleConfirmation(false)}>No</button>
-        </div>
-      )}
-      {profile && profile?.tipoUser === "Administrador" && (
-        <button className={styles.deleteButton} onClick={handleDeleteClick}>Eliminar</button>
+
+      {profile?.tipoUser === "Administrador" && (
+        <button className={styles.deleteButton} onClick={() => onDelete(comentario.id)}>Eliminar</button>
       )}
     </article>
   );
@@ -162,6 +194,8 @@ const Comentarios = () => {
     return () => unsubscribe();
   }, []);
 
+  
+
   const handleDeleteComment = async (commentId) => {
     try {
       await deleteDoc(doc(db, "comentarios", commentId));
@@ -204,6 +238,26 @@ const Comentarios = () => {
 
   const comentarioslength = filtroActividad.length; 
   
+  useEffect(() => {
+    const actualizarRatingDestino = async () => {
+      if (!isNaN(averageRating)) {
+        const q = query(collection(db, "destinos"), where("nombreActividad", "==", nombreActividad));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const destinoDoc = querySnapshot.docs[0];
+          const destinoRef = doc(db, "destinos", destinoDoc.id);
+          try {
+            await updateDoc(destinoRef, { rating: averageRating });
+            console.log("Rating actualizado en destinos");
+          } catch (error) {
+            console.error("Error al actualizar el rating en destinos:", error);
+          }
+        }
+      }
+    };
+    actualizarRatingDestino();
+  }, [averageRating, nombreActividad]);
+
   return (
     <section className={styles.commentsContainer}>
       <div className={styles.divider} />
@@ -224,11 +278,13 @@ const Comentarios = () => {
         />
       ))}
     </div>
-
+     {/* Mostrar input solo si el usuario es estudiante */}
+    {profile?.tipoUser === "Estudiante" && (
       <CommentInput
         avatarUrl={profile?.foto_perfil || logoSI}
         onCommentSubmit={handleAgregarComentario}
       />
+    )}
     </section>
   );
 };

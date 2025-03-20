@@ -4,7 +4,7 @@ import styles from "./Calendario.module.css";
 import { db, auth } from "../../credenciales";
 import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import PreReserva from '../Pre-Reserva/PreReserva';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
   const getTimeSlotClass = () => {
@@ -183,7 +183,9 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange, actividadN
           </li>
           <li aria-hidden="true">/</li>
           <li>
-            {actividadName}
+            <Link to={`/destinos/${actividadName}`} className={styles.navLink}>
+              {actividadName}
+            </Link>
           </li>
           <li aria-hidden="true">/</li>
           <li aria-current="page">Calendario</li>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import styles from "./SearchBar.module.css";
+import styles from "./Searchbar.module.css";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../credenciales";
 import ActivityIterator from "../../../utils/ActivityIterator";

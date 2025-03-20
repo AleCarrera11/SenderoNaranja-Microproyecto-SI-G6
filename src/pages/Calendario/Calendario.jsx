@@ -1,9 +1,10 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import styles from "./Calendario.module.css";
 import { db, auth } from "../../credenciales";
 import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import PreReserva from '../Pre-Reserva/PreReserva';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
   const getTimeSlotClass = () => {
@@ -35,12 +36,11 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
   );
 };
 
-import React, { useState, useEffect } from "react";
-const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota }) => {
+const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota, isPast }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   const handleAddClick = () => {
-    if (!isAdmin) return;
+    if (!isAdmin || isPast) return;
     setShowAddMenu(true);
   };
 
@@ -50,11 +50,11 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, a
 
   const daySlots = getSlotsForDay();
 
-  return (
-    <div className={`${styles.dayCell} ${isToday && isCurrentMonth ? styles.today : ''}`}>
+return (
+    <div className={`${styles.dayCell} ${isToday && isCurrentMonth ? styles.today : ''} ${isPast ? styles.pastDay : ''}`}>
       <div className={styles.dayNumber}>
         {day}
-        {isAdmin && isCurrentMonth && (
+        {isAdmin && isCurrentMonth && !isPast && (
           <button 
             className={styles.addSlotButton}
             onClick={handleAddClick}
@@ -64,7 +64,7 @@ const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, a
         )}
       </div>
       {showAddMenu && (
-        <div className={styles.addSlotMenu} ref={addMenuRef}>
+        <div className={styles.addSlotMenu}>
           <button onClick={() => {
             setSelectedTimeSlot({ day, time: "8:00am", type: "morning" });
             setShowAddQuota(true);
@@ -183,7 +183,9 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange, actividadN
           </li>
           <li aria-hidden="true">/</li>
           <li>
-            {actividadName}
+            <Link to={`/destinos/${actividadName}`} className={styles.navLink}>
+              {actividadName}
+            </Link>
           </li>
           <li aria-hidden="true">/</li>
           <li aria-current="page">Calendario</li>
@@ -485,20 +487,26 @@ const Calendar = () => {
               {day}
             </div>
           ))}
-          {currentMonthDays.map((day) => (
-            <DayCell 
-              key={`current-${day}`} 
-              day={day} 
-              isToday={parseInt(day) === currentDate && isCurrentMonth}
-              isCurrentMonth={true}
-              isAdmin={isAdmin}
-              onDeleteSlot={handleDeleteTimeSlot}
-              availableSlots={availableSlots}
-              onTimeSlotSelect={handleTimeSlotSelect}
-              setSelectedTimeSlot={setSelectedTimeSlot}
-              setShowAddQuota={setShowAddQuota}
-            />
-          ))}
+          {currentMonthDays.map((day) => {
+            const isPast = selectedYear < new Date().getFullYear() ||
+              (selectedYear === new Date().getFullYear() && selectedMonth < new Date().getMonth()) ||
+              (selectedYear === new Date().getFullYear() && selectedMonth === new Date().getMonth() && parseInt(day) < new Date().getDate());
+            return (
+              <DayCell
+                key={`current-${day}`}
+                day={day}
+                isToday={parseInt(day) === currentDate && isCurrentMonth}
+                isCurrentMonth={true}
+                isAdmin={isAdmin}
+                onDeleteSlot={handleDeleteTimeSlot}
+                availableSlots={availableSlots}
+                onTimeSlotSelect={handleTimeSlotSelect}
+                setSelectedTimeSlot={setSelectedTimeSlot}
+                setShowAddQuota={setShowAddQuota}
+                isPast={isPast}
+              />
+            );
+          })}
           {nextMonthDays.map((day) => (
             <DayCell
               key={`next-${day}`}
@@ -511,6 +519,7 @@ const Calendar = () => {
               onTimeSlotSelect={handleTimeSlotSelect}
               setSelectedTimeSlot={setSelectedTimeSlot}
               setShowAddQuota={setShowAddQuota}
+              isPast={false}
             />
           ))}
         </div>
@@ -556,40 +565,30 @@ const Calendar = () => {
     type="text"
     placeholder="Cupos máximos"
     value={newQuota}
-    onChange={(e) => {
-      const value = e.target.value === '' ? '' : parseInt(e.target.value, 10);
-      if (value === '' || (!isNaN(value) && value >= 0)) {
+   onChange={(e) => {
+      const value = e.target.value;
+      if (value === "" || /^\d*$/.test(value)) {
         setNewQuota(value);
       }
     }}
-    style={{ MozAppearance: 'textfield' }}
   />
-  {newQuota === 0 && (
-    <p style={{ color: 'red' }}>
-      El número de cupos debe ser mayor a 0.
-    </p>
-  )}
   <div className={styles.modalButtons}>
-    <button onClick={() => {
-      setShowAddQuota(false);
-      setSelectedTimeSlot(null);
-      setNewQuota('');
-    }} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
+    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
     <button onClick={async () => {
+      if (parseInt(newQuota, 10) <= 0) {
+        alert('Por favor, ingrese un número de cupos mayor que 0.');
+        return;
+      }
+      setShowAddQuota(false);
       if (selectedTimeSlot) {
-        if (newQuota > 0) {
-          await handleAddTimeSlotWithQuota(
-            selectedTimeSlot.day,
-            selectedTimeSlot.time,
-            selectedTimeSlot.type,
-            newQuota
-          );
-          setSelectedTimeSlot(null);
-          setNewQuota('');
-          setShowAddQuota(false);
-        } else {
-          alert('El número de cupos debe ser mayor a 0.');
-        }
+        await handleAddTimeSlotWithQuota(
+          selectedTimeSlot.day,
+          selectedTimeSlot.time,
+          selectedTimeSlot.type,
+          newQuota
+        );
+        setSelectedTimeSlot(null);
+        setNewQuota('');
       }
     }}>
       Confirmar

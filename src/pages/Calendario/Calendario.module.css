@@ -236,4 +236,9 @@
     padding: 0.25rem 0.5rem;
     font-size: 12px;
   }
-  
+
+  .pastDay {
+    background-color: #ddd;
+    color: #999;
+    cursor: not-allowed;
+  }

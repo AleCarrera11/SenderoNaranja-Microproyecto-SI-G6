@@ -4,7 +4,7 @@ import styles from "./Calendario.module.css";
 import { db, auth } from "../../credenciales";
 import { collection, addDoc, getDocs, query, where, doc, getDoc, deleteDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import PreReserva from '../Pre-Reserva/PreReserva';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 
 const TimeSlot = ({ time, type, date, onSelect }) => {
   const getTimeSlotClass = () => {
@@ -183,7 +183,9 @@ const CalendarHeader = ({ selectedMonth, selectedYear, onMonthChange, actividadN
           </li>
           <li aria-hidden="true">/</li>
           <li>
-            {actividadName}
+            <Link to={`/destinos/${actividadName}`} className={styles.navLink}>
+              {actividadName}
+            </Link>
           </li>
           <li aria-hidden="true">/</li>
           <li aria-current="page">Calendario</li>
@@ -550,17 +552,19 @@ const Calendar = () => {
     textAlign: 'center',
     fontSize: '1.2em',
     fontWeight: 'bold',
+    fontFamily: "Figtree",
     border: '2px solid #ee9a12'
   }}>Ingrese la cantidad de cupos máximos</h2>
   <input
     type="number"
     placeholder="Cupos máximos"
     value={newQuota}
+    style={{fontFamily: "Figtree",}}
     onChange={(e) => setNewQuota(e.target.value)}
   />
   <div className={styles.modalButtons}>
-    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' }}>Cancelar</button>
-    <button onClick={async () => {
+    <button onClick={() => setShowAddQuota(false)} style={{ backgroundColor: '#ee9a12', color: 'white' , fontFamily: "Figtree",borderRadius: '25px', borderColor: "white" }}>Cancelar</button>
+    <button style={{ backgroundColor: "white", color: '#ee9a12' , fontFamily: "Figtree",borderRadius: '25px', borderColor: "white" }}onClick={async () => {
       setShowAddQuota(false);
       if (selectedTimeSlot) {
         await handleAddTimeSlotWithQuota(

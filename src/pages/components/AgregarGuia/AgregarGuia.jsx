@@ -44,6 +44,7 @@ function GuideProfile({ imageSrc, name, onAsignarClick }) {
 function AgregarGuia({ actividadId, onClose, onGuideAssigned }) { // Agrega onGuideAssigned como prop
   const [guias, setGuias] = useState([]);
   const [guiasAsignados, setGuiasAsignados] = useState([]);
+  const [noGuiasDisponibles, setNoGuiasDisponibles] = useState(false);
 
   const handleAsignarClick = async (guiaId, guiaNombre) => { 
     try {
@@ -99,9 +100,17 @@ const fetchGuiasDisponibles = async () => {
   // Filtrar los guías disponibles
   const guiasDisponibles = guiasData.filter((guia) => !todosGuiasAsignadosData.includes(guia.id));
   setGuias(guiasDisponibles);
-};
+
+  // Verificar si no hay guías disponibles
+  if (guiasDisponibles.length === 0) {
+    setNoGuiasDisponibles(true);
+  } else {
+    setNoGuiasDisponibles(false);
+  }
+  };
 
 
+  
   useEffect(() => {
     if (actividadId) {
       fetchGuiasDisponibles();
@@ -113,15 +122,19 @@ const fetchGuiasDisponibles = async () => {
       <div className={styles.contentWrapper}>
         <TrailHeader logoSrc={logoSI} title="Asignación de Guía" onClose={onClose} />
         <div className={styles.guidesSection}>
-          {guias.map((guia) => (
-            <div key={guia.id} className={styles.guideWrapper}>
-              <GuideProfile
-                imageSrc={guia.foto_perfil || "/logoSI.png"}
-                name={`${guia.nombre} ${guia.apellido}`}
-                onAsignarClick={() => handleAsignarClick(guia.id, `${guia.nombre} ${guia.apellido}`)}
-              />
-            </div>
-          ))}
+          {noGuiasDisponibles ? (
+            <p className={styles.noActivities}>No hay guías disponibles en este momento.</p>
+          ) : (
+            guias.map((guia) => (
+              <div key={guia.id} className={styles.guideWrapper}>
+                <GuideProfile
+                  imageSrc={guia.foto_perfil || "/logoSI.png"}
+                  name={`${guia.nombre} ${guia.apellido}`}
+                  onAsignarClick={() => handleAsignarClick(guia.id, `${guia.nombre} ${guia.apellido}`)}
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>

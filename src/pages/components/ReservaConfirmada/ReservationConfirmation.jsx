@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../../credenciales'; // Asegúrate de que la ruta sea correcta
 
-const ReservationConfirmation = ({ onClose, formData, actividadInfo, selectedDay, selectedTime, nombreActividad, guia, userId}) => {
+const ReservationConfirmation = ({ onClose, formData, actividadInfo, selectedDay, selectedTime, nombreActividad, selectedMonth, selectedYear, guia, userId}) => {
   const navigate = useNavigate();
 
   // Generar el identificador

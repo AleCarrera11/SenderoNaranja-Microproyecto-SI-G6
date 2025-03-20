@@ -175,7 +175,7 @@ const PreReserva = ({ selectedDay, selectedSlot, nombreActividad, onClose, selec
         selectedTime: selectedSlot.time,
         actividadInfo,
         nombreActividad,
-        guia: nombreGuia  
+        guia: nombreGuia,
       } 
     });
   };

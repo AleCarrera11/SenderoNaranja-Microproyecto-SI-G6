@@ -152,16 +152,7 @@
   
   .imageSection {
     flex: 1;
-}
-
-.imageSection img { /*Aplica los estilos a la etiqueta img dentro de imageSection*/
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    max-width: 500px; /* Opcional: Limita el ancho máximo */
-    max-height: 400px; /*Opcional: Limita la altura maxima*/
-    object-fit: cover; /* Opcional: Ajusta la imagen al contenedor */
-}
+  }
   
   .tripImage {
     width: 100%;

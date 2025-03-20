@@ -559,7 +559,6 @@ const Calendar = () => {
     textAlign: 'center',
     fontSize: '1.2em',
     fontWeight: 'bold',
-    fontFamily: "Figtree",
     border: '2px solid #ee9a12'
   }}>Ingrese la cantidad de cupos máximos</h2>
  <input

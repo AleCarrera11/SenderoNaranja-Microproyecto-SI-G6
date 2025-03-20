@@ -36,7 +36,7 @@ const TimeSlot = ({ time, type, date, onSelect }) => {
   );
 };
 
-const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota, isPast }) => {
+const DayCell = ({ day, isToday, isCurrentMonth = true, isAdmin, onDeleteSlot, availableSlots, onTimeSlotSelect, setSelectedTimeSlot, setShowAddQuota, isPast, nombreActividad }) => {
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   const handleAddClick = () => {
@@ -504,6 +504,7 @@ const Calendar = () => {
                 setSelectedTimeSlot={setSelectedTimeSlot}
                 setShowAddQuota={setShowAddQuota}
                 isPast={isPast}
+                nombreActividad={nombreActividad}
               />
             );
           })}
@@ -520,6 +521,7 @@ const Calendar = () => {
               setSelectedTimeSlot={setSelectedTimeSlot}
               setShowAddQuota={setShowAddQuota}
               isPast={false}
+              nombreActividad={nombreActividad}
             />
           ))}
         </div>

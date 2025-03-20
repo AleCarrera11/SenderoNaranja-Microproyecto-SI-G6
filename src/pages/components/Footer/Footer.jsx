@@ -57,30 +57,33 @@ export function Footer() {
               Todos los derechos reservados.
             </p>
             <div className={styles.social}>
-              <img
-                src={facebooklogo}
-                alt="Social icon"
-                className={styles.socialIcon}
-              />
+              <a href="https://www.facebook.com/ProyectoAvila/" target="_blank" rel="noopener noreferrer">
+                <img
+                  src={facebooklogo}
+                  alt="Social icon"
+                  className={styles.socialIcon}
+                />
+              </a>
+              <a href="https://www.instagram.com/proyectoavila/" target="_blank" rel="noopener noreferrer">
               <img  
                 src={instagramlogo}
                 alt="Social icon"
                 className={styles.socialIcon}
               />
-              <img
-                src={xlogo}
-                alt="Social icon"
-                className={styles.socialIcon}
-              />
+              </a>
+              <a href="mailto:senderonaranja@unimet.edu.ve"target="_blank" rel="noopener noreferrer">
               <img
                 src={correologo}
                 className={styles.socialIcon}
               />
+              </a>
+              <a href="https://www.youtube.com/watch?v=ZEZQF9Xe5Jw" target="_blank" rel="noopener noreferrer">
               <img
                 src={youtubelogo}
                 alt="Social icon"
                 className={styles.socialIcon}
               />
+              </a>
             </div>
           </div>
 

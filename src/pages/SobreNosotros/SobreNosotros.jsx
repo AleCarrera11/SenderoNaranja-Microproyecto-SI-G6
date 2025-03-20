@@ -116,7 +116,7 @@ const SobreNosotros = () => {
                 />
                 <span>senderonaranja@unimet.edu.ve</span>
               </a>
-              <a href="/youtube" className={styles.contactLink}>
+              <a href="https://www.youtube.com/watch?v=ZEZQF9Xe5Jw" className={styles.contactLink}>
                 <img
                   src={youtubelogo}
                   alt="Youtube icon"
@@ -124,7 +124,7 @@ const SobreNosotros = () => {
                 />
                 <span>Sendero Naranja</span>
               </a>
-              <a href="/facebook" className={styles.contactLink}>
+              <a href="https://www.facebook.com/ProyectoAvila/" className={styles.contactLink}>
                 <img
                   src={facebooklogo}
                   alt="Facebook icon"
@@ -132,7 +132,7 @@ const SobreNosotros = () => {
                 />
                 <span>Sendero Naranja</span>
               </a>
-              <a href="/instagram" className={styles.contactLink}>
+              <a href="https://www.instagram.com/proyectoavila/" className={styles.contactLink}>
                 <img
                   src={instagramlogo}
                   alt="Instagram icon"

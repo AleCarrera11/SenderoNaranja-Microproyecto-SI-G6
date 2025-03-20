@@ -30,7 +30,7 @@ import React from 'react';
  
      return (
          <PayPalScriptProvider options={initialOptions}>
-             <PayPalButtons createOrder={createOrder} />
+             <PayPalButtons createOrder={createOrder} onApprove={onApprove} />
          </PayPalScriptProvider>
      )
  }
